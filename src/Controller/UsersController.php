@@ -29,15 +29,40 @@ use Cake\View\Exception\MissingTemplateException;
  *
  * @link https://book.cakephp.org/4/en/controllers/pages-controller.html
  */
-class LoginController  extends AppController
+class UsersController  extends AppController
 {
     /**
     * Function login for members
     */
-    public function index()
+    public function login()
     {
         $this->viewBuilder()->setLayout('login');
+        if ($this->request->is('post')) {
+            // $post = $this->request->getData();
+            $user = $this->Auth->identify();
+        // echo 'Tocken <pre>';print_r($user);exit;
+            if ($user) {
+                $this->Auth->setUser($user);
+                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+            } else {
+                $this->Flash->error(__('Username or password is incorrect'));
+            }
+        } 
+    }
 
-        // Output user image
+    /**
+    * Function index for members
+    */
+    public function index()
+    {
+
+    }
+
+    /**
+    * Function logout for members
+    */
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
     }
 }

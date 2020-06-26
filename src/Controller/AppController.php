@@ -53,12 +53,13 @@ class AppController extends Controller
                 ]
             ],
             'loginAction' => [
-                'controller' => 'Login',
-                'action' => 'index'
+                'controller' => 'Users',
+                'action' => 'login'
             ],
             'authorize' => ['login'],
-            'unauthorizedRedirect' => '/Login/index',
+            'unauthorizedRedirect' => '/Users/login',
         ]);
+        
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html

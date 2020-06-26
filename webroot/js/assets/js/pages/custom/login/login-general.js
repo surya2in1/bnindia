@@ -93,9 +93,13 @@ var KTLoginGeneral = function() {
             }
 
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
-
+            // form.submit();
             form.ajaxSubmit({
-                url: '',
+                url: 'users/login',
+                type:'POST',
+                beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
                 success: function(response, status, xhr, $form) {
                 	// similate 2s delay
                 	setTimeout(function() {

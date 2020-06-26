@@ -64,7 +64,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     //$builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
     
-    $builder->connect('/', ['controller' => 'Login', 'action' => 'index']);
+    $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/pages', ['controller' => 'Pages', 'action' => 'test']);
 
     /*
@@ -87,6 +87,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     $builder->fallbacks();
 });
+
 
 /*
  * If you need a different set of middleware or none at all,

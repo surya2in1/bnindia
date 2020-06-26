@@ -17,7 +17,13 @@
 											<h3 class="kt-login__title">Sign In To Admin</h3>
 										</div>
 										<div class="kt-login__form">
-											<form class="kt-form" action="">
+											<?= $this->Form->create(null, array(
+												   'url'=>'/Users/login',
+							                       'class'=>'kt-form',
+							                       'id'=>'login_form',
+							                       'method'=> 'Post'
+							                     )); ?>
+										
 												<div class="form-group">
 													<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">
 												</div>
@@ -34,7 +40,7 @@
 												<div class="kt-login__actions">
 													<button id="kt_login_signin_submit" class="btn btn-brand btn-pill btn-elevate">Sign In</button>
 												</div>
-											</form>
+											<?= $this->Form->end(); ?>
 										</div>
 									</div>
 									<div class="kt-login__signup">
