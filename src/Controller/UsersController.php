@@ -1,35 +1,15 @@
 <?php
 declare(strict_types=1);
 
-/**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link      https://cakephp.org CakePHP(tm) Project
- * @since     0.2.9
- * @license   https://opensource.org/licenses/mit-license.php MIT License
- */
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
-use Cake\View\Exception\MissingTemplateException;
-
 /**
- * Static content controller
+ * Users Controller
  *
- * This controller will render views from templates/Pages/
- *
- * @link https://book.cakephp.org/4/en/controllers/pages-controller.html
+ * @property \App\Model\Table\UsersTable $Users
+ * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class UsersController  extends AppController
+class UsersController extends AppController
 {
     /**
     * Function login for members
@@ -38,24 +18,123 @@ class UsersController  extends AppController
     {
         $this->viewBuilder()->setLayout('login');
         if ($this->request->is('post')) {
-            // $post = $this->request->getData();
+            $post = $this->request->getData();
             $user = $this->Auth->identify();
-        // echo 'Tocken <pre>';print_r($user);exit;
+            // debug($user);
+            //  echo 'post <pre>';print_r($post);exit;
             if ($user) {
+                //$this->_setCookie($this->Auth->user('id'));
                 $this->Auth->setUser($user);
-                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                echo 1;exit;
             } else {
-                $this->Flash->error(__('Username or password is incorrect'));
+                echo 0;exit;
             }
         } 
     }
 
+    protected function _setCookie($id) {
+        if (!$this->request->data['remember_me']) {
+            return false;
+        }
+        $data = array(
+            'User' => array(
+                'email' => $this->request->data['User']['email'],
+                'password' => $this->request->data['User']['password']
+                ));
+        
+        $this->Cookie->write('User', $data, true, '+2 week');
+        return true;
+    }
     /**
-    * Function index for members
-    */
+     * Index method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
     public function index()
     {
+        $users = $this->paginate($this->Users);
 
+        $this->set(compact('users'));
+    }
+
+    /**
+     * View method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Renders view
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $user = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+
+        $this->set(compact('user'));
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $user = $this->Users->newEmptyEntity();
+        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+        $this->set(compact('user'));
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $user = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+        $this->set(compact('user'));
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $user = $this->Users->get($id);
+        if ($this->Users->delete($user)) {
+            $this->Flash->success(__('The user has been deleted.'));
+        } else {
+            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     /**

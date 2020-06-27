@@ -18,7 +18,7 @@
 										</div>
 										<div class="kt-login__form">
 											<?= $this->Form->create(null, array(
-												   'url'=>'/Users/login',
+												   'url'=>'/login',
 							                       'class'=>'kt-form',
 							                       'id'=>'login_form',
 							                       'method'=> 'Post'
@@ -32,7 +32,7 @@
 												</div>
 												<div class="kt-login__extra">
 													<label class="kt-checkbox">
-														<input type="checkbox" name="remember"> Remember me
+														<input type="checkbox" name="remember_me"> Remember me
 														<span></span>
 													</label>
 													<a href="javascript:;" id="kt_login_forgot">Forget Password ?</a>
