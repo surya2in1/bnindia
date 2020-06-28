@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Http\Cookie\cookie;
+use Cake\I18n\Time;
+use Cake\Http\Cookie\CookieCollection;
 
 /**
  * Users Controller
@@ -17,14 +20,33 @@ class UsersController extends AppController
     public function login()
     {
         $this->viewBuilder()->setLayout('login');
+
         if ($this->request->is('post')) {
             $post = $this->request->getData();
             $user = $this->Auth->identify();
-            // debug($user);
-            //  echo 'post <pre>';print_r($post);exit;
+             // debug($user);
             if ($user) {
-                //$this->_setCookie($this->Auth->user('id'));
                 $this->Auth->setUser($user);
+                //Check remeber me 
+                if (isset($post['remember_me']) && $post['remember_me'] == 'on') {            
+                    $cookie = new Cookie(
+                                            'remember_me', // name
+                                            serialize($post), // value
+                                            new time('+1 year'), // expiration time, if applicable
+                                            '/', // path, if applicable
+                                            'example.com', // domain, if applicable
+                                            false, // secure only?
+                                            true // http only ? );
+                    );
+
+                    $cookies = new CookieCollection([$cookie]);//To create new collection
+                    $cookies = $cookies->add($cookie);//to add in existing collection
+                       // $cookie = $cookies->get('remember_me');
+                    // echo "ss <pre>";print_r($cookie);exit;
+
+                }else{
+                   // setcookie ("remember_me_cookie",''); 
+                }
                 echo 1;exit;
             } else {
                 echo 0;exit;
@@ -32,19 +54,6 @@ class UsersController extends AppController
         } 
     }
 
-    protected function _setCookie($id) {
-        if (!$this->request->data['remember_me']) {
-            return false;
-        }
-        $data = array(
-            'User' => array(
-                'email' => $this->request->data['User']['email'],
-                'password' => $this->request->data['User']['password']
-                ));
-        
-        $this->Cookie->write('User', $data, true, '+2 week');
-        return true;
-    }
     /**
      * Index method
      *

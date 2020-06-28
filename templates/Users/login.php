@@ -23,12 +23,17 @@
 							                       'id'=>'login_form',
 							                       'method'=> 'Post'
 							                     )); ?>
-										
+												<?php 
+												    $cookie =  '';
+													if(isset($_COOKIE['remember_me_cookie']) && $_COOKIE['remember_me_cookie'] != ''){						
+													 $cookie = unserialize($_COOKIE['remember_me_cookie'], ["allowed_classes" => false]);
+													}
+												?>
 												<div class="form-group">
-													<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">
+													<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off" value="<?php if(isset($cookie['remember_me_email'])){ echo $cookie['remember_me_email']; } ?>">
 												</div>
 												<div class="form-group">
-													<input class="form-control form-control-last" type="password" placeholder="Password" name="password">
+													<input class="form-control form-control-last" type="password" placeholder="Password" name="password" value="<?php if(isset($cookie['remember_me_pwd'])){ echo $cookie['remember_me_pwd']; } ?>" >
 												</div>
 												<div class="kt-login__extra">
 													<label class="kt-checkbox">
