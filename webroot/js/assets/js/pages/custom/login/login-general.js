@@ -106,7 +106,7 @@ var KTLoginGeneral = function() {
                         setTimeout(function() {
                             btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
                             showErrorMsg(form, 'success', 'Login successfully.');
-                            window.location.href = "pages";
+                            window.location.href = "dashboard";
                         }, 2000); 
                     }else{
                     	// similate 2s delay
@@ -137,10 +137,13 @@ var KTLoginGeneral = function() {
                         email: true
                     },
                     password: {
-                        required: true
+                        required: true,
+                        minlength : 4
                     },
                     rpassword: {
-                        required: true
+                        required: true,
+                        minlength : 4,
+                        equalTo: "#password"
                     },
                     agree: {
                         required: true
@@ -155,22 +158,29 @@ var KTLoginGeneral = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 
             form.ajaxSubmit({
-                url: '',
+                url: 'Users/signup',
                 success: function(response, status, xhr, $form) {
-                	// similate 2s delay
-                	setTimeout(function() {
-	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-	                    form.clearForm();
-	                    form.validate().resetForm();
+                    if(response > 0){
+                    	// similate 2s delay
+                    	setTimeout(function() {
+                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                            form.clearForm();
+                            form.validate().resetForm();
 
-	                    // display signup form
-	                    displaySignInForm();
-	                    var signInForm = login.find('.kt-login__signin form');
-	                    signInForm.clearForm();
-	                    signInForm.validate().resetForm();
+                            // display signup form
+                            displaySignInForm();
+                            var signInForm = login.find('.kt-login__signin form');
+                            signInForm.clearForm();
+                            signInForm.validate().resetForm();
 
-	                    showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please check your email.');
-	                }, 2000);
+                            showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please login.');
+                        }, 1000);
+                    }else{
+                        setTimeout(function() {
+                             var signUpForm = login.find('.kt-login__signup form');
+                            showErrorMsg(signUpForm, 'error', 'Something is wrong, please try again.');
+                        }, 1000);
+                    }
                 }
             });
         });

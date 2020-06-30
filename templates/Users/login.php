@@ -24,6 +24,7 @@
 							                       'method'=> 'Post'
 							                     )); ?>
 												<?php 
+												// echo "ss <pre>";print_r($_COOKIE);exit;
 												    $cookie =  '';
 													if(isset($_COOKIE['remember_me_cookie']) && $_COOKIE['remember_me_cookie'] != ''){						
 													 $cookie = unserialize($_COOKIE['remember_me_cookie'], ["allowed_classes" => false]);
@@ -54,7 +55,9 @@
 											<div class="kt-login__desc">Enter your details to create your account:</div>
 										</div>
 										<div class="kt-login__form">
-											<form class="kt-form" action="">
+											<?= $this->Form->create(null, array(
+						                       'method'=> 'Post'
+						                     )); ?>
 												<div class="form-group">
 													<input class="form-control" type="text" placeholder="Fullname" name="fullname">
 												</div>
@@ -62,7 +65,7 @@
 													<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">
 												</div>
 												<div class="form-group">
-													<input class="form-control" type="password" placeholder="Password" name="password">
+													<input class="form-control" type="password" placeholder="Password" name="password" id="password">
 												</div>
 												<div class="form-group">
 													<input class="form-control form-control-last" type="password" placeholder="Confirm Password" name="rpassword">
@@ -77,7 +80,7 @@
 													<button id="kt_login_signup_submit" class="btn btn-brand btn-pill btn-elevate">Sign Up</button>
 													<button id="kt_login_signup_cancel" class="btn btn-outline-brand btn-pill">Cancel</button>
 												</div>
-											</form>
+											<?= $this->Form->end(); ?>
 										</div>
 									</div>
 									<div class="kt-login__forgot">

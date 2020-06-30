@@ -57,9 +57,22 @@ class AppController extends Controller
                 'action' => 'login'
             ],
             'unauthorizedRedirect' => '/Users/login',
+            // 'Authenticate.Cookie' => array(
+            //        'fields' => array(
+            //            'username' => 'email',
+            //           'password' => 'password'
+            //        ),
+            //        'userModel' => 'User',
+            //        'scope' => array('User.active' => 1),
+            //        'crypt' => 'rijndael', // Defaults to rijndael(safest), optionally set to 'cipher' if required
+            //        'cookie' => array(
+            //            'name' => 'RememberMe',
+            //            'time' => '+2 weeks',
+            //       )
+            //    )
         ]);
         
-        $this->Auth->allow(['login','index','add']);
+        $this->Auth->allow(['login','signup','add']);
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.

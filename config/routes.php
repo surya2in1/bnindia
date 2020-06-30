@@ -24,6 +24,8 @@
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
+use Cake\Http\Middleware\EncryptedCookieMiddleware;
+use Cake\Core\Configure;
 
 /*
  * The default class to use for all routes
@@ -51,11 +53,13 @@ $routes->scope('/', function (RouteBuilder $builder) {
         'httpOnly' => true,
     ]));
 
+    $builder->registerMiddleware('cookies', new EncryptedCookieMiddleware(['remember_me'],  base64_encode(random_bytes(32))));
+
     /*
      * Apply a middleware to the current route scope.
      * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`
      */
-    $builder->applyMiddleware('csrf');
+    $builder->applyMiddleware('csrf','cookies');
 
     /*
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
@@ -66,7 +70,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     
     $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/pages', ['controller' => 'Pages', 'action' => 'test']);
-
+    $builder->connect('/dashboard', ['controller' => 'Dashboard', 'action' => 'index']);
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
      */

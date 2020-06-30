@@ -14,13 +14,26 @@ use Cake\Http\Cookie\CookieCollection;
  */
 class UsersController extends AppController
 {
-    /**
+   
+   /**
     * Function login for members
     */
     public function login()
     {
+        if ($this->Auth->user()) {
+            return $this->redirect('/dashboard');
+        }
         $this->viewBuilder()->setLayout('login');
-
+        // $this->response = $this->response->withCookie(
+        //                     (new Cookie('remember_me'))
+        //                         ->withValue('fdfg')
+        //                         ->withExpiry(new Time('+1 month'))
+        //                         ->withHttpOnly(true)
+        //                 );
+         
+        // Cookie::read();
+//                             echo "ss <pre>";print_r($_COOKIE);
+// exit();
         if ($this->request->is('post')) {
             $post = $this->request->getData();
             $user = $this->Auth->identify();
@@ -28,21 +41,34 @@ class UsersController extends AppController
             if ($user) {
                 $this->Auth->setUser($user);
                 //Check remeber me 
-                if (isset($post['remember_me']) && $post['remember_me'] == 'on') {            
-                    $cookie = new Cookie(
-                                            'remember_me', // name
-                                            serialize($post), // value
-                                            new time('+1 year'), // expiration time, if applicable
-                                            '/', // path, if applicable
-                                            'example.com', // domain, if applicable
-                                            false, // secure only?
-                                            true // http only ? );
-                    );
+                if (isset($post['remember_me']) && $post['remember_me'] == 'on') {     
+                    $cookie = Cookie::create(
+                                    'remember_me',
+                                    'setdata',
+                                    [
+                                        'expires' => new time('+1 year'),
+                                        'path' => '/login',
+                                        'secure' => false,
+                                        'httponly' => false,
+                                    ]
+                                );
+       
+                    // $cookie = new Cookie(
+                    //                         'remember_me', // name
+                    //                         serialize($post), // value
+                    //                         new time('+1 year'), // expiration time, if applicable
+                    //                         '/', // path, if applicable
+                    //                         'http://localhost/bnindia/', // domain, if applicable
+                    //                         false, // secure only?
+                    //                         false // http only ? );
+                    // );
 
                     $cookies = new CookieCollection([$cookie]);//To create new collection
                     $cookies = $cookies->add($cookie);//to add in existing collection
-                       // $cookie = $cookies->get('remember_me');
-                    // echo "ss <pre>";print_r($cookie);exit;
+                       $cookie = $cookies->get('remember_me');
+                    //  echo "ss <pre>";print_r($cookie);
+                   //  echo "ss <pre>";print_r($_COOKIE);
+                   // exit;
 
                 }else{
                    // setcookie ("remember_me_cookie",''); 
@@ -83,10 +109,36 @@ class UsersController extends AppController
     }
 
     /**
-     * Add method
+     * signup method
      *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response|null|void Redirects on successful signup, renders view otherwise.
      */
+    public function signup()
+    {
+        $user = $this->Users->newEmptyEntity();
+        if ($this->request->is('post')) {
+            $postData = $this->request->getData();
+            $name = explode(' ', $postData['fullname']);
+            $postData['first_name'] = isset($name[0]) ? $name[0] : '';
+            $postData['middle_name'] = isset($name[1]) ? $name[1] : '';
+            $postData['last_name'] = isset($name[2]) ? $name[2] : '';
+            unset($postData['fullname']);
+            unset($postData['agree']);
+            unset($postData['rpassword']);
+            // echo '<pre>';print_r($this->request->getData());
+            // echo 'postData<pre>';print_r($postData);
+            // echo 'user<pre>';print_r($user);
+            // exit;
+             $user = $this->Users->patchEntity($user, $postData);
+            if ($this->Users->save($user)) {
+                echo 1;
+            }else{
+                echo 0;
+            }
+            exit;
+        }
+    }
+
     public function add()
     {
         $user = $this->Users->newEmptyEntity();

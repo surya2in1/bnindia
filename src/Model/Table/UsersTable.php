@@ -73,54 +73,54 @@ class UsersTable extends Table
         $validator
             ->scalar('middle_name')
             ->maxLength('middle_name', 100)
-            ->requirePresence('middle_name', 'create')
-            ->notEmptyString('middle_name');
+            ->requirePresence('middle_name', 'create');
+            // ->notEmptyString('middle_name');
 
         $validator
             ->scalar('last_name')
             ->maxLength('last_name', 100)
-            ->requirePresence('last_name', 'create')
-            ->notEmptyString('last_name');
+            ->requirePresence('last_name', 'create');
+            // ->notEmptyString('last_name');
 
         $validator
             ->scalar('address')
             ->maxLength('address', 300)
-            ->requirePresence('address', 'create')
+            // ->requirePresence('address', 'create')
             ->notEmptyString('address');
 
         $validator
             ->scalar('city')
             ->maxLength('city', 50)
-            ->requirePresence('city', 'create')
+            // ->requirePresence('city', 'create')
             ->notEmptyString('city');
 
         $validator
             ->scalar('state')
             ->maxLength('state', 50)
-            ->requirePresence('state', 'create')
+            // ->requirePresence('state', 'create')
             ->notEmptyString('state');
 
         $validator
             ->scalar('gender')
             ->maxLength('gender', 15)
-            ->requirePresence('gender', 'create')
+            // ->requirePresence('gender', 'create')
             ->notEmptyString('gender');
 
         $validator
             ->scalar('maritial_status')
             ->maxLength('maritial_status', 30)
-            ->requirePresence('maritial_status', 'create')
+            // ->requirePresence('maritial_status', 'create')
             ->notEmptyString('maritial_status');
 
         $validator
             ->date('date_of_birth')
-            ->requirePresence('date_of_birth', 'create')
+            // ->requirePresence('date_of_birth', 'create')
             ->notEmptyDate('date_of_birth');
 
         $validator
             ->scalar('mobile_number')
             ->maxLength('mobile_number', 15)
-            ->requirePresence('mobile_number', 'create')
+            // ->requirePresence('mobile_number', 'create')
             ->notEmptyString('mobile_number');
 
         $validator
