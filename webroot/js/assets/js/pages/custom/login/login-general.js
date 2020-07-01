@@ -161,25 +161,25 @@ var KTLoginGeneral = function() {
                 url: 'Users/signup',
                 success: function(response, status, xhr, $form) {
                     if(response > 0){
-                    	// similate 2s delay
-                    	setTimeout(function() {
-                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            form.clearForm();
-                            form.validate().resetForm();
+                        btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                        form.clearForm();
+                        form.validate().resetForm();
 
-                            // display signup form
-                            displaySignInForm();
-                            var signInForm = login.find('.kt-login__signin form');
-                            signInForm.clearForm();
-                            signInForm.validate().resetForm();
+                        // display signup form
+                        displaySignInForm();
+                        var signInForm = login.find('.kt-login__signin form');
+                        signInForm.clearForm();
+                        signInForm.validate().resetForm();
 
-                            showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please login.');
-                        }, 1000);
+                        showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please login.');
                     }else{
-                        setTimeout(function() {
-                             var signUpForm = login.find('.kt-login__signup form');
-                            showErrorMsg(signUpForm, 'error', 'Something is wrong, please try again.');
-                        }, 1000);
+                        btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                        var validation_err = 'Something is wrong, please try again.';
+                        if(response == 'email_unique'){
+                            validation_err = 'This email is already in use.';
+                        }
+                        var signUpForm = login.find('.kt-login__signup form');
+                        showErrorMsg(signUpForm, 'danger', validation_err);
                     }
                 }
             });

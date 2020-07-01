@@ -131,9 +131,15 @@ class UsersController extends AppController
             // exit;
              $user = $this->Users->patchEntity($user, $postData);
             if ($this->Users->save($user)) {
-                echo 1;
-            }else{
                 echo 0;
+            }else{
+                $validationErrors = $user->getErrors();
+                // echo '<pre>';print_r($user->getErrors());
+                if(isset($validationErrors['email']['_isUnique']) && !empty($validationErrors['email']['_isUnique'])){
+                    echo 'email_unique';
+                }else{
+                    echo 0;
+                }
             }
             exit;
         }
