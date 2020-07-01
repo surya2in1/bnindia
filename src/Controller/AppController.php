@@ -72,12 +72,15 @@ class AppController extends Controller
             //    )
         ]);
         
-        $this->Auth->allow(['login','signup','add']);
+        $this->Auth->allow(['login','signup','add','forgotPassword','resetPassword']);
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+        // echo '<pre>';print_r($this->Auth->user('first_name'));exit;
+        $this->set('Auth', $this->Auth);
     }
+
 }

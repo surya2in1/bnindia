@@ -209,7 +209,7 @@ var KTLoginGeneral = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 
             form.ajaxSubmit({
-                url: '',
+                url: 'Users/forgotPassword',
                 success: function(response, status, xhr, $form) {
                 	// similate 2s delay
                 	setTimeout(function() {
@@ -230,6 +230,50 @@ var KTLoginGeneral = function() {
         });
     }
 
+    var handleResetSubmit = function() {
+        $('#kt_login_reset_submit').click(function(e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var form = $(this).closest('form');
+
+            form.validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true
+                    }
+                }
+            });
+
+            if (!form.valid()) {
+                return;
+            }
+
+            btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
+
+            form.ajaxSubmit({
+                url: 'Users/resetPassword',
+                success: function(response, status, xhr, $form) {
+                    // similate 2s delay
+                    setTimeout(function() {
+                        btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false); // remove
+                        form.clearForm(); // clear form
+                        form.validate().resetForm(); // reset validation states
+
+                        // display signup form
+                        displaySignInForm();
+                        var signInForm = login.find('.kt-login__signin form');
+                        signInForm.clearForm();
+                        signInForm.validate().resetForm();
+
+                        showErrorMsg(signInForm, 'success', 'Cool! Password reset successfully.');
+                    }, 2000);
+                }
+            });
+        });
+    }
+
     // Public Functions
     return {
         // public functions
@@ -238,6 +282,7 @@ var KTLoginGeneral = function() {
             handleSignInFormSubmit();
             handleSignUpFormSubmit();
             handleForgotFormSubmit();
+            handleResetSubmit();
         }
     };
 }();

@@ -5,6 +5,13 @@ namespace App\Controller;
 use Cake\Http\Cookie\cookie;
 use Cake\I18n\Time;
 use Cake\Http\Cookie\CookieCollection;
+use Cake\Mailer\Email;
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Utility\Security;
+use Cake\ORM\TableRegistry;
+use Cake\Mailer\TransportFactory;
+use Cake\Mailer\Transport;
+
 
 /**
  * Users Controller
@@ -210,5 +217,80 @@ class UsersController extends AppController
     public function logout()
     {
         return $this->redirect($this->Auth->logout());
+    }
+
+    /**
+    * Function forgot password
+    */
+    public function forgotPassword()
+    {
+        // Please specify your Mail Server - Example: mail.example.com.
+        ini_set("SMTP","jayshris22@gmail.com");
+
+        // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
+        ini_set("smtp_port","25");
+
+        // Please specify the return address to use
+        ini_set('sendmail_from', 'jayshris22@gmail.com');
+
+        if ($this->request->is('post')) {
+            $email = $this->request->getData('email');
+            $mytocken = Security::hash(Security::randomBytes(25));
+
+            $UsersTable = TableRegistry::get('Users');
+            $user = $UsersTable->find('all')->where(['email'=>$email])->first();
+            $user->token = $mytocken;
+            if($UsersTable->save($user)){
+                //send email 
+                // TransportFactory::setConfig('mailtrap', [
+                //   'host' => 'smtp.mailtrap.io',
+                //   'port' => 2525,
+                //   'username' => '8f7ca86b8c979f',
+                //   'password' => '006f3da61f5887',
+                //   'className' => 'Smtp'
+                // ]);
+
+                TransportFactory::setConfig('gmail', [
+                  'host' => 'ssl://smtp.gmail.com',
+                  'port' => 25,
+                  'username' => 'jayshris22@gmail.com',
+                  'password' => 'jayshri2121991',
+                  'className' => 'Smtp'
+                ]);
+                
+                $msg= 'Hello '.$email.'<br/> Please click link below to reset your password<br/><br/><a href="http://localhost:8765/users/resetPassword'.$mytocken.'">Reset Password</a>';
+                
+                Email::deliver($email, 'Please confirm your reset password', $msg, ['from' => 'votreidentifiant@gmail.com']);
+
+                // $email = new Email('default');
+                // $email->transport('mailtrap');
+                // $email->emailFormat('html');
+                // $email->from('jayshris22@gmail.com','Jayshri');
+                // $email->subject('Please confirm your reset password');
+                // $email->to($email);
+                // $email->send($msg);
+            } 
+        }
+    }
+
+    /**
+    * Function reset password
+    */
+    public function resetPassword($token)
+    {
+        if ($this->request->is('post')) {
+            $password = $this->request->getData('password');
+            $hasher = new DefaultPasswordHasher();
+            $mypassword= $hasher->hash($password);
+            $UsersTable = TableRegistry::get('Users');
+            $user = $UsersTable->find('all')->where(['email'=>$email])->first();
+            $user->password = $mypassword;
+            if($UsersTable->save($user)){
+                echo 1;
+            }else{
+                echo 0;
+            }
+            exit;
+        }
     }
 }
