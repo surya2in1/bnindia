@@ -225,13 +225,13 @@ class UsersController extends AppController
     public function forgotPassword()
     {
         // Please specify your Mail Server - Example: mail.example.com.
-        ini_set("SMTP","jayshris22@gmail.com");
+        ini_set("SMTP","riyajaya692@gmail.com");
 
         // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
         ini_set("smtp_port","25");
 
         // Please specify the return address to use
-        ini_set('sendmail_from', 'jayshris22@gmail.com');
+        ini_set('sendmail_from', 'riyajaya692@gmail.com');
 
         if ($this->request->is('post')) {
             $email = $this->request->getData('email');
@@ -253,14 +253,19 @@ class UsersController extends AppController
                 TransportFactory::setConfig('gmail', [
                   'host' => 'ssl://smtp.gmail.com',
                   'port' => 25,
-                  'username' => 'jayshris22@gmail.com',
-                  'password' => 'jayshri2121991',
+                  'username' => 'riyajaya692@gmail.com',
+                  'password' => 'jayshri21',
                   'className' => 'Smtp'
                 ]);
                 
-                $msg= 'Hello '.$email.'<br/> Please click link below to reset your password<br/><br/><a href="http://localhost:8765/users/resetPassword'.$mytocken.'">Reset Password</a>';
+                $msg= 'Hello '.$email.'<br/> Please click link below to reset your password<br/><br/><a href="http://localhost/bnindia/resetpassword/'.$mytocken.'">Reset Password</a>';
                 
-                Email::deliver($email, 'Please confirm your reset password', $msg, ['from' => 'votreidentifiant@gmail.com']);
+                try {
+                    Email::deliver($email, 'Please confirm your reset password', $msg, ['from' => 'votreidentifiant@gmail.com']);
+                    $response = 1;
+                } catch (Exception $e) {
+                    $response = 0;
+                }
 
                 // $email = new Email('default');
                 // $email->transport('mailtrap');
@@ -271,6 +276,7 @@ class UsersController extends AppController
                 // $email->send($msg);
             } 
         }
+        echo $response;exit;
     }
 
     /**
@@ -278,13 +284,16 @@ class UsersController extends AppController
     */
     public function resetPassword($token)
     {
+        if ($this->Auth->user()) {
+            return $this->redirect('/dashboard');
+        }
+        $this->set('token',$token);
+        $this->viewBuilder()->setLayout('login');
         if ($this->request->is('post')) {
             $password = $this->request->getData('password');
-            $hasher = new DefaultPasswordHasher();
-            $mypassword= $hasher->hash($password);
             $UsersTable = TableRegistry::get('Users');
-            $user = $UsersTable->find('all')->where(['email'=>$email])->first();
-            $user->password = $mypassword;
+            $user = $UsersTable->find('all')->where(['token'=>$token])->first();
+            $user->password = $password;
             if($UsersTable->save($user)){
                 echo 1;
             }else{

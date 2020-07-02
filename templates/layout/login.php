@@ -16,6 +16,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
 	<!-- begin::Head -->
 	<head>
+		<base href="http://localhost/bnindia/" target="_blank">
 		<meta charset="utf-8" />
 		<title>Login Page</title>
 		<meta name="description" content="Login page">
