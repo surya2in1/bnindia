@@ -937,14 +937,19 @@
 										<span class="kt-header__topbar-welcome kt-hidden-mobile">Hi,</span>
 										<span class="kt-header__topbar-username kt-hidden-mobile">
                                             <?php  $username = '';
-                                                if ($Auth->user()) { $username = ucfirst($Auth->user('first_name')); }
+                                                   $firstCharacterUser = 'User';
+                                                if ($Auth->user()) { $username = ucfirst($Auth->user('first_name')); 
+                                                     $firstCharacterUser = substr($username, 0, 1);
+                                                }
                                                 echo $username;
                                             ?>
                                         </span>
 										<img class="kt-hidden" alt="Pic" src="assets/media/users/300_25.jpg">
 
 										<!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-										<span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold">S</span>
+										<span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold">
+                                            <?php echo $firstCharacterUser; ?>
+                                        </span>
 									</div>
 								</div>
 								<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
@@ -955,10 +960,10 @@
 											<img class="kt-hidden" alt="Pic" src="assets/media/users/300_25.jpg">
 
 											<!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-											<span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">S</span>
+											<span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success"><?= $firstCharacterUser; ?></span>
 										</div>
 										<div class="kt-user-card__name">
-											Sean Stone
+											<?= $username; ?>
 										</div>
 										<div class="kt-user-card__badge">
 											<span class="btn btn-success btn-sm btn-bold btn-font-md">23 messages</span>
@@ -969,7 +974,7 @@
 
 									<!--begin: Navigation -->
 									<div class="kt-notification">
-										<a href="custom/apps/user/profile-1/personal-information.html" class="kt-notification__item">
+										<a href="personalinfo" class="kt-notification__item">
 											<div class="kt-notification__item-icon">
 												<i class="flaticon2-calendar-3 kt-font-success"></i>
 											</div>

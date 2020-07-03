@@ -302,4 +302,27 @@ class UsersController extends AppController
             exit;
         }
     }
+
+    /**
+    * Function personal info
+    */
+    public function personalinfo(){
+        $this->viewBuilder()->setLayout('admin');
+        $id = $this->Auth->user('id');
+        $user = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+        //echo '<pre>';print_r($user);exit();
+        $this->set('user',$user);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            echo '<pre>';print_r($this->request->getData());exit;
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+    }
 }

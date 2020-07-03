@@ -72,6 +72,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/pages', ['controller' => 'Pages', 'action' => 'test']);
     $builder->connect('/dashboard', ['controller' => 'Dashboard', 'action' => 'index']);
     $builder->connect('/resetpassword/*', ['controller' => 'Users', 'action' => 'resetPassword']);
+    $builder->connect('/personalinfo', ['controller' => 'Users', 'action' => 'personalinfo']);
+
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
      */

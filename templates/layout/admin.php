@@ -159,7 +159,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <!--begin::Page Scripts(used by this page) -->
         <?= $this->Html->script('assets/js/pages/dashboard.js') ?>
 
-        <?= $this->fetch('script') ?>
+        <?= $this->Html->script('assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js') ?>
+        
+         <?= $this->Html->script('assets/js/pages/custom/user/profile.js') ?>
+
+         <?= $this->Html->script('form_validation.js') ?>
+         
+         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>
 </body>

@@ -3,19 +3,48 @@
 var KTFormControls = function () {
     // Private functions
 
-    var login_form = function () {
-        $( "#login_form" ).validate({
+    var user_profile = function () {
+        $( "#user_profile" ).validate({
             // define validation rules
             rules: {
                 //= Client Information(step 3)
-                email: {
+                first_name: {
                     required: true,
-                    email: true
+                    maxlength: 20
                 },
-                password: {
+                middle_name: {
                     required: true,
-                    maxlength: 8
-                }
+                    maxlength: 20
+                },
+                last_name: {
+                    required: true,
+                    maxlength: 20
+                },
+                city:{
+                    lettersonly: true
+                },
+                city:{
+                    lettersonly: true
+                },
+                state:{
+                    lettersonly: true
+                },
+                accupation:{
+                    lettersonly: true
+                },
+                income_amt:{
+                    number: true
+                },
+                mobile_number:{
+                    number: true,
+                    maxlength: 10
+                },
+                nominee_name:{
+                    lettersonly: true
+                },
+                nominee_relation:{
+                    lettersonly: true
+                },
             },
 
             //display error alert on form submit
@@ -34,7 +63,7 @@ var KTFormControls = function () {
             },
 
             submitHandler: function (form) {
-                //form[0].submit(); // submit the form
+                $('#user_profile').submit(); // submit the form
                 swal.fire({
                     "title": "",
                     "text": "Form validation passed. All good!",
@@ -50,7 +79,7 @@ var KTFormControls = function () {
     return {
         // public functions
         init: function() {
-            login_form();
+            user_profile();
         }
     };
 }();
