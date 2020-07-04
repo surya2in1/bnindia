@@ -36,6 +36,8 @@
 								<h3 class="kt-portlet__head-title">Personal Information <small>update your personal informaiton</small></h3>
 							</div>
 						</div>
+						<?= $this->Flash->render() ?>
+						
 						<?= $this->Form->create(null, array(
 											   'url'=>'/personalinfo',
 						                       'class'=>'kt-form kt-form--label-right',
@@ -53,24 +55,25 @@
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">Profile picture</label>
 											<div class="col-lg-9 col-xl-6">
 												<div class="kt-avatar kt-avatar--outline" id="kt_user_avatar">
 													<?php 
 													$profile_picture = 'assets/media/users/100_13.jpg';
 													if($user->profile_picture){
-														$profile_picture = $user->profile_picture;
+														$profile_picture = 'img/user_imgs/'.$user->profile_picture;
 													}
 													?>
 													<div class="kt-avatar__holder" style="background-image: url(<?= $profile_picture?>)"></div>
 													<label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
 														<i class="fa fa-pen"></i>
-														<input type="file" name="profile_picture" value="<?= $user->profile_picture; ?>" accept=".png, .jpg, .jpeg">
+														<input type="file" name="profile_picture"/>
 													</label>
 													<span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
 														<i class="fa fa-times"></i>
 													</span>
 												</div>
+												<div id="profile_picture-error2" class="error invalid-feedback">Please enter a value with a valid extension.</div>
 											</div>
 										</div>
 										<div class="form-group row">
@@ -142,7 +145,13 @@
 											<label class="col-form-label col-lg-3 col-xl-3">Date of bith</label>
 											<div class="col-lg-9 col-xl-6">
 												<div class="input-group date">
-													<input type="text" class="form-control" readonly="" value="<?= $user->date_of_birth; ?>" id="kt_datepicker_3" name="date_of_birth">
+													<?php 
+														$dob = '';
+														if(strtotime($user->date_of_birth) > 0){
+															$dob = date('m/d/Y',strtotime($user->date_of_birth));
+														}
+													?>
+													<input type="text" class="form-control" readonly="" value="<?= $dob; ?>" id="kt_datepicker_3" name="date_of_birth">
 													<div class="input-group-append">
 														<span class="input-group-text">
 															<i class="la la-calendar"></i>
@@ -208,7 +217,13 @@
 											<label class="col-form-label col-lg-3 col-xl-3">Nominee Date of bith</label>
 											<div class="col-lg-9 col-xl-6">
 												<div class="input-group date">
-													<input type="text" class="form-control" readonly="" value="<?= $user->nominee_dob; ?>" id="nominee_dob" name="nominee_dob">
+													<?php 
+														$nominee_dob = '';
+														if(strtotime($user->nominee_dob) > 0){
+															$nominee_dob = date('m/d/Y',strtotime($user->nominee_dob));
+														}
+													?>
+													<input type="text" class="form-control" readonly="" value="<?= $nominee_dob; ?>" id="nominee_dob" name="nominee_dob">
 													<div class="input-group-append">
 														<span class="input-group-text">
 															<i class="la la-calendar"></i>

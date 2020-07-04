@@ -138,7 +138,7 @@ class UsersController extends AppController
             // exit;
              $user = $this->Users->patchEntity($user, $postData);
             if ($this->Users->save($user)) {
-                echo 0;
+                echo 1;
             }else{
                 $validationErrors = $user->getErrors();
                 // echo '<pre>';print_r($user->getErrors());
@@ -315,12 +315,47 @@ class UsersController extends AppController
         //echo '<pre>';print_r($user);exit();
         $this->set('user',$user);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            echo '<pre>';print_r($this->request->getData());exit;
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            echo '<pre>';print_r($this->request->getData());
+            $post = $this->request->getData();
+            if(strtotime($post['date_of_birth']) > 0){
+                $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
+            }
+            if(strtotime($post['nominee_dob']) > 0){
+                $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
+            }
+            $profile_picture_data = $post['profile_picture'];
+            unset($post['profile_picture']);
+            $user = $this->Users->patchEntity($user, $post);
+            $validationErrors = $user->getErrors();
+            //echo 'validationErrors <pre>';print_r($validationErrors);exit;
+            if(empty($validationErrors)){
+                $profile_picture = $profile_picture_data;
+                $name = $profile_picture->getClientFilename();
+                if($name){
+                    $sffledStr= str_shuffle('abscdefghij');
+                    $uniqueString = md5(time().$sffledStr);
+                    $type = $profile_picture->getClientMediaType();
+                    $size = $profile_picture->getSize();
+                    $tmpName = $profile_picture->getStream()->getMetadata('uri');
+                    if($name){
+                        //get exsiting image from db 
+                        $existing_pic = $user->profile_picture;
+                        if($existing_pic){
+                            unlink( WWW_ROOT.'img'.DS."user_imgs".DS.$existing_pic);
+                        }
+                        $targetPath = WWW_ROOT.'img'.DS."user_imgs".DS.$uniqueString.'_'.$name;
+                        $profile_picture->moveTo($targetPath);
+                        $user->profile_picture = $uniqueString.'_'.$name;
+                    }
+
+                }
+                          
+            }
+           // echo 'user <pre>';print_r($user);exit;
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'personalinfo']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }

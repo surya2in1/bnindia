@@ -86,19 +86,19 @@ class UsersTable extends Table
             ->scalar('address')
             ->maxLength('address', 300)
             // ->requirePresence('address', 'create')
-            ->notEmptyString('address');
+            ->allowEmptyString('address');
 
         $validator
             ->scalar('city')
             ->maxLength('city', 50)
             // ->requirePresence('city', 'create')
-            ->notEmptyString('city');
+            ->allowEmptyString('city');
 
         $validator
             ->scalar('state')
             ->maxLength('state', 50)
             // ->requirePresence('state', 'create')
-            ->notEmptyString('state');
+            ->allowEmptyString('state');
 
         $validator
             ->scalar('gender')
@@ -115,13 +115,13 @@ class UsersTable extends Table
         $validator
             ->date('date_of_birth')
             // ->requirePresence('date_of_birth', 'create')
-            ->notEmptyDate('date_of_birth');
+            ->allowEmptyString('date_of_birth');
 
         $validator
             ->scalar('mobile_number')
-            ->maxLength('mobile_number', 15)
+            ->maxLength('mobile_number', 10)
             // ->requirePresence('mobile_number', 'create')
-            ->notEmptyString('mobile_number');
+            ->allowEmptyString('mobile_number');
 
         $validator
             ->email('email')
@@ -168,8 +168,8 @@ class UsersTable extends Table
             ->allowEmptyString('other_document');
 
         $validator
-            ->scalar('profile_picture')
-            ->maxLength('profile_picture', 50)
+            // ->scalar('profile_picture')
+            // ->maxLength('profile_picture', 50)
             ->allowEmptyFile('profile_picture');
 
         $validator

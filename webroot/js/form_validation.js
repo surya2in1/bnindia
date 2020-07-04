@@ -45,8 +45,21 @@ var KTFormControls = function () {
                 nominee_relation:{
                     lettersonly: true
                 },
+                profile_picture: { extension: "png|jpe?g" }
             },
+            errorPlacement: function(error, element) {
+                    if (element.attr("name") == "profile_picture" ) {
+                        $("#profile_picture-error").text('');
+                        $("#profile_picture-error2").text($(error).text());
+                        $('html, body').animate({
+                            scrollTop: $("#kt_content").offset().top
+                        }, 1000);
+                    }else{
+                        $("#profile_picture-error2").text('');
+                    }
+                },
 
+            messages: { inputimage: "File must be JPG, JPEG or PNG, less than 1MB" },
             //display error alert on form submit
             invalidHandler: function(event, validator) {
                 swal.fire({
@@ -63,15 +76,16 @@ var KTFormControls = function () {
             },
 
             submitHandler: function (form) {
-                $('#user_profile').submit(); // submit the form
-                swal.fire({
-                    "title": "",
-                    "text": "Form validation passed. All good!",
-                    "type": "success",
-                    "confirmButtonClass": "btn btn-secondary"
-                });
+                //alert('sdf');exit;
+                form.submit(); // submit the form
+                // swal.fire({
+                //     "title": "",
+                //     "text": "Form validation passed. All good!",
+                //     "type": "success",
+                //     "confirmButtonClass": "btn btn-secondary"
+                // });
 
-                return false;
+                // return false;
             }
         });
     }
