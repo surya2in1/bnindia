@@ -129,8 +129,17 @@ var KTLoginGeneral = function() {
 
             form.validate({
                 rules: {
-                    fullname: {
-                        required: true
+                    first_name: {
+                        required: true,
+                        lettersonly: true
+                    },
+                    middle_name: {
+                        required: true,
+                        lettersonly: true
+                    },
+                    last_name: {
+                        required: true,
+                        lettersonly: true
                     },
                     email: {
                         required: true,

@@ -125,17 +125,8 @@ class UsersController extends AppController
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $postData = $this->request->getData();
-            $name = explode(' ', $postData['fullname']);
-            $postData['first_name'] = isset($name[0]) ? $name[0] : '';
-            $postData['middle_name'] = isset($name[1]) ? $name[1] : '';
-            $postData['last_name'] = isset($name[2]) ? $name[2] : '';
-            unset($postData['fullname']);
             unset($postData['agree']);
             unset($postData['rpassword']);
-            // echo '<pre>';print_r($this->request->getData());
-            // echo 'postData<pre>';print_r($postData);
-            // echo 'user<pre>';print_r($user);
-            // exit;
              $user = $this->Users->patchEntity($user, $postData);
             if ($this->Users->save($user)) {
                 echo 1;

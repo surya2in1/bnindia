@@ -59,7 +59,7 @@
 											<div class="col-lg-9 col-xl-6">
 												<div class="kt-avatar kt-avatar--outline" id="kt_user_avatar">
 													<?php 
-													$profile_picture = 'assets/media/users/100_13.jpg';
+													$profile_picture = 'assets/media/users/default.jpg';
 													if($user->profile_picture){
 														$profile_picture = 'img/user_imgs/'.$user->profile_picture;
 													}

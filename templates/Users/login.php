@@ -59,7 +59,13 @@
 						                       'method'=> 'Post'
 						                     )); ?>
 												<div class="form-group">
-													<input class="form-control" type="text" placeholder="Fullname" name="fullname">
+													<input class="form-control" type="text" placeholder="First name" name="first_name">
+												</div>
+												<div class="form-group">
+													<input class="form-control" type="text" placeholder="Middle name" name="middle_name">
+												</div>
+												<div class="form-group">
+													<input class="form-control" type="text" placeholder="Last name" name="last_name">
 												</div>
 												<div class="form-group">
 													<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">

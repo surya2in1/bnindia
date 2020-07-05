@@ -24,7 +24,7 @@
 						<div class="kt-widget__head">
 							<div class="kt-widget__media">
 								<?php 
-								$profile_picture = 'assets/media/users/100_13.jpg';
+								$profile_picture = 'assets/media/users/default.jpg';
 								if($user->profile_picture){
 									$profile_picture = 'img/user_imgs/'.$user->profile_picture;
 								}
