@@ -201,6 +201,12 @@
 												<span class="form-text text-muted">We'll never share your email with anyone else.</span>
 											</div>
 										</div>
+										<div class="row">
+											<label class="col-xl-3"></label>
+											<div class="col-lg-9 col-xl-6">
+												<h3 class="kt-section__title kt-section__title-sm">Nominee Info:</h3>
+											</div>
+										</div>
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Nominee name</label>
 											<div class="col-lg-9 col-xl-6">
@@ -231,6 +237,24 @@
 													</div>
 												</div>
 												<span class="form-text text-muted">Enable clear and today helper buttons</span>
+											</div>
+										</div>
+										<div class="row">
+											<label class="col-xl-3"></label>
+											<div class="col-lg-9 col-xl-6">
+												<h3 class="kt-section__title kt-section__title-sm">Important Documents:</h3>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-xl-3 col-lg-3 col-form-label">Address Proof</label>
+											<div class="col-lg-9 col-xl-6">
+												<!-- <input class="form-control" type="file" value="<?= $user->address_proof; ?>" name="address_proof"> -->
+												<div class="dropzone dropzone-default" id="kt_dropzone_1">
+													<div class="dropzone-msg dz-message needsclick">
+														<h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
+														<span class="dropzone-msg-desc">This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.</span>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>

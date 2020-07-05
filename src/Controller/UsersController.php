@@ -306,7 +306,7 @@ class UsersController extends AppController
         //echo '<pre>';print_r($user);exit();
         $this->set('user',$user);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            echo '<pre>';print_r($this->request->getData());
+            //echo '<pre>';print_r($this->request->getData());
             $post = $this->request->getData();
             if(strtotime($post['date_of_birth']) > 0){
                 $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
@@ -325,18 +325,20 @@ class UsersController extends AppController
                 if($name){
                     $sffledStr= str_shuffle('abscdefghij');
                     $uniqueString = md5(time().$sffledStr);
-                    $type = $profile_picture->getClientMediaType();
-                    $size = $profile_picture->getSize();
-                    $tmpName = $profile_picture->getStream()->getMetadata('uri');
                     if($name){
+                        $path = WWW_ROOT.'img'.DS."user_imgs";
+                        if (!file_exists($path)) {
+                            mkdir($path, 0777, true);
+                        }
                         //get exsiting image from db 
                         $existing_pic = $user->profile_picture;
                         if($existing_pic){
-                            unlink( WWW_ROOT.'img'.DS."user_imgs".DS.$existing_pic);
+                            unlink( $path.DS.$existing_pic);
                         }
-                        $targetPath = WWW_ROOT.'img'.DS."user_imgs".DS.$uniqueString.'_'.$name;
+                        $filename = $uniqueString.'_'.$name;
+                        $targetPath = $path.DS.$filename;
                         $profile_picture->moveTo($targetPath);
-                        $user->profile_picture = $uniqueString.'_'.$name;
+                        $user->profile_picture = $filename;
                     }
 
                 }
@@ -349,6 +351,40 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'personalinfo']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+    }
+
+    public function userDocUpload($docType){
+        $post = $this->request->getData('file');
+        $name = $post->getClientFilename();
+        if($name){
+        // echo $name.'<pre>';print_r($post);
+            $sffledStr= str_shuffle('askn');
+            $uniqueString = md5(time().$sffledStr);
+            $id = $this->Auth->user('id');
+            $user = $this->Users->get($id);
+
+            //create path
+            $path = WWW_ROOT.DS.$docType;
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            //get exsiting doc from db 
+            $existing_doc = $user->$docType;
+            if (($existing_doc) && file_exists($path.DS.$existing_doc)){
+                unlink( $path.DS.$existing_doc);
+            }
+            
+            $filename = $id.'_'.$uniqueString.'_'.$name;
+            $targetPath = $path.DS.$filename;
+            $post->moveTo($targetPath);
+            $user->$docType = $filename;
+            if ($this->Users->save($user)) {
+                echo 1;
+            }else{
+                echo 0;
+            }
+            exit;
         }
     }
 }

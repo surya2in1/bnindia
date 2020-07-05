@@ -164,6 +164,9 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
          <?= $this->Html->script('assets/js/pages/custom/user/profile.js') ?>
 
          <?= $this->Html->script('form_validation.js') ?>
+
+         <?= $this->Html->script('assets/js/pages/crud/file-upload/dropzonejs.js') ?>
+         
          
          <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
