@@ -248,13 +248,24 @@
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Address Proof</label>
 											<div class="col-lg-9 col-xl-6">
-												<!-- <input class="form-control" type="file" value="<?= $user->address_proof; ?>" name="address_proof"> -->
-												<div class="dropzone dropzone-default" id="kt_dropzone_1">
+												 <input class="form-control" type="file" value="<?= $user->address_proof; ?>" name="address_proof"> 
+												<!-- <div class="dropzone dropzone-default" id="kt_dropzone_1">
 													<div class="dropzone-msg dz-message needsclick">
 														<h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
-														<span class="dropzone-msg-desc">This is just a demo dropzone. Selected files are <strong>not</strong> actually uploaded.</span>
 													</div>
-												</div>
+												</div> -->
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-xl-3 col-lg-3 col-form-label">Photo Proof</label>
+											<div class="col-lg-9 col-xl-6">
+												 <input class="form-control" type="file" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-xl-3 col-lg-3 col-form-label">Other Document</label>
+											<div class="col-lg-9 col-xl-6">
+												 <input class="form-control" type="file" value="<?= $user->other_document; ?>" name="other_document"> 
 											</div>
 										</div>
 									</div>

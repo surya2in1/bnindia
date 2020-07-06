@@ -314,36 +314,39 @@ class UsersController extends AppController
             if(strtotime($post['nominee_dob']) > 0){
                 $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
             }
+            //upload profile pic
             $profile_picture_data = $post['profile_picture'];
+            $address_proof = $post['address_proof'];
+            $photo_proof = $post['photo_proof'];
+            $other_document = $post['other_document'];
+
             unset($post['profile_picture']);
+            unset($post['address_proof']);
+            unset($post['photo_proof']);
+            unset($post['other_document']);
             $user = $this->Users->patchEntity($user, $post);
             $validationErrors = $user->getErrors();
             //echo 'validationErrors <pre>';print_r($validationErrors);exit;
             if(empty($validationErrors)){
                 $profile_picture = $profile_picture_data;
-                $name = $profile_picture->getClientFilename();
-                if($name){
-                    $sffledStr= str_shuffle('abscdefghij');
-                    $uniqueString = md5(time().$sffledStr);
-                    if($name){
-                        $path = WWW_ROOT.'img'.DS."user_imgs";
-                        if (!file_exists($path)) {
-                            mkdir($path, 0777, true);
-                        }
-                        //get exsiting image from db 
-                        $existing_pic = $user->profile_picture;
-                        if($existing_pic){
-                            unlink( $path.DS.$existing_pic);
-                        }
-                        $filename = $uniqueString.'_'.$name;
-                        $targetPath = $path.DS.$filename;
-                        $profile_picture->moveTo($targetPath);
-                        $user->profile_picture = $filename;
-                    }
-
+                if($profile_picture_data->getClientFilename()){
+                   $user->profile_picture = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs"); 
                 }
                           
+                //upload documnts\
+                if($post['address_proof']->getClientFilename()){
+                    $user->address_proof = $this->userDocUpload('address_proof',$address_proof);
+                }
+
+                if($post['photo_proof']->getClientFilename()){
+                    $user->photo_proof = $this->userDocUpload('photo_proof',$photo_proof);
+                }
+                if($post['other_document']->getClientFilename()){
+                    $user->other_document = $this->userDocUpload('other_document',$other_document);
+                }
             }
+
+
            // echo 'user <pre>';print_r($user);exit;
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
@@ -354,9 +357,9 @@ class UsersController extends AppController
         }
     }
 
-    public function userDocUpload($docType){
-        $post = $this->request->getData('file');
+    public function userDocUpload($docType, $post, $path = '' ){
         $name = $post->getClientFilename();
+        $filename = '';
         if($name){
         // echo $name.'<pre>';print_r($post);
             $sffledStr= str_shuffle('askn');
@@ -365,7 +368,9 @@ class UsersController extends AppController
             $user = $this->Users->get($id);
 
             //create path
-            $path = WWW_ROOT.DS.$docType;
+            if(empty($path)){
+                $path = WWW_ROOT.DS.$docType;
+            }
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
@@ -378,13 +383,7 @@ class UsersController extends AppController
             $filename = $id.'_'.$uniqueString.'_'.$name;
             $targetPath = $path.DS.$filename;
             $post->moveTo($targetPath);
-            $user->$docType = $filename;
-            if ($this->Users->save($user)) {
-                echo 1;
-            }else{
-                echo 0;
-            }
-            exit;
         }
+        return $filename;
     }
 }
