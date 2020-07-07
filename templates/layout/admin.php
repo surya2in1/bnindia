@@ -51,7 +51,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->css('assets/css/skins/header/menu/light.css') ?>
     <?= $this->Html->css('assets/css/skins/brand/dark.css') ?>
     <?= $this->Html->css('assets/css/skins/aside/dark.css') ?>
-
+    <?= $this->Html->css('custom.css') ?>
     <!--end::Layout Skins -->
 
     <?= $this->fetch('meta') ?>

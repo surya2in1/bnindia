@@ -151,7 +151,7 @@
 															$dob = date('m/d/Y',strtotime($user->date_of_birth));
 														}
 													?>
-													<input type="text" class="form-control" readonly="" value="<?= $dob; ?>" id="kt_datepicker_3" name="date_of_birth">
+													<input type="text" class="form-control" readonly="" value="<?= $dob; ?>" id="date_of_birth" name="date_of_birth">
 													<div class="input-group-append">
 														<span class="input-group-text">
 															<i class="la la-calendar"></i>
@@ -159,6 +159,12 @@
 													</div>
 												</div>
 												<span class="form-text text-muted">Enable clear and today helper buttons</span>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-xl-3 col-lg-3 col-form-label">Address</label>
+											<div class="col-lg-9 col-xl-6">
+												<input class="form-control" type="text" value="<?= $user->address; ?>" name="address">
 											</div>
 										</div>
 										<div class="form-group row">
@@ -220,7 +226,7 @@
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-form-label col-lg-3 col-xl-3">Nominee Date of bith</label>
+											<label class="col-form-label col-lg-3 col-xl-3">Nominee date of bith</label>
 											<div class="col-lg-9 col-xl-6">
 												<div class="input-group date">
 													<?php 
@@ -248,7 +254,28 @@
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Address Proof</label>
 											<div class="col-lg-9 col-xl-6">
-												 <input class="form-control" type="file" value="<?= $user->address_proof; ?>" name="address_proof"> 
+												<?php if($user->address_proof){ ?>
+												<div class="existing-address-doc" >
+													<div class="kt-widget__media">
+														<img src="users_docs/address_proof/<?= $user->address_proof; ?>"width="25%" alt="image">
+													</div>
+													<br/>
+													<button type="button" class="btn btn-success btn-sm" onClick="(function(){
+													    $('.existing-address-doc').addClass('hide');
+													    $('.new-address-doc').removeClass('hide');
+													    return false;
+													})();return false;">Change</button>
+												</div>
+												<div class="new-address-doc hide">
+													<input class="file-input" id="address_proof" type="file" name="address_proof"> 
+													<label for="address_proof" class="file-input-btn">Choose a file</label>
+													<label class="file-name"></label>
+												</div>
+												<?php }else{ ?>
+												 <input class="file-input" type="file" id="address_proof" value="<?= $user->address_proof; ?>" name="address_proof">
+												 <label for="address_proof" class="file-input-btn">Choose a file</label>
+												<label class="file-name"></label> 
+												<?php } ?>
 												<!-- <div class="dropzone dropzone-default" id="kt_dropzone_1">
 													<div class="dropzone-msg dz-message needsclick">
 														<h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
@@ -259,13 +286,56 @@
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Photo Proof</label>
 											<div class="col-lg-9 col-xl-6">
-												 <input class="form-control" type="file" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
+												<?php if($user->photo_proof){ ?>
+												<div class="existing-photo-doc" >
+													<div class="kt-widget__media">
+														<img src="users_docs/photo_proof/<?= $user->photo_proof; ?>"width="25%" alt="image">
+													</div>
+													<br/>
+													<button type="button" class="btn btn-success btn-sm" onClick="(function(){
+													    $('.existing-photo-doc').addClass('hide');
+													    $('.new-photo-doc').removeClass('hide');
+													    return false;
+													})();return false;">Change</button>
+												</div>
+												<div class="new-photo-doc hide">
+													<input class="file-input" id="photo_proof" type="file" name="photo_proof"> 
+													<label for="photo_proof" class="file-input-btn">Choose a file</label>
+													<label class="file-name"></label>
+
+												</div>
+												<?php }else{ ?>
+												 <input class="form-input" type="file" id="photo_proof" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
+												 <label for="photo_proof" class="file-input-btn">Choose a file</label>
+													<label class="file-name"></label>
+												<?php } ?>
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Other Document</label>
 											<div class="col-lg-9 col-xl-6">
-												 <input class="form-control" type="file" value="<?= $user->other_document; ?>" name="other_document"> 
+												<?php if($user->other_document){ ?>
+												<div class="existing-other-doc" >
+													<div class="kt-widget__media">
+														<img src="users_docs/other_document/<?= $user->other_document; ?>"width="25%" alt="image">
+													</div>
+													<br/>
+													<button type="button" class="btn btn-success btn-sm" onClick="(function(){
+													    $('.existing-other-doc').addClass('hide');
+													    $('.new-other-doc').removeClass('hide');
+													    return false;
+													})();return false;">Change</button>
+												</div>
+												<div class="new-other-doc hide">
+													<input class="file-input" id="other_document" type="file" name="other_document"> 
+													<label for="other_document" class="file-input-btn">Choose a file</label>
+													<label class="file-name"></label>
+												</div>
+												<?php }else{ ?>
+												 <input class="form-input" type="file" id="other_document" value="<?= $user->other_document; ?>" name="other_document"> 
+												<label for="other_document" class="file-input-btn">Choose a file</label>
+													<label class="file-name"></label>
+												<?php } ?>
 											</div>
 										</div>
 									</div>

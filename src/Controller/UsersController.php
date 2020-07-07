@@ -306,27 +306,32 @@ class UsersController extends AppController
         //echo '<pre>';print_r($user);exit();
         $this->set('user',$user);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            //echo '<pre>';print_r($this->request->getData());
+            // echo '<pre>';print_r($this->request->getData());
+
             $post = $this->request->getData();
+
+            //convert dates to db field format
             if(strtotime($post['date_of_birth']) > 0){
                 $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
             }
             if(strtotime($post['nominee_dob']) > 0){
                 $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
             }
-            //upload profile pic
+            //upload docs
             $profile_picture_data = $post['profile_picture'];
             $address_proof = $post['address_proof'];
             $photo_proof = $post['photo_proof'];
             $other_document = $post['other_document'];
 
+            //remove unnecessary data for db validation
             unset($post['profile_picture']);
             unset($post['address_proof']);
             unset($post['photo_proof']);
             unset($post['other_document']);
+
             $user = $this->Users->patchEntity($user, $post);
             $validationErrors = $user->getErrors();
-            //echo 'validationErrors <pre>';print_r($validationErrors);exit;
+            // echo 'validationErrors <pre>';print_r($validationErrors);exit;
             if(empty($validationErrors)){
                 $profile_picture = $profile_picture_data;
                 if($profile_picture_data->getClientFilename()){
@@ -334,14 +339,14 @@ class UsersController extends AppController
                 }
                           
                 //upload documnts\
-                if($post['address_proof']->getClientFilename()){
+                if($address_proof->getClientFilename()){
                     $user->address_proof = $this->userDocUpload('address_proof',$address_proof);
                 }
 
-                if($post['photo_proof']->getClientFilename()){
+                if($photo_proof->getClientFilename()){
                     $user->photo_proof = $this->userDocUpload('photo_proof',$photo_proof);
                 }
-                if($post['other_document']->getClientFilename()){
+                if($other_document->getClientFilename()){
                     $user->other_document = $this->userDocUpload('other_document',$other_document);
                 }
             }
@@ -353,29 +358,33 @@ class UsersController extends AppController
 
                 return $this->redirect(['action' => 'personalinfo']);
             }
+
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
     }
 
-    public function userDocUpload($docType, $post, $path = '' ){
+    /**
+    * this function ussed for image and user documents upload
+    */
+    public function userDocUpload($db_upload_field, $post, $path = '' ){
         $name = $post->getClientFilename();
         $filename = '';
         if($name){
         // echo $name.'<pre>';print_r($post);
-            $sffledStr= str_shuffle('askn');
+            $sffledStr= str_shuffle('encrypt');
             $uniqueString = md5(time().$sffledStr);
             $id = $this->Auth->user('id');
             $user = $this->Users->get($id);
 
             //create path
             if(empty($path)){
-                $path = WWW_ROOT.DS.$docType;
+                $path = WWW_ROOT.DS.'users_docs'.DS.$db_upload_field;
             }
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
             }
             //get exsiting doc from db 
-            $existing_doc = $user->$docType;
+            $existing_doc = $user->$db_upload_field;
             if (($existing_doc) && file_exists($path.DS.$existing_doc)){
                 unlink( $path.DS.$existing_doc);
             }

@@ -50,12 +50,21 @@ var KTBootstrapDatepicker = function () {
         });
 
         // enable clear button 
-        $('#kt_datepicker_3, #kt_datepicker_3_validate,#nominee_dob').datepicker({
+        $('#kt_datepicker_3, #kt_datepicker_3_validate').datepicker({
             rtl: KTUtil.isRTL(),
             todayBtn: "linked",
             clearBtn: true,
             todayHighlight: true,
             templates: arrows
+        });
+        $('#date_of_birth, #nominee_dob').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows,
+            endDate: "today",
+            autoclose: true,
         });
 
         // enable clear button for modal demo

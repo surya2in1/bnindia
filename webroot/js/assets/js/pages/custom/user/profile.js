@@ -33,3 +33,8 @@ var KTUserProfile = function () {
 KTUtil.ready(function() {
 	KTUserProfile.init();
 });
+
+
+$(".file-input").change(function(){
+  $(".file-name").text(this.files[0].name);
+});
