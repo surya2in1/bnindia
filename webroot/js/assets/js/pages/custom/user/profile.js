@@ -36,5 +36,6 @@ KTUtil.ready(function() {
 
 
 $(".file-input").change(function(){
-  $(".file-name").text(this.files[0].name);
+  $(this).next().next().text(this.files[0].name);
+
 });

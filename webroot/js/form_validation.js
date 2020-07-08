@@ -10,14 +10,17 @@ var KTFormControls = function () {
                 //= Client Information(step 3)
                 first_name: {
                     required: true,
+                    lettersonly: true,
                     maxlength: 200
                 },
                 middle_name: {
                     required: true,
+                    lettersonly: true,
                     maxlength: 100
                 },
                 last_name: {
                     required: true,
+                    lettersonly: true,
                     maxlength: 100
                 },
                 address:{
@@ -67,7 +70,22 @@ var KTFormControls = function () {
                     //     $("#profile_picture-error2").text('');
                     // }
                 // },
+            errorPlacement: function(error, element) {
+                var group = element.closest('.input-group');
+                if (group.length) {
+                    group.after(error.addClass('invalid-feedback'));
+                } else {
+                    element.after(error.addClass('invalid-feedback'));
+                }
+                 element.addClass('is-invalid');
+            },
 
+            //display error alert on form submit
+            invalidHandler: function(event, validator) {
+                var alert = $('#user_profile_msg');
+                alert.removeClass('kt--hide').show();
+                KTUtil.scrollTop();
+            },
              messages: { 
                 profile_picture: "File must be JPG, JPEG or PNG",
                 address_proof: "File must be JPG, JPEG or PNG",
@@ -82,6 +100,9 @@ var KTFormControls = function () {
                     "type": "error",
                     "confirmButtonClass": "btn btn-secondary",
                     "onClose": function(e) {
+                         $('html, body').animate({
+                            scrollTop: $("#kt_content").offset().top
+                        }, 1000);
                         console.log('on close event fired!');
                     }
                 });
@@ -90,6 +111,8 @@ var KTFormControls = function () {
             },
 
             submitHandler: function (form) {
+                 var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
+                loading.show();
                 //alert('sdf');exit;
                 form.submit(); // submit the form
                 // swal.fire({
