@@ -303,7 +303,7 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
-        //echo '<pre>';print_r($user);exit();
+        // echo '<pre>';print_r($user);exit();
         $this->set('user',$user);
         if ($this->request->is(['patch', 'post', 'put'])) {
             // echo '<pre>';print_r($this->request->getData());
@@ -394,5 +394,34 @@ class UsersController extends AppController
             $post->moveTo($targetPath);
         }
         return $filename;
+    }
+
+    /**
+    * Function change password
+    */
+    public function changePassword()
+    {
+        $this->viewBuilder()->setLayout('admin');
+        $id = $this->Auth->user('id');
+        $user = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+        // debug($this->Auth->user());
+        // echo '<pre>';print_r($user);exit();
+        $this->set('user',$user);
+        if ($this->request->is('post')) {
+            $db_password = $this->Auth->user('password');
+            $current_password = $this->request->getData('current_password');
+            $password = $this->request->getData('password');
+            $UsersTable = TableRegistry::get('Users');
+            $user = $UsersTable->find('all')->where(['token'=>$token])->first();
+            $user->password = $password;
+            if($UsersTable->save($user)){
+                echo 1;
+            }else{
+                echo 0;
+            }
+            exit;
+        }
     }
 }

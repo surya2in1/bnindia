@@ -132,7 +132,7 @@
 														<span></span>
 													</label>
 													<label class="kt-radio">
-														<input type="radio" checked="checked" name="maritial_status" value="unmarried"
+														<input type="radio" name="maritial_status" value="unmarried"
 														<?php if($user->maritial_status ==  'unmarried'){?>
 															checked="checked"
 														<?php }

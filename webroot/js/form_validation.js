@@ -127,10 +127,71 @@ var KTFormControls = function () {
         });
     }
 
+    var change_password = function () {
+        $( "#change_password" ).validate({
+            // define validation rules
+            rules: {
+                current_password: {
+                        required: true,
+                        minlength : 4
+                },
+                password: {
+                        required: true,
+                        minlength : 4
+                },
+                verify_password: {
+                    required: true,
+                    minlength : 4,
+                    equalTo: "#password"
+                },
+            },
+            errorPlacement: function(error, element) {
+                var group = element.closest('.input-group');
+                if (group.length) {
+                    group.after(error.addClass('invalid-feedback'));
+                } else {
+                    element.after(error.addClass('invalid-feedback'));
+                }
+                 element.addClass('is-invalid');
+            },
+
+            //display error alert on form submit
+            invalidHandler: function(event, validator) {
+                var alert = $('#change_password_msg');
+                alert.removeClass('kt--hide').show();
+                KTUtil.scrollTop();
+            },
+            //display error alert on form submit
+            invalidHandler: function(event, validator) {
+                swal.fire({
+                    "title": "",
+                    "text": "There are some errors in your submission. Please correct them.",
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary",
+                    "onClose": function(e) {
+                         $('html, body').animate({
+                            scrollTop: $("#kt_content").offset().top
+                        }, 1000);
+                        console.log('on close event fired!');
+                    }
+                });
+
+                event.preventDefault();
+            },
+
+            submitHandler: function (form) {
+                 var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
+                loading.show();
+                form.submit(); // submit the form
+            }
+        });
+    }
+
     return {
         // public functions
         init: function() {
             user_profile();
+            change_password();
         }
     };
 }();
