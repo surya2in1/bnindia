@@ -37,10 +37,10 @@
 													<input class="form-control form-control-last" type="password" placeholder="Password" name="password" value="<?php if(isset($cookie['remember_me_pwd'])){ echo $cookie['remember_me_pwd']; } ?>" >
 												</div>
 												<div class="kt-login__extra">
-													<label class="kt-checkbox">
+													<!-- <label class="kt-checkbox">
 														<input type="checkbox" name="remember_me"> Remember me
 														<span></span>
-													</label>
+													</label> -->
 													<a href="javascript:;" id="kt_login_forgot">Forget Password ?</a>
 												</div>
 												<div class="kt-login__actions">
