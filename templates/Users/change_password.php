@@ -57,19 +57,33 @@
 									<div class="form-group row">
 										<label class="col-xl-3 col-lg-3 col-form-label">Current Password</label>
 										<div class="col-lg-9 col-xl-6">
-											<input type="password" name="current_password" class="form-control" value="" placeholder="Current password">
+											<?= $this->Form->input('current_password',[
+												'type'=> 'password',
+												'autofocus' => 'true',
+												'class' => 'form-control',
+												'placeholder' => 'Current password'
+											]) ?>
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-xl-3 col-lg-3 col-form-label">New Password</label>
 										<div class="col-lg-9 col-xl-6">
-											<input type="password" name="password" class="form-control" value="" placeholder="New password">
+											<?= $this->Form->input('password',[
+												'type'=> 'password',
+												'class' => 'form-control',
+												'placeholder' => 'New password',
+												'id'=>'password'
+											]) ?>
 										</div>
 									</div>
 									<div class="form-group form-group-last row">
 										<label class="col-xl-3 col-lg-3 col-form-label">Verify Password</label>
 										<div class="col-lg-9 col-xl-6">
-											<input type="password" name="verify_password" class="form-control" value="" placeholder="Verify password">
+											<?= $this->Form->input('verify_password',[
+												'type'=> 'password',
+												'class' => 'form-control',
+												'placeholder' => 'Verify password'
+											]) ?>
 										</div>
 									</div>
 								</div>
@@ -81,7 +95,7 @@
 									<div class="col-lg-3 col-xl-3">
 									</div>
 									<div class="col-lg-9 col-xl-9">
-										<button type="reset" class="btn btn-brand btn-bold">Change Password</button>&nbsp;
+										<button type="submit" class="btn btn-brand btn-bold">Change Password</button>&nbsp;
 										<button type="reset" class="btn btn-secondary">Cancel</button>
 									</div>
 								</div>

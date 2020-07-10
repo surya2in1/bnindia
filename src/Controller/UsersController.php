@@ -354,7 +354,7 @@ class UsersController extends AppController
 
            // echo 'user <pre>';print_r($user);exit;
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__('The user has been saved successfully.'));
 
                 return $this->redirect(['action' => 'personalinfo']);
             }
@@ -407,21 +407,30 @@ class UsersController extends AppController
             'contain' => [],
         ]);
         // debug($this->Auth->user());
-        // echo '<pre>';print_r($user);exit();
         $this->set('user',$user);
         if ($this->request->is('post')) {
-            $db_password = $this->Auth->user('password');
+            // echo '<pre>';print_r($this->request->getData());
+            $db_password = $user->password;
             $current_password = $this->request->getData('current_password');
             $password = $this->request->getData('password');
-            $UsersTable = TableRegistry::get('Users');
-            $user = $UsersTable->find('all')->where(['token'=>$token])->first();
-            $user->password = $password;
-            if($UsersTable->save($user)){
-                echo 1;
+            
+            //Check old password is correct or not            
+            $check_password = (new DefaultPasswordHasher)->check($current_password,$db_password);
+            if($check_password == false){
+                $this->Flash->error(__('Current password not matchced. Please, try again.'));
+            }elseif((new DefaultPasswordHasher)->check($password,$db_password)){
+                $this->Flash->error(__('New password is same as old. Please change new password.'));
             }else{
-                echo 0;
+                $UsersTable = TableRegistry::get('Users');
+                $user = $UsersTable->find('all')->where(['id'=>$id])->first();
+                $user->password = $password;
+                if($UsersTable->save($user)){
+                    $this->Flash->success(__('Password changed successfully.'));
+                    return $this->redirect(['action' => 'changePassword']);
+                }
+                $this->Flash->error(__('The password could not be changed. Please, try again.'));
             }
-            exit;
+            
         }
     }
 }

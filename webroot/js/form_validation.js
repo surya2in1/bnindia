@@ -145,6 +145,9 @@ var KTFormControls = function () {
                     equalTo: "#password"
                 },
             },
+            messages: { 
+                verify_password: "Verify password not matched to password."
+            },
             errorPlacement: function(error, element) {
                 var group = element.closest('.input-group');
                 if (group.length) {

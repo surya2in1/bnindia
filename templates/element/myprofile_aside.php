@@ -87,7 +87,7 @@
 												</g>
 											</svg> </span>
 										<span class="kt-widget__desc">
-											Change Passwort
+											Change Password
 										</span>
 									</span>
 								</a>
