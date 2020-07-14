@@ -111,12 +111,12 @@
 									</div>
 								</div>
 							</div>
-							<div class="kt-login__account">
+							<!-- <div class="kt-login__account">
 								<span class="kt-login__account-msg">
 									Don't have an account yet ?
 								</span>&nbsp;&nbsp;
 								<a href="javascript:;" id="kt_login_signup" class="kt-login__account-link">Sign Up!</a>
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<div class="kt-grid__item kt-grid__item--fluid kt-grid__item--center kt-grid kt-grid--ver kt-login__content" style="background-image: url(assets/media/bg/bg-4.jpg);">
