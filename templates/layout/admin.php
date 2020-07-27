@@ -1,5 +1,5 @@
 <?php
-$cakeDescription = 'CakePHP: the rapid development php framework';
+$cakeDescription = 'Bnindia';
 ?>
 <!DOCTYPE html>
 <html>

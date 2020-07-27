@@ -40,7 +40,7 @@ class DashboardController extends AppController
             'contain' => [
             				 'Roles' => function ($q) {
 			                    return $q
-			                        ->select(['id'])
+			                        ->select(['id','name'])
 								    ->contain(['RolePermissions' => function ($q) {
 						                    return $q
 						                        ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
