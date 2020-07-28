@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 
 /**
  * Application Controller
@@ -81,6 +83,25 @@ class AppController extends Controller
         //$this->loadComponent('FormProtection');
         // echo '<pre>';print_r($this->Auth->user('first_name'));exit;
         $this->set('Auth', $this->Auth);
+
+        $ROLE_ADMIN = Configure::read('ROLE_ADMIN');
+        $users= TableRegistry::get('Users');
+        $user = $users->get($this->Auth->user('id'), [
+            'contain' => [
+                             'Roles' => function ($q) {
+                                return $q
+                                    ->select(['id','name'])
+                                    ->contain(['RolePermissions' => function ($q) {
+                                            return $q
+                                                ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
+                                                ->contain(['Modules','Permissions']);
+                                        },  
+                                    ]);
+                            },      
+                         ],
+        ]);
+         echo '<pre>';print_r($user);exit;
+        
     }
 
 }

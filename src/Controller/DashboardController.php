@@ -16,12 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
-use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\View\Exception\MissingTemplateException;
-use Cake\ORM\TableRegistry;
+
 
 /**
  * Static content controller
@@ -34,24 +33,7 @@ class DashboardController extends AppController
 {
     public function index()
     {
-    	$ROLE_ADMIN = Configure::read('ROLE_ADMIN');
-    	$users= TableRegistry::get('Users');
-    	$user = $users->get($this->Auth->user('id'), [
-            'contain' => [
-            				 'Roles' => function ($q) {
-			                    return $q
-			                        ->select(['id','name'])
-								    ->contain(['RolePermissions' => function ($q) {
-						                    return $q
-						                        ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
-											    ->contain(['Modules','Permissions']);
-						                },	
-					            	]);
-			                },		
-        				 ],
-        ]);
-        // echo '<pre>';print_r($user);exit;
-        $this->viewBuilder()->setLayout('admin');
+    	$this->viewBuilder()->setLayout('admin');
 
         // Output user image
     }
