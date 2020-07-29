@@ -45,6 +45,7 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Common');
         $this->loadComponent('Auth', [
             'authenticate' => [
                 'Form' => [
@@ -84,24 +85,27 @@ class AppController extends Controller
         // echo '<pre>';print_r($this->Auth->user('first_name'));exit;
         $this->set('Auth', $this->Auth);
 
-        $ROLE_ADMIN = Configure::read('ROLE_ADMIN');
-        $users= TableRegistry::get('Users');
-        $user = $users->get($this->Auth->user('id'), [
-            'contain' => [
-                             'Roles' => function ($q) {
-                                return $q
-                                    ->select(['id','name'])
-                                    ->contain(['RolePermissions' => function ($q) {
-                                            return $q
-                                                ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
-                                                ->contain(['Modules','Permissions']);
-                                        },  
-                                    ]);
-                            },      
-                         ],
-        ]);
-         echo '<pre>';print_r($user);exit;
-        
+        if ($this->Auth->user()) {
+            $ROLE_ADMIN = Configure::read('ROLE_ADMIN');
+            $users= TableRegistry::get('Users');
+            $user = $users->get($this->Auth->user('id'), [
+                'contain' => [
+                                 'Roles' => function ($q) {
+                                    return $q
+                                        ->select(['id','name'])
+                                        ->contain(['RolePermissions' => function ($q) {
+                                                return $q
+                                                    ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
+                                                    ->contain(['Modules','Permissions']);
+                                            },  
+                                        ]);
+                                },      
+                             ],
+            ])->toArray();
+            $this->set('member_side_menu', $this->Common->searchUserPermission('members',$user['role']['role_permissions']));
+
+        }
     }
 
 }
+

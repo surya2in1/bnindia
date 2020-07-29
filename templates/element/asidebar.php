@@ -39,6 +39,7 @@
                                     <h4 class="kt-menu__section-text">Modules</h4>
                                     <i class="kt-menu__section-icon flaticon-more-v2"></i>
                                 </li>
+                                <?php if($member_side_menu == '1111'){?>
                                 <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
@@ -56,7 +57,7 @@
                                         </ul>
                                     </div>
                                 </li>
-
+                                <?php }?>
                     
                         </ul><!--kt-menu__nav ul close-->
                     </div><!--kt_aside_menu close-->
