@@ -152,6 +152,7 @@ $cakeDescription = 'Bnindia';
 
          <?= $this->Html->script('assets/js/pages/crud/file-upload/dropzonejs.js') ?>
          
+         <?= $this->Html->script('assets/js/pages/custom/user/list-datatable.js') ?>
          
          <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->

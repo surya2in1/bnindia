@@ -433,4 +433,18 @@ class UsersController extends AppController
             
         }
     }
+
+    /**
+    * Members list
+    */
+    public function members()
+    {
+        $this->viewBuilder()->setLayout('admin');    
+        if ($this->request->is('post')) {
+             $output = $this->User->GetData();
+             debug($output);exit;
+        }
+        
+    }
+
 }

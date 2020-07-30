@@ -71,6 +71,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/pages', ['controller' => 'Pages', 'action' => 'test']);
     $builder->connect('/dashboard', ['controller' => 'Dashboard', 'action' => 'index']);
+    $builder->connect('/members', ['controller' => 'Users', 'action' => 'members']);
     $builder->connect('/resetpassword/*', ['controller' => 'Users', 'action' => 'resetPassword']);
     $builder->connect('/personalinfo', ['controller' => 'Users', 'action' => 'personalinfo']);
     $builder->connect('/change_password', ['controller' => 'Users', 'action' => 'changePassword']);
