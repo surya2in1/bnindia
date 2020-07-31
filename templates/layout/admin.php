@@ -38,6 +38,9 @@ $cakeDescription = 'Bnindia';
     <?= $this->Html->css('assets/css/skins/aside/dark.css') ?>
     <?= $this->Html->css('custom.css') ?>
     <!--end::Layout Skins -->
+    <!--begin::Page Vendors Styles(used by this page) -->
+    <?= $this->Html->css('assets/plugins/custom/datatables/datatables.bundle.css') ?>
+    <!--end::Page Vendors Styles -->
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -152,7 +155,10 @@ $cakeDescription = 'Bnindia';
 
          <?= $this->Html->script('assets/js/pages/crud/file-upload/dropzonejs.js') ?>
          
-         <?= $this->Html->script('assets/js/pages/custom/user/list-datatable.js') ?>
+        <!--begin::Page Vendors(used by this page) -->
+        <?= $this->Html->script('assets/plugins/custom/datatables/datatables.bundle.js') ?>
+        <!--end::Page Vendors -->
+         <?= $this->Html->script('members.js') ?>
          
          <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->

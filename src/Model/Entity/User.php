@@ -89,4 +89,8 @@ class User extends Entity
           return (new DefaultPasswordHasher)->hash($password);
         }
     }
+
+    function test(){
+        echo 1;
+    }
 }
