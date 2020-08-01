@@ -206,32 +206,13 @@ class UsersTable extends Table
         $sIndexColumn = "u.id";
         /* DB table to use */
         $sTable = "users u";
-    // echo 'gpoet<pre>';print_r($_POST);exit;        
-        // $dataSource = ConnectionManager::alias('database','default');
-        // $connection = \Cake\Datasource\ConnectionManager::get('default');
-
-        // $this->User->setConnection($connection);
-        // debug($dataSource);exit();
-        /* Database connection information */
-        // $gaSql['root']       = $dataSource->config['login'];
-        // $gaSql['']   = $dataSource->config['password'];
-        // $gaSql['user']         = $dataSource->config['database'];
-        // $gaSql['localhost']     = $dataSource->config['host'];
-        
+       
         /*
         * MySQL connection
         */
         $conn = ConnectionManager::get('default');
 
-        // if ( ! $gaSql['link'] = mysql_pconnect( $gaSql['localhost'], $gaSql['root'], $gaSql['']  ) )
-        // {
-        //     fatal_error( 'Could not open connection to server' );
-        // }
-        // if ( ! mysql_select_db( $gaSql['user'], $gaSql['link'] ) )
-        // {
-        //     fatal_error( 'Could not select database ' );
-        // }
-        /*
+       /*
         * Paging
         */
         $sLimit = "";
@@ -279,21 +260,6 @@ class UsersTable extends Table
                 $sWhere .= ')';
         }
         /* Individual column filtering */
-        // for ( $i=0 ; $i<count($aColumns) ; $i++ )
-        // {
-        //     if ( isset($_POST['columns'][$i]) && $_POST['columns'][$i]['searchable'] == "true" && $_POST['search']['value'] != '' )
-        //     {
-        //         if ( $sWhere == "" )
-        //         {
-        //             $sWhere = "WHERE ";
-        //         }
-        //         else
-        //         {
-        //             $sWhere .= " AND ";
-        //         }
-        //         $sWhere .= "".$aColumns[$i]." LIKE '%".($_POST['search']['value'])."%' ";
-        //     }
-        // }
         /*
         * SQL queries
         * Get data to display
@@ -305,20 +271,15 @@ class UsersTable extends Table
         $sOrder
         $sLimit
         ";
-         // echo $sQuery;exit;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
-        // echo 'rResult<pre>';print_r($rResult);exit;
-        // $rResult = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
+       
         /* Data set length after filtering */
         $sQuery = "
         SELECT FOUND_ROWS() as cnt
         ";
-        // $rResultFilterTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
-        // $aResultFilterTotal = mysql_fetch_array($rResultFilterTotal);
         $rResultFilterTotal = $conn->execute($sQuery);
         $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
-        // echo 'aResultFilterTotal<pre>';print_r($aResultFilterTotal);
         $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
         /* Total data set length */
         $sQuery = "
@@ -328,9 +289,6 @@ class UsersTable extends Table
         ";
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
-        // echo 'aResultTotal<pre>';print_r($aResultTotal);
-        // $rResultTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
-        // $aResultTotal = mysql_fetch_array($rResultTotal);
         $iTotal = $aResultTotal[0]['cnt'];
         /*
         * Output
@@ -341,25 +299,6 @@ class UsersTable extends Table
         "iTotalDisplayRecords" => $iFilteredTotal,
         "aaData" =>  $rResult
         );
-        // while ( $aRow = mysql_fetch_array( $rResult ) )
-        // {
-        //     $row = array();
-        //     for ( $i=0 ; $i<count($aColumns) ; $i++ )
-        //     {
-        //         if ( $aColumns[$i] == "version" )
-        //         {
-        //             /* Special output formatting for 'version' column */
-        //             $row[] = ($aRow[ $aColumns[$i] ]=="0") ? '-' : $aRow[ $aColumns[$i] ];
-        //         }
-        //         else if ( $aColumns[$i] != ' ' )
-        //         {
-        //             /* General output */
-        //             $row[] = $aRow[ $aColumns[$i] ];
-        //         }
-        //     }
-        //     $output['data'][] = $row;
-        // }
-        // echo 'output<pre>';print_r($output);exit;
         return $output;
     }
 }
