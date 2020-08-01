@@ -18,14 +18,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 },
 	        },
 			columns: [
-				{data: 'OrderID'},
-				{data: 'Country'},
-				{data: 'ShipCity'},
-				{data: 'CompanyName'},
-				{data: 'ShipDate'},
-				{data: 'Status'},
-				{data: 'Type'},
-				{data: 'Actions', responsivePriority: -1},
+				{data: 'id'},
+				{data: 'email'},
+				{data: 'first_name'},
+				{data: 'last_name'},
+				{data: 'gender'},
+				{data: 'status'},
+				{data: 'actions', responsivePriority: -1},
 			],
 			columnDefs: [
 				{
@@ -53,13 +52,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					targets: -3,
 					render: function(data, type, full, meta) {
 						var status = {
-							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
-							2: {'title': 'Delivered', 'class': ' kt-badge--danger'},
-							3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
-							4: {'title': 'Success', 'class': ' kt-badge--success'},
-							5: {'title': 'Info', 'class': ' kt-badge--info'},
-							6: {'title': 'Danger', 'class': ' kt-badge--danger'},
-							7: {'title': 'Warning', 'class': ' kt-badge--warning'},
+							'female': {'title': 'Female', 'class': 'kt-badge--brand'},
+							'male': {'title': 'male', 'class': ' kt-badge--info'},
+							// 3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
+							// 4: {'title': 'Success', 'class': ' kt-badge--success'},
+							// 5: {'title': 'Info', 'class': ' kt-badge--danger'},
+							// 6: {'title': 'Danger', 'class': ' kt-badge--danger'},
+							// 7: {'title': 'Warning', 'class': ' kt-badge--warning'},
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
@@ -71,15 +70,26 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					targets: -2,
 					render: function(data, type, full, meta) {
 						var status = {
-							1: {'title': 'Online', 'state': 'danger'},
-							2: {'title': 'Retail', 'state': 'primary'},
-							3: {'title': 'Direct', 'state': 'success'},
+							1: {'title': 'Active', 'state': 'success'},
+							0: {'title': 'Inactive', 'state': 'danger'}
 						};
 						if (typeof status[data] === 'undefined') {
 							return data;
 						}
 						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
 							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
+					},
+				},
+				{
+					targets: -4,
+					render: function(data, type, full, meta) {
+						return  data.charAt(0).toUpperCase() + data.slice(1);
+					},
+				},
+				{
+					targets: -5,
+					render: function(data, type, full, meta) {
+						return  data.charAt(0).toUpperCase() + data.slice(1);
 					},
 				},
 			],

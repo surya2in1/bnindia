@@ -441,8 +441,9 @@ class UsersController extends AppController
     {
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) {
-             $output = $this->User->test();
-             debug($output);exit;
+             $output = $this->Users->GetData();
+             // debug($output);exit;
+             echo json_encode($output);exit;
         }
         
     }

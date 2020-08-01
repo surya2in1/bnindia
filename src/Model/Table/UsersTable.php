@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Users Model
@@ -200,57 +201,58 @@ class UsersTable extends Table
     }
 
     public function GetData() {
-        $aColumns = array( 'id','email','first_name','last_name','gender','password','status' );
+        $aColumns = array( 'u.id','u.email','u.first_name','u.last_name','u.gender','u.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
-        $sIndexColumn = "id";
+        $sIndexColumn = "u.id";
         /* DB table to use */
-        $sTable = "users";
-        App::uses('ConnectionManager', 'Model');
-        $dataSource = ConnectionManager::getDataSource('default');
+        $sTable = "users u";
+    // echo 'gpoet<pre>';print_r($_POST);exit;        
+        // $dataSource = ConnectionManager::alias('database','default');
+        // $connection = \Cake\Datasource\ConnectionManager::get('default');
+
+        // $this->User->setConnection($connection);
+        // debug($dataSource);exit();
         /* Database connection information */
-        $gaSql['root']       = $dataSource->config['login'];
-        $gaSql['']   = $dataSource->config['password'];
-        $gaSql['user']         = $dataSource->config['database'];
-        $gaSql['localhost']     = $dataSource->config['host'];
+        // $gaSql['root']       = $dataSource->config['login'];
+        // $gaSql['']   = $dataSource->config['password'];
+        // $gaSql['user']         = $dataSource->config['database'];
+        // $gaSql['localhost']     = $dataSource->config['host'];
         
-        function fatal_error ( $sErrorMessage = '' )
-        {
-            header( $_SERVER['SERVER_PROTOCOL'] .' 500 Internal Server Error' );
-            die( $sErrorMessage );
-        }
         /*
         * MySQL connection
         */
-        if ( ! $gaSql['link'] = mysql_pconnect( $gaSql['localhost'], $gaSql['root'], $gaSql['']  ) )
-        {
-            fatal_error( 'Could not open connection to server' );
-        }
-        if ( ! mysql_select_db( $gaSql['user'], $gaSql['link'] ) )
-        {
-            fatal_error( 'Could not select database ' );
-        }
+        $conn = ConnectionManager::get('default');
+
+        // if ( ! $gaSql['link'] = mysql_pconnect( $gaSql['localhost'], $gaSql['root'], $gaSql['']  ) )
+        // {
+        //     fatal_error( 'Could not open connection to server' );
+        // }
+        // if ( ! mysql_select_db( $gaSql['user'], $gaSql['link'] ) )
+        // {
+        //     fatal_error( 'Could not select database ' );
+        // }
         /*
         * Paging
         */
         $sLimit = "";
-        if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
         {
-            $sLimit = "LIMIT ".intval( $_GET['iDisplayStart'] ).", ".
-            intval( $_GET['iDisplayLength'] );
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
         }
         /*
         * Ordering
         */
         $sOrder = "";
-        if ( isset( $_GET['iSortCol_0'] ) )
+        if ( isset( $_POST['order'][0] ) )
         {
             $sOrder = "ORDER BY  ";
-            for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
             {
-                if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
                 {
-                    $sOrder .= "`".$aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."` ".
-                    ($_GET['sSortDir_'.$i]==='asc' ? 'asc' : 'desc') .", ";
+                    $sOrder .= "".$aColumns[$_POST['order'][$i]['column']]." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
                 }
             }
             $sOrder = substr_replace( $sOrder, "", -2 );
@@ -265,92 +267,99 @@ class UsersTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = "";
-        if ( isset($_GET['sSearch']) && $_GET['sSearch'] != "" )
+        $sWhere = "WHERE r.name = 'member' ";
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
-            $sWhere = "WHERE (";
+            $sWhere .= " AND (";
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
-                    $sWhere .= "`".$aColumns[$i]."` LIKE '%".mysql_real_escape_string( $_GET['sSearch'] )."%' OR ";
+                    $sWhere .= "".$aColumns[$i]." LIKE '%".( $_POST['search']['value'] )."%' OR ";
                 }
                 $sWhere = substr_replace( $sWhere, "", -3 );
                 $sWhere .= ')';
         }
         /* Individual column filtering */
-        for ( $i=0 ; $i<count($aColumns) ; $i++ )
-        {
-            if ( isset($_GET['bSearchable_'.$i]) && $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
-            {
-                if ( $sWhere == "" )
-                {
-                    $sWhere = "WHERE ";
-                }
-                else
-                {
-                    $sWhere .= " AND ";
-                }
-                $sWhere .= "`".$aColumns[$i]."` LIKE '%".mysql_real_escape_string($_GET['sSearch_'.$i])."%' ";
-            }
-        }
+        // for ( $i=0 ; $i<count($aColumns) ; $i++ )
+        // {
+        //     if ( isset($_POST['columns'][$i]) && $_POST['columns'][$i]['searchable'] == "true" && $_POST['search']['value'] != '' )
+        //     {
+        //         if ( $sWhere == "" )
+        //         {
+        //             $sWhere = "WHERE ";
+        //         }
+        //         else
+        //         {
+        //             $sWhere .= " AND ";
+        //         }
+        //         $sWhere .= "".$aColumns[$i]." LIKE '%".($_POST['search']['value'])."%' ";
+        //     }
+        // }
         /*
         * SQL queries
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS `".str_replace(" , ", " ", implode("`, `", $aColumns))."`
-        FROM   $sTable
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." ,'1' as actions
+        FROM   $sTable  left JOIN roles r on u.role_id = r.id 
         $sWhere
         $sOrder
         $sLimit
         ";
-        $rResult = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
+         // echo $sQuery;exit;
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+        // echo 'rResult<pre>';print_r($rResult);exit;
+        // $rResult = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
         /* Data set length after filtering */
         $sQuery = "
-        SELECT FOUND_ROWS()
+        SELECT FOUND_ROWS() as cnt
         ";
-        $rResultFilterTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
-        $aResultFilterTotal = mysql_fetch_array($rResultFilterTotal);
-        $iFilteredTotal = $aResultFilterTotal[0];
+        // $rResultFilterTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
+        // $aResultFilterTotal = mysql_fetch_array($rResultFilterTotal);
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        // echo 'aResultFilterTotal<pre>';print_r($aResultFilterTotal);
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
         /* Total data set length */
         $sQuery = "
-        SELECT COUNT(`".$sIndexColumn."`)
-        FROM   $sTable
+        SELECT COUNT(".$sIndexColumn.") as cnt
+        FROM   $sTable left JOIN roles r on u.role_id = r.id 
+        where r.name= 'admin'
         ";
-        $rResultTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
-        $aResultTotal = mysql_fetch_array($rResultTotal);
-        $iTotal = $aResultTotal[0];
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        // echo 'aResultTotal<pre>';print_r($aResultTotal);
+        // $rResultTotal = mysql_query( $sQuery, $gaSql['link'] ) or fatal_error( 'MySQL Error: ' . mysql_errno() );
+        // $aResultTotal = mysql_fetch_array($rResultTotal);
+        $iTotal = $aResultTotal[0]['cnt'];
         /*
         * Output
         */
         $output = array(
-        /*"sEcho" => intval($_GET['sEcho']),
+        "draw" => intval($_POST['draw']),
         "iTotalRecords" => $iTotal,
         "iTotalDisplayRecords" => $iFilteredTotal,
-        "aaData" => array()
-        */
-        "draw" => intval($_GET['sEcho']),
-        "recordsTotal" => $iTotal,
-        "recordsFiltered" => $iFilteredTotal,
-        "data" => array()
+        "aaData" =>  $rResult
         );
-        while ( $aRow = mysql_fetch_array( $rResult ) )
-        {
-            $row = array();
-            for ( $i=0 ; $i<count($aColumns) ; $i++ )
-            {
-                if ( $aColumns[$i] == "version" )
-                {
-                    /* Special output formatting for 'version' column */
-                    $row[] = ($aRow[ $aColumns[$i] ]=="0") ? '-' : $aRow[ $aColumns[$i] ];
-                }
-                else if ( $aColumns[$i] != ' ' )
-                {
-                    /* General output */
-                    $row[] = $aRow[ $aColumns[$i] ];
-                }
-            }
-            $output['data'][] = $row;
-        }
+        // while ( $aRow = mysql_fetch_array( $rResult ) )
+        // {
+        //     $row = array();
+        //     for ( $i=0 ; $i<count($aColumns) ; $i++ )
+        //     {
+        //         if ( $aColumns[$i] == "version" )
+        //         {
+        //             /* Special output formatting for 'version' column */
+        //             $row[] = ($aRow[ $aColumns[$i] ]=="0") ? '-' : $aRow[ $aColumns[$i] ];
+        //         }
+        //         else if ( $aColumns[$i] != ' ' )
+        //         {
+        //             /* General output */
+        //             $row[] = $aRow[ $aColumns[$i] ];
+        //         }
+        //     }
+        //     $output['data'][] = $row;
+        // }
+        // echo 'output<pre>';print_r($output);exit;
         return $output;
     }
 }
