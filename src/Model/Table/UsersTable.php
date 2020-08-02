@@ -149,9 +149,9 @@ class UsersTable extends Table
             ->allowEmptyDate('nominee_dob');
 
         $validator
-            ->scalar('accupation')
-            ->maxLength('accupation', 50)
-            ->allowEmptyString('accupation');
+            ->scalar('occupation')
+            ->maxLength('occupation', 50)
+            ->allowEmptyString('occupation');
 
         $validator
             ->scalar('income_amt')

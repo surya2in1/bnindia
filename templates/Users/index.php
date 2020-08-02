@@ -28,7 +28,7 @@
                     <th><?= $this->Paginator->sort('nominee_name') ?></th>
                     <th><?= $this->Paginator->sort('nominee_relation') ?></th>
                     <th><?= $this->Paginator->sort('nominee_dob') ?></th>
-                    <th><?= $this->Paginator->sort('accupation') ?></th>
+                    <th><?= $this->Paginator->sort('occupation') ?></th>
                     <th><?= $this->Paginator->sort('income_amt') ?></th>
                     <th><?= $this->Paginator->sort('address_proof') ?></th>
                     <th><?= $this->Paginator->sort('photo_proof') ?></th>
@@ -60,7 +60,7 @@
                     <td><?= h($user->nominee_name) ?></td>
                     <td><?= h($user->nominee_relation) ?></td>
                     <td><?= h($user->nominee_dob) ?></td>
-                    <td><?= h($user->accupation) ?></td>
+                    <td><?= h($user->occupation) ?></td>
                     <td><?= h($user->income_amt) ?></td>
                     <td><?= h($user->address_proof) ?></td>
                     <td><?= h($user->photo_proof) ?></td>

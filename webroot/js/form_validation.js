@@ -34,7 +34,7 @@ var KTFormControls = function () {
                     lettersonly: true,
                     maxlength: 50
                 },
-                accupation:{
+                occupation:{
                     lettersonly: true,
                     maxlength: 50
                 },

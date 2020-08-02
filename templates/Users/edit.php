@@ -38,7 +38,7 @@
                     echo $this->Form->control('nominee_name');
                     echo $this->Form->control('nominee_relation');
                     echo $this->Form->control('nominee_dob', ['empty' => true]);
-                    echo $this->Form->control('accupation');
+                    echo $this->Form->control('occupation');
                     echo $this->Form->control('income_amt');
                     echo $this->Form->control('address_proof');
                     echo $this->Form->control('photo_proof');

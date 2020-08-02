@@ -25,7 +25,7 @@ use Cake\ORM\Entity;
  * @property string|null $nominee_name
  * @property string|null $nominee_relation
  * @property \Cake\I18n\FrozenDate|null $nominee_dob
- * @property string|null $accupation
+ * @property string|null $occupation
  * @property string|null $income_amt
  * @property string|null $address_proof
  * @property string|null $photo_proof
@@ -62,7 +62,7 @@ class User extends Entity
         'nominee_name' => true,
         'nominee_relation' => true,
         'nominee_dob' => true,
-        'accupation' => true,
+        'occupation' => true,
         'income_amt' => true,
         'address_proof' => true,
         'photo_proof' => true,

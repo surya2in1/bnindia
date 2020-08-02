@@ -38,7 +38,7 @@
 										<i class="flaticon2-correct kt-font-success"></i>
 									</a>
 									<span class="kt-widget__subtitle">
-										<?= $user->accupation; ?>
+										<?= $user->occupation; ?>
 									</span>
 								</div>
 							</div>

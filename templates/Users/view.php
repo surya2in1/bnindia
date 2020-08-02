@@ -76,7 +76,7 @@
                 </tr>
                 <tr>
                     <th><?= __('Accupation') ?></th>
-                    <td><?= h($user->accupation) ?></td>
+                    <td><?= h($user->occupation) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Income Amt') ?></th>
