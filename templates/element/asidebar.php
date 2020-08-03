@@ -28,7 +28,7 @@
                 <div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
                     <div id="kt_aside_menu" class="kt-aside-menu " data-ktmenu-vertical="1" data-ktmenu-scroll="1" data-ktmenu-dropdown-timeout="500">
                         <ul class="kt-menu__nav ">
-                            <li class="kt-menu__item  kt-menu__item--active" aria-haspopup="true"><a href="dashboard" class="kt-menu__link "><span class="kt-menu__link-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                            <li class="kt-menu__item  <?php if($this->request->getParam('controller') == 'Dashboard') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true"><a href="dashboard" class="kt-menu__link "><span class="kt-menu__link-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
                                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <polygon points="0 0 24 0 24 24 0 24" />
                                                     <path d="M12.9336061,16.072447 L19.36,10.9564761 L19.5181585,10.8312381 C20.1676248,10.3169571 20.2772143,9.3735535 19.7629333,8.72408713 C19.6917232,8.63415859 19.6104327,8.55269514 19.5206557,8.48129411 L12.9336854,3.24257445 C12.3871201,2.80788259 11.6128799,2.80788259 11.0663146,3.24257445 L4.47482784,8.48488609 C3.82645598,9.00054628 3.71887192,9.94418071 4.23453211,10.5925526 C4.30500305,10.6811601 4.38527899,10.7615046 4.47382636,10.8320511 L4.63,10.9564761 L11.0659024,16.0730648 C11.6126744,16.5077525 12.3871218,16.5074963 12.9336061,16.072447 Z" fill="#000000" fill-rule="nonzero" />
@@ -39,8 +39,28 @@
                                     <h4 class="kt-menu__section-text">Modules</h4>
                                     <i class="kt-menu__section-icon flaticon-more-v2"></i>
                                 </li>
+                                <?php if($groups_side_menu == '1111'){?>
+                                <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Groups') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                    <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"/>
+                                            <path d="M18,14 C16.3431458,14 15,12.6568542 15,11 C15,9.34314575 16.3431458,8 18,8 C19.6568542,8 21,9.34314575 21,11 C21,12.6568542 19.6568542,14 18,14 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                            <path d="M17.6011961,15.0006174 C21.0077043,15.0378534 23.7891749,16.7601418 23.9984937,20.4 C24.0069246,20.5466056 23.9984937,21 23.4559499,21 L19.6,21 C19.6,18.7490654 18.8562935,16.6718327 17.6011961,15.0006174 Z M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                                        </g>
+                                    </svg>
+                                        </span><span class="kt-menu__link-text">Groups</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                                    <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                        <ul class="kt-menu__subnav">
+                                            <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true"><a href="groups" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">List Groups</span></a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <?php }?>
+
                                 <?php if($member_side_menu == '1111'){?>
-                                <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Users') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -53,7 +73,7 @@
                                     <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                         <ul class="kt-menu__subnav">
                                             <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
-                                            <li class="kt-menu__item " aria-haspopup="true"><a href="members" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">List Members</span></a></li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Members' && $this->request->getParam('action') == 'members') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true"><a href="members" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">List Members</span></a></li>
                                         </ul>
                                     </div>
                                 </li>

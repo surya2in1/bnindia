@@ -158,9 +158,14 @@ $cakeDescription = 'Bnindia';
         <!--begin::Page Vendors(used by this page) -->
         <?= $this->Html->script('assets/plugins/custom/datatables/datatables.bundle.js') ?>
         <!--end::Page Vendors -->
-         <?= $this->Html->script('members.js') ?>
-         
-         <?= $this->fetch('script') ?>
+        <?php if($this->request->getParam('controller') == 'Users') { ?> 
+            <?= $this->Html->script('members.js') ?>
+        <?php } ?>
+
+        <?php if($this->request->getParam('controller') == 'Groups') { ?> 
+            <?= $this->Html->script('groups.js') ?> 
+        <?php } ?>
+        <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>
 </body>

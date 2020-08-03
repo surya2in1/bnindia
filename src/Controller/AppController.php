@@ -103,7 +103,7 @@ class AppController extends Controller
                              ],
             ])->toArray();
             $this->set('member_side_menu', $this->Common->searchUserPermission('members',$user['role']['role_permissions']));
-
+            $this->set('groups_side_menu', $this->Common->searchUserPermission('groups',$user['role']['role_permissions']));
         }
     }
 
