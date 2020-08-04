@@ -1,36 +1,110 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Group $group
- */
-?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Groups'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="groups form content">
-            <?= $this->Form->create($group) ?>
-            <fieldset>
-                <legend><?= __('Add Group') ?></legend>
-                <?php
-                    echo $this->Form->control('group_number');
-                    echo $this->Form->control('chit_amount');
-                    echo $this->Form->control('total_number');
-                    echo $this->Form->control('premium');
-                    echo $this->Form->control('gov_reg_no');
-                    echo $this->Form->control('date');
-                    echo $this->Form->control('status');
-                    echo $this->Form->control('no_of_months');
-                    echo $this->Form->control('created_date');
-                    echo $this->Form->control('modified_date');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+<!-- begin:: Content Head -->
+<div class="kt-subheader  kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">Groups</h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <div class="kt-input-icon kt-input-icon--right kt-subheader__search kt-hidden">
+                <input type="text" class="form-control" placeholder="Search order..." id="generalSearch">
+                <span class="kt-input-icon__icon kt-input-icon__icon--right">
+                    <span><i class="flaticon2-search-1"></i></span>
+                </span>
+            </div>
         </div>
     </div>
 </div>
+<!-- end:: Content Head -->
+<!-- begin:: Content -->
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            Add Group
+                        </h3>
+                    </div>
+                </div>
+                <!--begin::Form-->
+                <?= $this->Form->create(null, array(
+                       'url'=>'/groups/add',
+                       'class'=>'kt-form',
+                       'id'=>'add_group_form',
+                       'method'=> 'Post'
+                     )); ?>
+                    <div class="kt-portlet__body">
+                        <div class="kt-section kt-section--first">
+                            <div class="kt-section__body">
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Group Number:</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="group_number" placeholder="Enter Group Number">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Chit Amount:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="chit_amount" placeholder="Enter Chit Amount">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Total Number:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Number">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Premium:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="premium" placeholder="Enter Premium">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Goverment Registration Number:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="gov_reg_no" placeholder="Enter Goverment Registration Number">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Date:</label>
+                                    <div class="col-lg-6">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control" readonly="" value="" id="date_of_birth" name="date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="la la-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="form-text text-muted">Enable clear and today helper buttons</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Number of months:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="no_of_months" placeholder="Enter Number of months">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__foot">
+                        <div class="kt-form__actions">
+                            <div class="row">
+                                <div class="col-lg-3"></div>
+                                <div class="col-lg-6">
+                                    <button type="reset" class="btn btn-success">Submit</button>
+                                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?= $this->Form->end() ?>
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end:: Content -->
+
