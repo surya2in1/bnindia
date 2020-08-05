@@ -30,7 +30,7 @@
                 <?= $this->Form->create(null, array(
                        'url'=>'/groups/add',
                        'class'=>'kt-form',
-                       'id'=>'add_group_form',
+                       'id'=>'group_form',
                        'method'=> 'Post'
                      )); ?>
                     <div class="kt-portlet__body">
@@ -63,7 +63,7 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Goverment Registration Number:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="gov_reg_no" placeholder="Enter Goverment Registration Number">
+                                        <input type="text" class="form-control" name="gov_reg_no" placeholder="Enter Goverment Registration Number">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -94,7 +94,7 @@
                             <div class="row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    <button type="reset" class="btn btn-success">Submit</button>
+                                    <button type="submit" class="btn btn-success">Submit</button>
                                     <button type="reset" class="btn btn-secondary">Cancel</button>
                                 </div>
                             </div>

@@ -70,11 +70,89 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		});
 	};
 
+	var group_form = function () {
+        $( "#group_form" ).validate({
+            // define validation rules
+            rules: {
+                group_number: {
+                        required: true,
+                        maxlength : 10
+                },
+                chit_amount: {
+                        required: true,
+                        number:true,
+                        max : 10
+                },
+                total_number: {
+                        required: true,
+                        number:true,
+                        max : 10
+                },
+                premium: {
+                        required: true,
+                        number:true,
+                        max : 10
+                },
+                gov_reg_no: {
+                        required: true,
+                        maxlength : 10
+                },
+                no_of_months: {
+                        required: true,
+                        number:true,
+                        max : 12
+                },
+                date:{
+                	required:true
+                }
+            },
+            errorPlacement: function(error, element) {
+                var group = element.closest('.input-group');
+                if (group.length) {
+                    group.after(error.addClass('invalid-feedback'));
+                } else {
+                    element.after(error.addClass('invalid-feedback'));
+                }
+                 element.addClass('is-invalid');
+            },
+
+            //display error alert on form submit
+            invalidHandler: function(event, validator) {
+                var alert = $('#change_password_msg');
+                alert.removeClass('kt--hide').show();
+                KTUtil.scrollTop();
+            },
+            //display error alert on form submit
+            invalidHandler: function(event, validator) {
+                swal.fire({
+                    "title": "",
+                    "text": "There are some errors in your submission. Please correct them.",
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary",
+                    "onClose": function(e) {
+                         $('html, body').animate({
+                            scrollTop: $("#kt_content").offset().top
+                        }, 1000);
+                        console.log('on close event fired!');
+                    }
+                });
+
+                event.preventDefault();
+            },
+
+            submitHandler: function (form) {
+                 var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
+                loading.show();
+                form.submit(); // submit the form
+            }
+        });
+    }
 	return {
 
 		//main function to initiate the module
 		init: function() {
 			initTable1();
+			group_form();
 		},
 
 	};
