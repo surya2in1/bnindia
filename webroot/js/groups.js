@@ -71,60 +71,72 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	};
 
 	var group_form = function () {
-        $( "#group_form" ).validate({
-            // define validation rules
-            rules: {
-                group_number: {
-                        required: true,
-                        maxlength : 10
-                },
-                chit_amount: {
-                        required: true,
-                        number:true,
-                        max : 10
-                },
-                total_number: {
-                        required: true,
-                        number:true,
-                        max : 10
-                },
-                premium: {
-                        required: true,
-                        number:true,
-                        max : 10
-                },
-                gov_reg_no: {
-                        required: true,
-                        maxlength : 10
-                },
-                no_of_months: {
-                        required: true,
-                        number:true,
-                        max : 12
-                },
-                date:{
-                	required:true
-                }
-            },
-            errorPlacement: function(error, element) {
-                var group = element.closest('.input-group');
-                if (group.length) {
-                    group.after(error.addClass('invalid-feedback'));
-                } else {
-                    element.after(error.addClass('invalid-feedback'));
-                }
-                 element.addClass('is-invalid');
-            },
+		 var showErrorMsg = function(form, type, msg) {
+	        var alert = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert">\
+				<div class="alert-text">'+msg+'</div>\
+				<div class="alert-close">\
+	                <i class="flaticon2-cross kt-icon-sm" data-dismiss="alert"></i>\
+	            </div>\
+			</div>');
 
-            //display error alert on form submit
-            invalidHandler: function(event, validator) {
-                var alert = $('#change_password_msg');
-                alert.removeClass('kt--hide').show();
-                KTUtil.scrollTop();
-            },
-            //display error alert on form submit
-            invalidHandler: function(event, validator) {
-                swal.fire({
+	        form.find('.alert').remove();
+	        alert.prependTo(form);
+	        //alert.animateClass('fadeIn animated');
+	        KTUtil.animateClass(alert[0], 'fadeIn animated');
+	        alert.find('span').html(msg);
+	    }
+		 $('#submit').click(function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $(this).closest('form');
+	        form.validate({
+	     		// define validation rules
+	            rules: {
+	                group_number: {
+	                        required: true,
+	                        maxlength : 10
+	                },
+	                chit_amount: {
+	                        required: true,
+	                        number:true,
+	                        max : 100000000
+	                },
+	                total_number: {
+	                        required: true,
+	                        number:true,
+	                        max : 100000000
+	                },
+	                premium: {
+	                        required: true,
+	                        number:true,
+	                        max : 100000000
+	                },
+	                gov_reg_no: {
+	                        required: true,
+	                        maxlength : 10
+	                },
+	                no_of_months: {
+	                        required: true,
+	                        number:true,
+	                        max : 100000
+	                },
+	                date:{
+	                	required:true
+	                }
+	            },
+	            errorPlacement: function(error, element) {
+	                var group = element.closest('.input-group');
+	                if (group.length) {
+	                    group.after(error.addClass('invalid-feedback'));
+	                } else {
+	                    element.after(error.addClass('invalid-feedback'));
+	                }
+	                 element.addClass('is-invalid');
+	            },    
+	        });
+			
+			if (!form.valid()) {
+               swal.fire({
                     "title": "",
                     "text": "There are some errors in your submission. Please correct them.",
                     "type": "error",
@@ -137,15 +149,34 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     }
                 });
 
-                event.preventDefault();
-            },
-
-            submitHandler: function (form) {
-                 var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
-                loading.show();
-                form.submit(); // submit the form
-            }
-        });
+	       		return;
+            }	
+            btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
+		    // form.submit();
+            form.ajaxSubmit({
+                url: 'Groups/groupform',
+                type:'POST',
+                // beforeSend: function (xhr) { // Add this line
+                //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                // },
+                success: function(response, status, xhr, $form) {
+                    if(response>0){
+                        // similate 2s delay
+                        setTimeout(function() {
+                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                            showErrorMsg(form, 'success', 'the group has been successfully.');
+                            window.location.href = "groups";
+                        }, 2000); 
+                    }else{
+                    	// similate 2s delay
+                    	setTimeout(function() {
+    	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+    	                    showErrorMsg(form, 'danger', 'Some error has been occured. Please try again.');
+                        }, 2000);                        
+                    }
+                }
+            });	
+		});
     }
 	return {
 

@@ -53,6 +53,35 @@ class GroupsController extends AppController
 
         $this->set(compact('group'));
     }
+    /*
+    ** add editgroup
+    */
+     function groupform($id=null){
+        $this->viewBuilder()->setLayout('admin');
+        if($id>0){
+            $group = $this->Groups->get($id, [
+                'contain' => [],
+            ]);       
+        }else{
+            $group = $this->Groups->newEmptyEntity();
+        }
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $post = $this->request->getData();
+            $post['date'] = date('Y-m-d',strtotime($post['date'])); 
+            //echo '<pre>';print_r($post);exit;
+            $group = $this->Groups->patchEntity($group, $post);
+            if ($this->Groups->save($group)) {
+                echo 1;
+            }else{
+                 $validationErrors = $group->getErrors();
+                echo '<pre>';print_r($group->getErrors());
+                echo 0;
+            }
+            exit;
+        }
+        //echo '<pre>';print_r($group);exit();
+        $this->set(compact('group'));
+     }
 
     /**
      * Add method

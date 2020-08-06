@@ -55,7 +55,8 @@ var KTBootstrapDatepicker = function () {
             todayBtn: "linked",
             clearBtn: true,
             todayHighlight: true,
-            templates: arrows
+            templates: arrows,
+            autoclose:true
         });
         $('#date_of_birth, #nominee_dob').datepicker({
             rtl: KTUtil.isRTL(),
@@ -66,7 +67,6 @@ var KTBootstrapDatepicker = function () {
             endDate: "today",
             autoclose: true,
         });
-
         // enable clear button for modal demo
         $('#kt_datepicker_3_modal').datepicker({
             rtl: KTUtil.isRTL(),
