@@ -58,6 +58,9 @@ class GroupsController extends AppController
     */
      function groupform($id=null){
         $this->viewBuilder()->setLayout('admin');
+        if(isset($_POST['id']) && ($_POST['id'] > 0)){
+            $id =  $_POST['id'];
+        }
         if($id>0){
             $group = $this->Groups->get($id, [
                 'contain' => [],
@@ -67,8 +70,9 @@ class GroupsController extends AppController
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
+          // echo $post['id'].'<pre>';print_r($group);exit;
             $post['date'] = date('Y-m-d',strtotime($post['date'])); 
-            //echo '<pre>';print_r($post);exit;
+            // echo '<pre>';print_r($post);exit;
             $group = $this->Groups->patchEntity($group, $post);
             if ($this->Groups->save($group)) {
                 echo 1;

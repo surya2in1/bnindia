@@ -40,12 +40,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
                               <i class="la la-ellipsis-h"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
+                                <a class="dropdown-item" href="groups/groupform/`+data+`"><i class="la la-edit"></i> Edit Details</a>
                                 <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
                                 <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
                             </div>
                         </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
+                        <a href="groups/groupform/`+data+`" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
                           <i class="la la-edit"></i>
                         </a>`;
 					},
@@ -154,7 +154,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'Groups/groupform',
+                url: 'Groups/groupform/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
@@ -164,8 +164,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
                         // similate 2s delay
                         setTimeout(function() {
                             btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'the group has been successfully.');
-                            window.location.href = "groups";
+                            showErrorMsg(form, 'success', 'The group has been successfully.');
+                            window.location.reload();
                         }, 2000); 
                     }else{
                     	// similate 2s delay

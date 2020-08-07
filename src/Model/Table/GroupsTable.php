@@ -188,7 +188,7 @@ class GroupsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." , 1 as actions
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." , id as actions
         FROM   $sTable 
         $sWhere
         $sOrder
