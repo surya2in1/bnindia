@@ -6,6 +6,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 		// begin first table
 		table.DataTable({
+			// "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 			responsive: true,
 			searchDelay: 500,
 			processing: true,
@@ -35,17 +36,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					orderable: false,
 					render: function(data, type, full, meta) {
 						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="groups/groupform/`+data+`"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="groups/groupform/`+data+`" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
+                        <a href="group_form/`+data+`" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
                           <i class="la la-edit"></i>
                         </a>`;
 					},
@@ -154,7 +145,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'Groups/groupform/'+$('#id').val(),
+                url: 'group_form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
@@ -168,12 +159,19 @@ var KTDatatablesDataSourceAjaxServer = function() {
                             window.location.reload();
                         }, 2000); 
                     }else{
+                    	var err = 'Some error has been occured. Please try again.';
+                    	if(response == 'group_number_unique'){
+                    		err= "Group number is duplicate, please change group number."
+                    	}
                     	// similate 2s delay
                     	setTimeout(function() {
     	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-    	                    showErrorMsg(form, 'danger', 'Some error has been occured. Please try again.');
+    	                    showErrorMsg(form, 'danger', err);
                         }, 2000);                        
                     }
+                	$('html, body').animate({
+                        scrollTop: "0"
+                    }, 2000);
                 }
             });	
 		});

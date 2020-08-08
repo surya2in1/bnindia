@@ -68,18 +68,23 @@ class GroupsController extends AppController
         }else{
             $group = $this->Groups->newEmptyEntity();
         }
+        // echo 'sdf';exit;
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
-          // echo $post['id'].'<pre>';print_r($group);exit;
+           // echo '<pre>';print_r($group); 
             $post['date'] = date('Y-m-d',strtotime($post['date'])); 
-            // echo '<pre>';print_r($post);exit;
+             // echo '<pre>';print_r($post);exit;
             $group = $this->Groups->patchEntity($group, $post);
             if ($this->Groups->save($group)) {
                 echo 1;
             }else{
                  $validationErrors = $group->getErrors();
-                echo '<pre>';print_r($group->getErrors());
-                echo 0;
+                // echo '<pre>';print_r($group->getErrors());
+                if(isset($validationErrors['group_number']['unique']) && !empty($validationErrors['group_number']['unique'])){
+                    echo 'group_number_unique';
+                }else{
+                    echo 0;
+                } 
             }
             exit;
         }

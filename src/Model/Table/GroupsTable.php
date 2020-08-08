@@ -88,22 +88,10 @@ class GroupsTable extends Table
             ->requirePresence('date', 'create')
             ->notEmptyDate('date');
 
-        // $validator
-        //     ->integer('status')
-            // ->notEmptyString('status');
-
         $validator
             ->integer('no_of_months')
             ->requirePresence('no_of_months', 'create')
             ->notEmptyString('no_of_months');
-
-        // $validator
-        //     ->dateTime('created_date')
-        //     ->notEmptyDateTime('created_date');
-
-        // $validator
-        //     ->dateTime('modified_date')
-        //     ->notEmptyDateTime('modified_date');
 
         return $validator;
     }
@@ -124,7 +112,7 @@ class GroupsTable extends Table
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'g.group_number','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.status','g.no_of_months' );
+        $aColumns = array( 'g.group_number','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "g.group_number";
         /* DB table to use */
@@ -194,7 +182,6 @@ class GroupsTable extends Table
         $sOrder
         $sLimit
         ";
-
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
        
