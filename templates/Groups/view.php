@@ -1,68 +1,92 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Group $group
- */
-?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('Edit Group'), ['action' => 'edit', $group->id], ['class' => 'side-nav-item']) ?>
-            <?= $this->Form->postLink(__('Delete Group'), ['action' => 'delete', $group->id], ['confirm' => __('Are you sure you want to delete # {0}?', $group->id), 'class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('List Groups'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('New Group'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="groups view content">
-            <h3><?= h($group->id) ?></h3>
-            <table>
-                <tr>
-                    <th><?= __('Group Number') ?></th>
-                    <td><?= h($group->group_number) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Gov Reg No') ?></th>
-                    <td><?= h($group->gov_reg_no) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Id') ?></th>
-                    <td><?= $this->Number->format($group->id) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Chit Amount') ?></th>
-                    <td><?= $this->Number->format($group->chit_amount) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Total Number') ?></th>
-                    <td><?= $this->Number->format($group->total_number) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Premium') ?></th>
-                    <td><?= $this->Number->format($group->premium) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Status') ?></th>
-                    <td><?= $this->Number->format($group->status) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('No Of Months') ?></th>
-                    <td><?= $this->Number->format($group->no_of_months) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Date') ?></th>
-                    <td><?= h($group->date) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Created Date') ?></th>
-                    <td><?= h($group->created_date) ?></td>
-                </tr>
-                <tr>
-                    <th><?= __('Modified Date') ?></th>
-                    <td><?= h($group->modified_date) ?></td>
-                </tr>
-            </table>
+<!-- begin:: Content Head -->
+<div class="kt-subheader  kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">Groups</h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <div class="kt-input-icon kt-input-icon--right kt-subheader__search kt-hidden">
+                <input type="text" class="form-control" placeholder="Search order..." id="generalSearch">
+                <span class="kt-input-icon__icon kt-input-icon__icon--right">
+                    <span><i class="flaticon2-search-1"></i></span>
+                </span>
+            </div>
         </div>
     </div>
 </div>
+<!-- end:: Content Head -->
+<!-- begin:: Content -->
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">
+                            View Group
+                        </h3>
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="kt-section kt-section--first">
+                        <div class="kt-section__body">
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Group Number:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->group_number) ? $group->group_number : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Chit Amount:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->chit_amount) ? $group->chit_amount : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Total Number:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->total_number) ? $group->total_number : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Premium:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->premium) ? $group->premium : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Goverment Registration Number:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->gov_reg_no) ? $group->gov_reg_no : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Date:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->date) && strtotime($group->date) > 0 ? date('m/d/Y',strtotime($group->date)) : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Number of months:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->no_of_months) ? $group->no_of_months : '';?></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-portlet__foot">
+                    <div class="kt-form__actions">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <button type="button" onclick="history.go(-1);" class="btn btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end:: Content -->
+

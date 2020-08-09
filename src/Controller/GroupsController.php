@@ -47,6 +47,7 @@ class GroupsController extends AppController
      */
     public function view($id = null)
     {
+        $this->viewBuilder()->setLayout('admin');
         $group = $this->Groups->get($id, [
             'contain' => [],
         ]);
