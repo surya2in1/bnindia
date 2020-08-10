@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\ORM\TableRegistry;
 
 /**
  * Groups Controller
@@ -147,14 +148,20 @@ class GroupsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $group = $this->Groups->get($id);
-        if ($this->Groups->delete($group)) {
-            $this->Flash->success(__('The group has been deleted.'));
-        } else {
-            $this->Flash->error(__('The group could not be deleted. Please, try again.'));
+        $this->request->allowMethod(['get', 'delete']);
+        $MembersGroupsTable = TableRegistry::get('MembersGroups');
+        $membergroup = $MembersGroupsTable->find('all')->where(['group_id'=>$id])->first();
+        if($membergroup){
+            echo 'group_associated_with_members';
+        }else{
+            $group = $this->Groups->get($id);
+            if ($this->Groups->delete($group)) {
+                echo 1;
+            } else {
+                echo 0;
+            }
         }
-
-        return $this->redirect(['action' => 'index']);
+        exit;
     }
 }
+

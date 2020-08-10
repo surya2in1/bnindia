@@ -37,7 +37,7 @@
                         <a href="group_form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
-                        </a>
+                        </a>                       
                     </div>
                 </div>
             </div>

@@ -1,8 +1,8 @@
 "use strict";
+		var table = $('#group_table');
 var KTDatatablesDataSourceAjaxServer = function() {
 
 	var initTable1 = function() {
-		var table = $('#group_table');
 
 		// begin first table
 		table.DataTable({
@@ -55,7 +55,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 											</a>\
 										</li>\
 										<li class="kt-nav__item">\
-											<a href="#" class="kt-nav__link">\
+											<a href="#" class="kt-nav__link" onclick="deletegroup('+data+');">\
 												<i class="kt-nav__link-icon flaticon2-trash"></i>\
 												<span class="kt-nav__link-text">Delete</span>\
 											</a>\
@@ -85,6 +85,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 				}
 			],
 		});
+
 	};
 
 	var group_form = function () {
@@ -217,3 +218,56 @@ var KTDatatablesDataSourceAjaxServer = function() {
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();
 });
+function deletegroup(id){ 
+
+	swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then(function(result){ 
+        if (result.value) {
+        	$.ajax({
+			   "url": "Groups/delete/"+id,
+	            "type": "GET",
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) {
+                	if(response == 'group_associated_with_members'){
+                		swal.fire(
+			                'Cancelled',
+			                'Sorry we can not be delete this group. This group is associated with members.',
+			                'error'
+			            );
+                	}else if(response>0){
+    					table.DataTable().ajax.reload();
+                    	
+                    	swal.fire(
+			                'Deleted!',
+			                'The group has been deleted.',
+			                'success'
+			            );
+                    }else{
+                    	swal.fire(
+			                'Cancelled',
+			                'The group could not be deleted. Please, try again.',
+			                'error'
+			            );                        
+                    } 
+                }
+			}); 
+            // result.dismiss can be 'cancel', 'overlay',
+            // 'close', and 'timer'
+        } else if (result.dismiss === 'cancel') {
+            swal.fire(
+                'Cancelled',
+                'Your data is safe :)',
+                'error'
+            )
+        }
+    });
+} 

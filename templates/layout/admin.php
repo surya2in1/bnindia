@@ -158,6 +158,10 @@ $cakeDescription = 'Bnindia';
         <!--begin::Page Vendors(used by this page) -->
         <?= $this->Html->script('assets/plugins/custom/datatables/datatables.bundle.js') ?>
         <!--end::Page Vendors -->
+
+        <!-- Popup js -->
+        
+
         <?php if($this->request->getParam('controller') == 'Users') { ?> 
             <?= $this->Html->script('members.js') ?>
         <?php } ?>
