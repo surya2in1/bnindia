@@ -1,8 +1,8 @@
 "use strict";
+var table = $('#kt_table_1');
 var KTDatatablesDataSourceAjaxServer = function() {
 
 	var initTable1 = function() {
-		var table = $('#kt_table_1');
 
 		// begin first table
 		table.DataTable({
@@ -17,8 +17,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
 	        },
-			columns: [
-				{data: 'id'},
+			columns: [ 
 				{data: 'email'},
 				{data: 'first_name'},
 				{data: 'last_name'},
@@ -32,20 +31,35 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					title: 'Actions',
 					orderable: false,
 					render: function(data, type, full, meta) {
-						return `
-                        <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
-                              <i class="la la-ellipsis-h"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>
-                                <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
-                            </div>
-                        </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
-                          <i class="la la-edit"></i>
-                        </a>`;
+						return '\
+							<div class="dropdown">\
+								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
+									<i class="flaticon-more-1"></i>\
+								</a>\
+								<div class="dropdown-menu dropdown-menu-right">\
+									<ul class="kt-nav">\
+										<li class="kt-nav__item">\
+											<a href="users/view/'+data+'" class="kt-nav__link">\
+												<i class="kt-nav__link-icon flaticon2-expand"></i>\
+												<span class="kt-nav__link-text">View</span>\
+											</a>\
+										</li>\
+										<li class="kt-nav__item">\
+											<a href="member_form/'+data+'" class="kt-nav__link">\
+												<i class="kt-nav__link-icon flaticon2-contract"></i>\
+												<span class="kt-nav__link-text">Edit</span>\
+											</a>\
+										</li>\
+										<li class="kt-nav__item">\
+											<a href="#" class="kt-nav__link" onclick="deleteuser('+data+');">\
+												<i class="kt-nav__link-icon flaticon2-trash"></i>\
+												<span class="kt-nav__link-text">Delete</span>\
+											</a>\
+										</li>\
+									</ul>\
+								</div>\
+							</div>\
+						';
 					},
 				},
 				{
@@ -110,3 +124,57 @@ var KTDatatablesDataSourceAjaxServer = function() {
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();
 });
+
+function deleteuser(id){ 
+
+	swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then(function(result){ 
+        if (result.value) {
+        	$.ajax({
+			   "url": "Users/delete/"+id,
+	            "type": "GET",
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) {
+                	if(response == 'group_associated_with_members'){
+                		swal.fire(
+			                'Cancelled',
+			                'Sorry we can not be delete this group. This group is associated with members.',
+			                'error'
+			            );
+                	}else if(response>0){
+    					table.DataTable().ajax.reload();
+                    	
+                    	swal.fire(
+			                'Deleted!',
+			                'The group has been deleted.',
+			                'success'
+			            );
+                    }else{
+                    	swal.fire(
+			                'Cancelled',
+			                'The group could not be deleted. Please, try again.',
+			                'error'
+			            );                        
+                    } 
+                }
+			}); 
+            // result.dismiss can be 'cancel', 'overlay',
+            // 'close', and 'timer'
+        } else if (result.dismiss === 'cancel') {
+            swal.fire(
+                'Cancelled',
+                'Your data is safe :)',
+                'error'
+            )
+        }
+    });
+} 

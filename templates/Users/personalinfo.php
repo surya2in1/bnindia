@@ -309,7 +309,7 @@
 
 													</div>
 													<?php }else{ ?>
-													 <input class="form-input" type="file" id="photo_proof" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
+													 <input class="file-input" type="file" id="photo_proof" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
 													 <label for="photo_proof" class="file-input-btn">Choose a file</label>
 														<label class="file-name"></label>
 													<?php } ?>
@@ -338,7 +338,7 @@
 														<label class="file-name"></label>
 													</div>
 													<?php }else{ ?>
-													 <input class="form-input" type="file" id="other_document" value="<?= $user->other_document; ?>" name="other_document"> 
+													 <input class="file-input" type="file" id="other_document" value="<?= $user->other_document; ?>" name="other_document"> 
 													<label for="other_document" class="file-input-btn">Choose a file</label>
 														<label class="file-name"></label>
 													<?php } ?>

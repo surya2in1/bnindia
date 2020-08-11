@@ -34,7 +34,7 @@
                 <div class="kt-portlet__head-wrapper">
                     <div class="kt-portlet__head-actions">
                         
-                        <a href="#" class="btn btn-brand btn-elevate btn-icon-sm">
+                        <a href="member_form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
                         </a>
@@ -48,7 +48,6 @@
             <table class="table table-striped- table-bordered table-hover table-checkable" id="kt_table_1">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>

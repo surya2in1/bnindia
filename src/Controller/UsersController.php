@@ -447,5 +447,83 @@ class UsersController extends AppController
         }
         
     }
+    
+    /*
+    ** add edit member
+    */
+     function memberform($id=null){
+        $this->viewBuilder()->setLayout('admin');
+        if(isset($_POST['id']) && ($_POST['id'] > 0)){
+            $id =  $_POST['id'];
+        }
+        if($id>0){
+            $user = $this->Users->get($id, [
+                'contain' => [],
+            ]);       
+        }else{
+            $user = $this->Users->newEmptyEntity();
+        }
+        // echo 'sdf';exit;
+        if ($this->request->is(['patch', 'post', 'put'])) {
+           // echo '<pre>';print_r($this->request->getData());
+
+            $post = $this->request->getData();
+
+            //convert dates to db field format
+            if(strtotime($post['date_of_birth']) > 0){
+                $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
+            }
+            if(strtotime($post['nominee_dob']) > 0){
+                $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
+            }
+            //upload docs
+            $profile_picture_data = $post['profile_picture'];
+            $address_proof = $post['address_proof'];
+            $photo_proof = $post['photo_proof'];
+            $other_document = $post['other_document'];
+
+            //remove unnecessary data for db validation
+            unset($post['profile_picture']);
+            unset($post['address_proof']);
+            unset($post['photo_proof']);
+            unset($post['other_document']);
+
+            $user = $this->Users->patchEntity($user, $post);
+            $validationErrors = $user->getErrors();
+            // echo 'validationErrors <pre>';print_r($validationErrors);exit;
+            if(empty($validationErrors)){
+                $profile_picture = $profile_picture_data;
+                if($profile_picture_data->getClientFilename()){
+                   $user->profile_picture = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs"); 
+                }
+                          
+                //upload documnts\
+                if($address_proof->getClientFilename()){
+                    $user->address_proof = $this->userDocUpload('address_proof',$address_proof);
+                }
+
+                if($photo_proof->getClientFilename()){
+                    $user->photo_proof = $this->userDocUpload('photo_proof',$photo_proof);
+                }
+                if($other_document->getClientFilename()){
+                    $user->other_document = $this->userDocUpload('other_document',$other_document);
+                }
+            }
+            if ($this->Users->save($user)) {
+                echo 1;
+            }else{
+                 $validationErrors = $user->getErrors();
+                // echo '<pre>';print_r($user->getErrors());
+                if(isset($validationErrors['email']['unique']) && !empty($validationErrors['email']['unique'])){
+                    echo 'email_unique';
+                }else{
+                    echo 0;
+                } 
+            }
+            exit;
+        }
+        //echo '<pre>';print_r($user);exit();
+        $this->set(compact('user'));
+     }
 
 }

@@ -201,7 +201,7 @@ class UsersTable extends Table
     }
 
     public function GetData() {
-        $aColumns = array( 'u.id','u.email','u.first_name','u.last_name','u.gender','u.status' );
+        $aColumns = array( 'u.email','u.first_name','u.last_name','u.gender','u.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";
         /* DB table to use */
@@ -265,7 +265,7 @@ class UsersTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." ,'1' as actions
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." ,u.id as actions
         FROM   $sTable  left JOIN roles r on u.role_id = r.id 
         $sWhere
         $sOrder
