@@ -51,7 +51,7 @@
 										<div class="row">
 											<label class="col-xl-3"></label>
 											<div class="col-lg-9 col-xl-6">
-												<h3 class="kt-section__title kt-section__title-sm">Customer Info:</h3>
+												<h3 class="kt-section__title kt-section__title-sm">Information:</h3>
 											</div>
 										</div>
 										<div class="form-group row">
@@ -181,7 +181,7 @@
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">Accupation</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">Occupation</label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" name="occupation" type="text" value="<?= $user->occupation; ?>">
 											</div>

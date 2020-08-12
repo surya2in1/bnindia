@@ -2,7 +2,7 @@
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
         <div class="kt-subheader__main">
-            <h3 class="kt-subheader__title">Add Member</h3>
+            <h3 class="kt-subheader__title">Member</h3>
             <span class="kt-subheader__separator kt-subheader__separator--v"></span>
             <div class="kt-input-icon kt-input-icon--right kt-subheader__search kt-hidden">
                 <input type="text" class="form-control" placeholder="Search order..." id="generalSearch">
@@ -30,12 +30,42 @@
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form',
                        'id'=>'member_form',
+                       'enctype' => 'multipart/form-data',
                        'method'=> 'Post'
                      )); ?>
-                      <input type="hidden" name="id" id="id" value="<?= isset($member->id) && ($member->id > 0) ? $member->id : '0';?>">
+                    <input type="hidden" name="id" id="id" value="<?= isset($user->id) && ($user->id > 0) ? $user->id : '0';?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
+                                <div class="row">
+                                    <label class="col-xl-3"></label>
+                                    <div class="col-lg-9 col-xl-6">
+                                        <h3 class="kt-section__title kt-section__title-sm">Information:</h3>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label">Profile picture</label>
+                                            <div class="col-lg-9 col-xl-6">
+                                                <div class="input-group">
+                                                    <div class="kt-avatar kt-avatar--outline" id="kt_user_avatar">
+                                                        <?php 
+                                                        $profile_picture = 'assets/media/users/default.jpg';
+                                                        if($user->profile_picture){
+                                                            $profile_picture = 'img/user_imgs/'.$user->profile_picture;
+                                                        }
+                                                        ?>
+                                                        <div class="kt-avatar__holder" style="background-image: url(<?= $profile_picture?>)"></div>
+                                                        <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
+                                                            <i class="fa fa-pen"></i>
+                                                            <input type="file" name="profile_picture" id="profile_picture"/>
+                                                        </label>
+                                                        <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
+                                                            <i class="fa fa-times"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">First Name:</label>
                                     <div class="col-lg-6">
@@ -45,19 +75,19 @@
                                  <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Middle name:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="middle_name" placeholder="Enter Middle Name" value="<?= isset($user->middle_name) ? $user->middle_name : '';?>">
+                                        <input type="text" class="form-control" name="middle_name" placeholder="Enter Middle Name" value="<?= isset($user->middle_name) ? $user->middle_name : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Last Name:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="last_name" placeholder="Enter Last Name" value="<?= isset($user->last_name) ? $user->last_name : '';?>">
+                                        <input type="text" class="form-control" name="last_name" placeholder="Enter Last Name" value="<?= isset($user->last_name) ? $user->last_name : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Email:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="email" placeholder="Enter Email" value="<?= isset($user->email) ? $user->email : '';?>">
+                                        <input type="email" class="form-control" name="email" placeholder="Enter Email" value="<?= isset($user->email) ? $user->email : '';?>">
                                     </div>
                                 </div> 
                                 <div class="form-group row">
@@ -146,7 +176,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-xl-3 col-lg-3 col-form-label">Accupation</label>
+                                    <label class="col-xl-3 col-lg-3 col-form-label">Occupation</label>
                                     <div class="col-lg-6 col-xl-6">
                                         <input class="form-control" name="occupation" type="text" value="<?= $user->occupation; ?>">
                                     </div>
@@ -154,7 +184,7 @@
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Income Amount</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" name="income_amt" type="text" value="<?= $user->income_amt; ?>">
+                                        <input class="form-control" name="income_amt" type="number" value="<?= $user->income_amt; ?>">
                                     </div>
                                 </div>
                                 <div class="row">

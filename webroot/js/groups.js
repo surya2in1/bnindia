@@ -182,7 +182,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                         // similate 2s delay
                         setTimeout(function() {
                             btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'The group has been successfully.');
+                            showErrorMsg(form, 'success', 'The group has been saved successfully.');
                             window.location.reload();
                         }, 2000); 
                     }else{
