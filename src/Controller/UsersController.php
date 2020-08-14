@@ -233,19 +233,11 @@ class UsersController extends AppController
             $user->token = $mytocken;
             if($UsersTable->save($user)){
                 //send email 
-                // TransportFactory::setConfig('mailtrap', [
-                //   'host' => 'smtp.mailtrap.io',
-                //   'port' => 2525,
-                //   'username' => '8f7ca86b8c979f',
-                //   'password' => '006f3da61f5887',
-                //   'className' => 'Smtp'
-                // ]);
-
                 TransportFactory::setConfig('gmail', [
                   'host' => 'ssl://smtp.gmail.com',
                   'port' => 25,
                   'username' => 'riyajaya692@gmail.com',
-                  'password' => 'jayshri21',
+                  'password' => 'etgtxblbsftaupzd',
                   'className' => 'Smtp'
                 ]);
                 
@@ -257,14 +249,6 @@ class UsersController extends AppController
                 } catch (Exception $e) {
                     $response = 0;
                 }
-
-                // $email = new Email('default');
-                // $email->transport('mailtrap');
-                // $email->emailFormat('html');
-                // $email->from('jayshris22@gmail.com','Jayshri');
-                // $email->subject('Please confirm your reset password');
-                // $email->to($email);
-                // $email->send($msg);
             } 
         }
         echo $response;exit;
@@ -468,7 +452,7 @@ class UsersController extends AppController
         }
         // echo 'sdf';exit;
         if ($this->request->is(['patch', 'post', 'put'])) {
-           echo '<pre>';print_r($this->request->getData());
+           // echo '<pre>';print_r($this->request->getData());
 
             $post = $this->request->getData();
 
@@ -490,33 +474,53 @@ class UsersController extends AppController
             unset($post['address_proof']);
             unset($post['photo_proof']);
             unset($post['other_document']);
+            //create random password
+            $post['password'] = $this->Common->randomPassword();
+
+            //find member role id
+            $RolesTable = TableRegistry::get('Roles');
+            $role = $RolesTable->find('all')->where(['name'=>'member'])->first();
+            $post['role_id'] = $role->id;
 
             $user = $this->Users->patchEntity($user, $post);
-            $validationErrors = $user->getErrors();
-            echo 'validationErrors <pre>';print_r($validationErrors);exit;
             if ($result = $this->Users->save($user)) { 
-                echo '$result->id '.$result->id;
                 $profile_picture = $profile_picture_data;
                 if($profile_picture_data->getClientFilename()){
-                   $user->profile_picture = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id); 
+                   $updateuser['profile_picture'] = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id); 
                 }
                           
                 //upload documnts\
                 if($address_proof->getClientFilename()){
-                    $user->address_proof = $this->userDocUpload('address_proof',$address_proof,'', $result->id);
+                    $updateuser['address_proof'] = $this->userDocUpload('address_proof',$address_proof,'', $result->id);
                 }
 
                 if($photo_proof->getClientFilename()){
-                    $user->photo_proof = $this->userDocUpload('photo_proof',$photo_proof,'', $result->id);
+                    $updateuser['photo_proof'] = $this->userDocUpload('photo_proof',$photo_proof,'', $result->id);
                 }
                 if($other_document->getClientFilename()){
-                    $user->other_document = $this->userDocUpload('other_document',$other_document,'', $result->id);
+                    $updateuser['other_document'] = $this->userDocUpload('other_document',$other_document,'', $result->id);
                 } 
-                echo 1;
+                //update user docs
+                $usertable = TableRegistry::get("Users");
+                $query = $usertable->query();
+                $result = $query->update()
+                        ->set($updateuser)
+                        ->where(['id' => $result->id])
+                        ->execute();
+                // send password to user
+                $msg ="Hello ".$post['first_name'].'\r\n';
+                $msg .="Welcome to Bnindia application, your newly genereted password is below,".'\r\n';
+                $msg .= "Password: ". $post['password'].'\r\n';
+                $send = $this->Common->sendmail($post['email'],'Bnindia application password',$msg);
+                if($send){
+                    echo 1;
+                }else{
+                    echo 2;
+                }
             }else{
                  $validationErrors = $user->getErrors();
-                // echo '<pre>';print_r($user->getErrors());
-                if(isset($validationErrors['email']['unique']) && !empty($validationErrors['email']['unique'])){
+                //echo '<pre>';print_r($user->getErrors());
+                if(isset($validationErrors['email']['_isUnique']) && !empty($validationErrors['email']['_isUnique'])){
                     echo 'email_unique';
                 }else{
                     echo 0;
