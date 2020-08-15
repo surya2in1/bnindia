@@ -450,9 +450,14 @@ class UsersController extends AppController
         }else{
             $user = $this->Users->newEmptyEntity();
         }
-        // echo 'sdf';exit;
+        // get groups
+        $GroupsTable = TableRegistry::get('Groups');
+        $groups = $GroupsTable->find('list', [
+                                        'keyField' => 'id',
+                                        'valueField' => 'group_number'
+                                    ])->where(['status'=>1])->toArray();;
+        // echo '<pre>';print_r($groups);exit;
         if ($this->request->is(['patch', 'post', 'put'])) {
-           // echo '<pre>';print_r($this->request->getData());
 
             $post = $this->request->getData();
 
@@ -530,6 +535,7 @@ class UsersController extends AppController
         }
         //echo '<pre>';print_r($user);exit();
         $this->set(compact('user'));
+        $this->set('groups',$groups);
      }
 
 }

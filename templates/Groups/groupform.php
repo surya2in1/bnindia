@@ -15,6 +15,7 @@
 </div>
 <!-- end:: Content Head -->
 <!-- begin:: Content -->
+<?php $groupid = isset($group->id) && ($group->id > 0) ? $group->id : '0';?>
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
         <div class="col-lg-12">
@@ -22,7 +23,7 @@
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                            Add Group
+                            <?= ($groupid > 0 ) ? 'Edit Group' : 'Add Group'; ?> 
                         </h3>
                     </div>
                 </div>
@@ -32,7 +33,7 @@
                        'id'=>'group_form',
                        'method'=> 'Post'
                      )); ?>
-                      <input type="hidden" name="id" id="id" value="<?= isset($group->id) && ($group->id > 0) ? $group->id : '0';?>">
+                      <input type="hidden" name="id" id="id" value="<?= $groupid; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">

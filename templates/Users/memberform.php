@@ -1,3 +1,5 @@
+<?php use Cake\Routing\Router; ?>
+
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -15,6 +17,7 @@
 </div>
 <!-- end:: Content Head -->
 <!-- begin:: Content -->
+<?php $userid = isset($user->id) && ($user->id > 0) ? $user->id : 0;?>
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
         <div class="col-lg-12">
@@ -22,7 +25,7 @@
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                            Add Member
+                            <?= ($userid>0) ? 'Edit Member' : 'Add Member';?>
                         </h3>
                     </div>
                 </div>
@@ -33,7 +36,7 @@
                        'enctype' => 'multipart/form-data',
                        'method'=> 'Post'
                      )); ?>
-                    <input type="hidden" name="id" id="id" value="<?= isset($user->id) && ($user->id > 0) ? $user->id : '0';?>">
+                    <input type="hidden" name="id" id="id" value="<?= $userid; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
@@ -51,7 +54,7 @@
                                                         <?php 
                                                         $profile_picture = 'assets/media/users/default.jpg';
                                                         if($user->profile_picture){
-                                                            $profile_picture = 'img/user_imgs/'.$user->profile_picture;
+                                                            $profile_picture =  Router::url('/', true).'img/user_imgs/'.$user->profile_picture;
                                                         }
                                                         ?>
                                                         <div class="kt-avatar__holder" style="background-image: url(<?= $profile_picture?>)"></div>
@@ -254,7 +257,7 @@
                                             <?php if($user->address_proof){ ?>
                                             <div class="existing-address-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="users_docs/address_proof/<?= $user->address_proof; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>users_docs/address_proof/<?= $user->address_proof; ?>"width="25%" alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -269,15 +272,10 @@
                                                 <label class="file-name"></label>
                                             </div>
                                             <?php }else{ ?>
-                                             <input class="file-input" type="file" id="address_proof" value="<?= $user->address_proof; ?>" name="address_proof">
+                                             <input class="file-input" type="file" id="address_proof" name="address_proof">
                                              <label for="address_proof" class="file-input-btn">Choose a file</label>
                                             <label class="file-name"></label> 
-                                            <?php } ?>
-                                            <!-- <div class="dropzone dropzone-default" id="kt_dropzone_1">
-                                                <div class="dropzone-msg dz-message needsclick">
-                                                    <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
-                                                </div>
-                                            </div> -->
+                                            <?php } ?> 
                                         </div>
                                     </div>
                                 </div>
@@ -288,7 +286,7 @@
                                             <?php if($user->photo_proof){ ?>
                                             <div class="existing-photo-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="users_docs/photo_proof/<?= $user->photo_proof; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>users_docs/photo_proof/<?= $user->photo_proof; ?>"width="25%" alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -304,7 +302,7 @@
 
                                             </div>
                                             <?php }else{ ?>
-                                             <input class="file-input" type="file" id="photo_proof" value="<?= $user->photo_proof; ?>" name="photo_proof"> 
+                                             <input class="file-input" type="file" id="photo_proof" name="photo_proof"> 
                                              <label for="photo_proof" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
                                             <?php } ?>
@@ -318,7 +316,7 @@
                                             <?php if($user->other_document){ ?>
                                             <div class="existing-other-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="users_docs/other_document/<?= $user->other_document; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>users_docs/other_document/<?= $user->other_document; ?>"width="25%" alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -333,11 +331,32 @@
                                                 <label class="file-name"></label>
                                             </div>
                                             <?php }else{ ?>
-                                             <input class="file-input" type="file" id="other_document" value="<?= $user->other_document; ?>" name="other_document"> 
+                                             <input class="file-input" type="file" id="other_document" name="other_document"> 
                                             <label for="other_document" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
                                             <?php } ?>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-xl-3"></label>
+                                    <div class="col-lg-6 col-xl-6">
+                                        <h3 class="kt-section__title kt-section__title-sm">Groups:</h3>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups</label>
+                                    <div class="col-lg-6 col-xl-6">
+                                        <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
+                                            <?php if($groups){ 
+                                                foreach ($groups as $key => $group) {?>
+                                                    <option value="<?= $key; ?>"><?=$group?></option>
+                                               <?php }
+                                            }else{ ?>
+                                            <option value="">No groups available</option>
+                                            <?php } ?>
+                                        </select>
+                                        <a href="<?= Router::url('/', true);?>groups" class="form-text text-muted">For more delails click here</a>
                                     </div>
                                 </div>
                             </div>
