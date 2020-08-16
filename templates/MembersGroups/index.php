@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('member_id') ?></th>
+                    <th><?= $this->Paginator->sort('user_id') ?></th>
                     <th><?= $this->Paginator->sort('group_id') ?></th>
                     <th><?= $this->Paginator->sort('created_date') ?></th>
                     <th><?= $this->Paginator->sort('modified_date') ?></th>
@@ -23,7 +23,7 @@
                 <?php foreach ($membersGroups as $membersGroup): ?>
                 <tr>
                     <td><?= $this->Number->format($membersGroup->id) ?></td>
-                    <td><?= $this->Number->format($membersGroup->member_id) ?></td>
+                    <td><?= $this->Number->format($membersGroup->user_id) ?></td>
                     <td><?= $membersGroup->has('group') ? $this->Html->link($membersGroup->group->id, ['controller' => 'Groups', 'action' => 'view', $membersGroup->group->id]) : '' ?></td>
                     <td><?= h($membersGroup->created_date) ?></td>
                     <td><?= h($membersGroup->modified_date) ?></td>

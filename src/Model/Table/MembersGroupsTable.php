@@ -11,7 +11,6 @@ use Cake\Validation\Validator;
 /**
  * MembersGroups Model
  *
- * @property \App\Model\Table\MembersTable&\Cake\ORM\Association\BelongsTo $Members
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
  *
  * @method \App\Model\Entity\MembersGroup newEmptyEntity()
@@ -44,8 +43,8 @@ class MembersGroupsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Members', [
-            'foreignKey' => 'member_id',
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Groups', [
@@ -86,7 +85,7 @@ class MembersGroupsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['member_id'], 'Members'));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
         $rules->add($rules->existsIn(['group_id'], 'Groups'));
 
         return $rules;

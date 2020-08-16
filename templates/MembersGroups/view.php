@@ -27,8 +27,8 @@
                     <td><?= $this->Number->format($membersGroup->id) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Member Id') ?></th>
-                    <td><?= $this->Number->format($membersGroup->member_id) ?></td>
+                    <th><?= __('User Id') ?></th>
+                    <td><?= $this->Number->format($membersGroup->user_id) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('Created Date') ?></th>

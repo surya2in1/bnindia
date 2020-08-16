@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * MembersGroup Entity
  *
  * @property int $id
- * @property int $member_id
+ * @property int $user_id
  * @property int $group_id
  * @property \Cake\I18n\FrozenTime $created_date
  * @property \Cake\I18n\FrozenTime $modified_date
@@ -29,7 +29,7 @@ class MembersGroup extends Entity
      * @var array
      */
     protected $_accessible = [
-        'member_id' => true,
+        'user_id' => true,
         'group_id' => true,
         'created_date' => true,
         'modified_date' => true,

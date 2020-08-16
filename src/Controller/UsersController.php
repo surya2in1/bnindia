@@ -318,19 +318,19 @@ class UsersController extends AppController
             // echo 'validationErrors <pre>';print_r($validationErrors);exit;
             if(empty($validationErrors)){
                 $profile_picture = $profile_picture_data;
-                if($profile_picture_data->getClientFilename()){
+                if($profile_picture_data && $profile_picture_data->getClientFilename()){
                    $user->profile_picture = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs"); 
                 }
                           
                 //upload documnts\
-                if($address_proof->getClientFilename()){
+                if($address_proof && $address_proof->getClientFilename()){
                     $user->address_proof = $this->userDocUpload('address_proof',$address_proof);
                 }
 
-                if($photo_proof->getClientFilename()){
+                if($photo_proof && $photo_proof->getClientFilename()){
                     $user->photo_proof = $this->userDocUpload('photo_proof',$photo_proof);
                 }
-                if($other_document->getClientFilename()){
+                if($other_document && $other_document->getClientFilename()){
                     $user->other_document = $this->userDocUpload('other_document',$other_document);
                 }
             }
@@ -443,10 +443,14 @@ class UsersController extends AppController
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
         }
+        $this->loadModel('MembersGroups');
         if($id>0){
             $user = $this->Users->get($id, [
                 'contain' => [],
-            ]);       
+            ]);
+            $MembersGroupsTable = TableRegistry::get('MembersGroups');
+            $selected_member_groups = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->toArray();
+            // echo '<pre>';print_r($selected_member_groups);exit;
         }else{
             $user = $this->Users->newEmptyEntity();
         }
@@ -456,10 +460,10 @@ class UsersController extends AppController
                                         'keyField' => 'id',
                                         'valueField' => 'group_number'
                                     ])->where(['status'=>1])->toArray();;
-        // echo '<pre>';print_r($groups);exit;
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $post = $this->request->getData();
+            // echo $id.'<pre>';print_r($post);exit;
 
             //convert dates to db field format
             if(strtotime($post['date_of_birth']) > 0){
@@ -488,30 +492,46 @@ class UsersController extends AppController
             $post['role_id'] = $role->id;
 
             $user = $this->Users->patchEntity($user, $post);
-            if ($result = $this->Users->save($user)) { 
+            if ($result = $this->Users->save($user)) {  
                 $profile_picture = $profile_picture_data;
-                if($profile_picture_data->getClientFilename()){
+                if($profile_picture_data && $profile_picture_data->getClientFilename()){
                    $updateuser['profile_picture'] = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id); 
                 }
                           
                 //upload documnts\
-                if($address_proof->getClientFilename()){
+                if($address_proof && $address_proof->getClientFilename()){
                     $updateuser['address_proof'] = $this->userDocUpload('address_proof',$address_proof,'', $result->id);
                 }
 
-                if($photo_proof->getClientFilename()){
+                if($photo_proof &&  $photo_proof->getClientFilename()){
                     $updateuser['photo_proof'] = $this->userDocUpload('photo_proof',$photo_proof,'', $result->id);
                 }
-                if($other_document->getClientFilename()){
+                if($other_document &&  $other_document->getClientFilename()){
                     $updateuser['other_document'] = $this->userDocUpload('other_document',$other_document,'', $result->id);
                 } 
                 //update user docs
-                $usertable = TableRegistry::get("Users");
-                $query = $usertable->query();
-                $result = $query->update()
-                        ->set($updateuser)
-                        ->where(['id' => $result->id])
-                        ->execute();
+                if(isset($updateuser)){
+                    $usertable = TableRegistry::get("Users");
+                    $query = $usertable->query();
+                    $result = $query->update()
+                            ->set($updateuser)
+                            ->where(['id' => $result->id])
+                            ->execute();
+                }
+
+                //Add member groups
+                if(isset($post['group_ids']) && !empty($post['group_ids'])){
+                    //delete existing data
+                    $this->MembersGroups->deleteAll(['user_id' => $result->id]);
+                    foreach ($post['group_ids'] as  $group_id) {
+                        $group_record['user_id'] = $result->id;
+                        $group_record['group_id'] = $group_id;
+                        $group_records[] = $group_record;
+                    }
+                    $MembersGroups = $this->MembersGroups->newEntities($group_records);
+                    $this->MembersGroups->saveMany($MembersGroups);
+                }   
+
                 // send password to user
                 $msg ="Hello ".$post['first_name'].'\r\n';
                 $msg .="Welcome to Bnindia application, your newly genereted password is below,".'\r\n';

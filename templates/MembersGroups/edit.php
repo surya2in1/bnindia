@@ -22,7 +22,7 @@
             <fieldset>
                 <legend><?= __('Edit Members Group') ?></legend>
                 <?php
-                    echo $this->Form->control('member_id');
+                    echo $this->Form->control('user_id');
                     echo $this->Form->control('group_id', ['options' => $groups]);
                     echo $this->Form->control('created_date');
                     echo $this->Form->control('modified_date');
