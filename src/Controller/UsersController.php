@@ -108,6 +108,7 @@ class UsersController extends AppController
      */
     public function view($id = null)
     {
+        $this->viewBuilder()->setLayout('admin');
         $user = $this->Users->get($id, [
             'contain' => [],
         ]);
@@ -444,16 +445,23 @@ class UsersController extends AppController
             $id =  $_POST['id'];
         }
         $this->loadModel('MembersGroups');
+        $selected_member_groups = []; 
         if($id>0){
             $user = $this->Users->get($id, [
                 'contain' => [],
             ]);
             $MembersGroupsTable = TableRegistry::get('MembersGroups');
-            $selected_member_groups = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->toArray();
+            $member_groups = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->toArray();
+            if(!empty($member_groups)){
+                foreach ($member_groups as $key => $value) { 
+                    $selected_member_groups[$key] = $value->group_id; 
+                }
+            }
             // echo '<pre>';print_r($selected_member_groups);exit;
         }else{
             $user = $this->Users->newEmptyEntity();
         }
+        $this->set('selected_member_groups',$selected_member_groups);
         // get groups
         $GroupsTable = TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
@@ -531,16 +539,19 @@ class UsersController extends AppController
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
                     $this->MembersGroups->saveMany($MembersGroups);
                 }   
-
-                // send password to user
-                $msg ="Hello ".$post['first_name'].'\r\n';
-                $msg .="Welcome to Bnindia application, your newly genereted password is below,".'\r\n';
-                $msg .= "Password: ". $post['password'].'\r\n';
-                $send = $this->Common->sendmail($post['email'],'Bnindia application password',$msg);
-                if($send){
-                    echo 1;
+                if($id<1){
+                    // send password to user
+                    $msg ="Hello ".$post['first_name'].'\r\n';
+                    $msg .="Welcome to Bnindia application, your newly genereted password is below,".'\r\n';
+                    $msg .= "Password: ". $post['password'].'\r\n';
+                    $send = $this->Common->sendmail($post['email'],'Bnindia application password',$msg);
+                    if($send){
+                        echo 1;
+                    }else{
+                        echo 2;
+                    }
                 }else{
-                    echo 2;
+                    echo 1;
                 }
             }else{
                  $validationErrors = $user->getErrors();

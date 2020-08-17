@@ -203,7 +203,6 @@
                                             <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
                                             <input type="text" class="form-control" name="mobile_number" value="<?= $user->mobile_number; ?>" placeholder="Phone" aria-describedby="basic-addon1">
                                         </div>
-                                        <span class="form-text text-muted">We'll never share your email with anyone else.</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -241,7 +240,6 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <span class="form-text text-muted">Enable clear and today helper buttons</span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -350,7 +348,7 @@
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
                                             <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
-                                                    <option value="<?= $key; ?>"><?=$group?></option>
+                                                    <option <?php if(in_array($key, $selected_member_groups)){ echo 'selected'; } ?> value="<?= $key; ?>"><?=$group?></option>
                                                <?php }
                                             }else{ ?>
                                             <option value="">No groups available</option>
