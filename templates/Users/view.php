@@ -230,17 +230,14 @@
                                 <div class="form-group row">
                                     <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
-                                            <?php if($groups){ 
-                                                foreach ($groups as $key => $group) {?>
-                                                    <option <?php if(in_array($key, $selected_member_groups)){ echo 'selected'; } ?> value="<?= $key; ?>"><?=$group?></option>
-                                               <?php }
-                                            }else{ ?>
-                                            <option value="">No groups available</option>
-                                            <?php } ?>
-                                        </select>
-                                        <a href="<?= Router::url('/', true);?>groups" class="form-text text-muted">For more delails click here</a>
-                                    </div>
+                                        <?php if($membergroups){ 
+                                            foreach ($membergroups as $key => $value) {
+                                                    echo $value->group->group_number."<br/>";
+                                                }    
+                                        }else{
+                                            echo 'No groups available';
+                                        } ?>
+                                    </div>  
                                 </div>
                             </div>
                         </div>

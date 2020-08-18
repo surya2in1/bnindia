@@ -113,7 +113,18 @@ class UsersController extends AppController
             'contain' => [],
         ]);
 
+        $membergroups= TableRegistry::get('MembersGroups');
+        $membergroup = $membergroups->find('all', [
+            'contain' => [
+                             'Groups' => function ($q) {
+                                return $q
+                                    ->select(['id','group_number']);
+                            },      
+                         ],
+        ])->toArray();
+        // echo '<pre>';print_r($membergroup);exit;
         $this->set(compact('user'));
+        $this->set('membergroups',$membergroup);
     }
 
     /**
