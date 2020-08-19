@@ -203,15 +203,20 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
-        } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+        $this->request->allowMethod(['get', 'delete']);
+        $MembersGroupsTable = TableRegistry::get('MembersGroups');
+        $membergroup = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->first();
+        if($membergroup){
+            echo 'group_associated_with_members';
+        }else{
+            $user = $this->Users->get($id);
+            if ($this->Users->delete($user)) {
+                echo 1;
+            } else {
+                echo 0;
+            }
         }
-
-        return $this->redirect(['action' => 'index']);
+        exit;
     }
 
     /**

@@ -247,7 +247,7 @@
                             <div class="row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                                    <button type="button" onclick="history.go(-1);" class="btn btn-secondary">Cancel</button>
                                 </div>
                             </div>
                         </div>

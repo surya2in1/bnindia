@@ -311,13 +311,13 @@ function deleteuser(id){
                     	
                     	swal.fire(
 			                'Deleted!',
-			                'The group has been deleted.',
+			                'The member has been deleted.',
 			                'success'
 			            );
                     }else{
                     	swal.fire(
 			                'Cancelled',
-			                'The group could not be deleted. Please, try again.',
+			                'The member could not be deleted. Please, try again.',
 			                'error'
 			            );                        
                     } 
