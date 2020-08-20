@@ -348,8 +348,13 @@
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
                                             <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
-                                                    <option <?php if(in_array($key, $selected_member_groups)){ echo 'selected'; } ?> value="<?= $key; ?>"><?=$group?></option>
+                                                    <option <?php if(in_array($key, $selected_member_groups)){ echo 'selected'; echo 'desabled'; } ?> value="<?= $key; ?>"><?=$group?></option>
                                                <?php }
+                                               if($full_groups){
+                                                foreach ($full_groups as $key => $value) { ?>
+                                                    <option selected='selected' disabled value="<?= $key; ?>"><?=$value?></option>
+                                                <?php  }
+                                               }
                                             }else{ ?>
                                             <option value="">No groups available</option>
                                             <?php } ?>

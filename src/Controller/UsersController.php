@@ -457,9 +457,11 @@ class UsersController extends AppController
     */
      function memberform($id=null){
         $this->viewBuilder()->setLayout('admin');
+       
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
         }
+
         $this->loadModel('MembersGroups');
         $selected_member_groups = []; 
         if($id>0){
@@ -478,12 +480,33 @@ class UsersController extends AppController
             $user = $this->Users->newEmptyEntity();
         }
         $this->set('selected_member_groups',$selected_member_groups);
-        // get groups
+        //Get available groups
         $GroupsTable = TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
                                         'keyField' => 'id',
                                         'valueField' => 'group_number'
-                                    ])->where(['status'=>1])->toArray();;
+                                    ])->where(['status'=>1])->toArray();
+
+        $full_groups= [];
+        if(!empty($groups)){
+            foreach ($groups as $key=> $value) {
+                  $grouplist[] = $key; 
+            }
+             if(!empty($selected_member_groups)){
+                $remaning_full_groups = array_diff($selected_member_groups, $grouplist);
+                 if($remaning_full_groups){
+                    foreach ($remaning_full_groups as  $value) {
+                        $result = $GroupsTable->find('list', [
+                                                'keyField' => 'id',
+                                                'valueField' => 'group_number'
+                                            ])->where(['id'=>$value])->toArray();
+                        $full_groups = $full_groups + $result;
+                    }
+                }
+            }
+
+        }
+         $this->set('full_groups',$full_groups);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $post = $this->request->getData();
@@ -554,7 +577,28 @@ class UsersController extends AppController
                     }
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
                     $this->MembersGroups->saveMany($MembersGroups);
+                    
+                    //Check group is full and change the group status
+                    //Get the member groups count
+                    foreach ($post['group_ids'] as $group_id) {
+                        $GroupsTable = TableRegistry::get('Groups');
+                        $MembersGroupsTable = TableRegistry::get('MembersGroups');
+                        $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
+                        $member_group_count = $query->count();
+                        $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
+
+                        if($group_total_no['total_number'] == $member_group_count){
+                            //update group status as full i.e 0
+                            $query = $GroupsTable->query();
+                            $query->update()
+                                ->set(['status' => 0])
+                                ->where(['id' => $group_id])
+                                ->execute();
+
+                        }
+                    }
                 }   
+
                 if($id<1){
                     // send password to user
                     $msg ="Hello ".$post['first_name'].'\r\n';
