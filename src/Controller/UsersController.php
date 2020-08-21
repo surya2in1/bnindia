@@ -258,7 +258,7 @@ class UsersController extends AppController
                   'className' => 'Smtp'
                 ]);
                 
-                $msg= 'Hello '.$email.'<br/> Please click link below to reset your password<br/><br/><a href="http://localhost/bnindia/resetpassword/'.$mytocken.'">Reset Password</a>';
+                $msg= 'Hello '.$email."\r\n".' Please click link below to reset your password<br/>'."\r\n".'<a href="http://localhost/bnindia/resetpassword/'.$mytocken.'">Reset Password</a>'."\r\n"."\r\n".'Thank you,'."\r\n".'Bnindia team';
                 
                 try {
                     Email::deliver($email, 'Please confirm your reset password', $msg, ['from' => 'votreidentifiant@gmail.com']);
@@ -475,7 +475,6 @@ class UsersController extends AppController
                     $selected_member_groups[$key] = $value->group_id; 
                 }
             }
-            // echo '<pre>';print_r($selected_member_groups);exit;
         }else{
             $user = $this->Users->newEmptyEntity();
         }
@@ -486,7 +485,8 @@ class UsersController extends AppController
                                         'keyField' => 'id',
                                         'valueField' => 'group_number'
                                     ])->where(['status'=>1])->toArray();
-
+        // echo '<pre>';print_r($selected_member_groups);
+        // echo '<pre>';print_r($groups);exit;
         $full_groups= [];
         if(!empty($groups)){
             foreach ($groups as $key=> $value) {
@@ -560,12 +560,13 @@ class UsersController extends AppController
                 if(isset($updateuser)){
                     $usertable = TableRegistry::get("Users");
                     $query = $usertable->query();
-                    $result = $query->update()
+                    $query->update()
                             ->set($updateuser)
                             ->where(['id' => $result->id])
                             ->execute();
                 }
 
+                $MembersGroupsTable = TableRegistry::get('MembersGroups');
                 //Add member groups
                 if(isset($post['group_ids']) && !empty($post['group_ids'])){
                     //delete existing data
@@ -575,6 +576,7 @@ class UsersController extends AppController
                         $group_record['group_id'] = $group_id;
                         $group_records[] = $group_record;
                     }
+
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
                     $this->MembersGroups->saveMany($MembersGroups);
                     
@@ -582,7 +584,6 @@ class UsersController extends AppController
                     //Get the member groups count
                     foreach ($post['group_ids'] as $group_id) {
                         $GroupsTable = TableRegistry::get('Groups');
-                        $MembersGroupsTable = TableRegistry::get('MembersGroups');
                         $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
                         $member_group_count = $query->count();
                         $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
@@ -601,9 +602,10 @@ class UsersController extends AppController
 
                 if($id<1){
                     // send password to user
-                    $msg ="Hello ".$post['first_name'].'\r\n';
-                    $msg .="Welcome to Bnindia application, your newly genereted password is below,".'\r\n';
-                    $msg .= "Password: ". $post['password'].'\r\n';
+                    $msg ="Hello ".$post['first_name']."\r\n";
+                    $msg .="Welcome to Bnindia application, your newly genereted password is below,"."\r\n";
+                    $msg .= "Password: ". $post['password']."\r\n";
+                    $msg .= 'Thank you,'."\r\n".'Bnindia team';
                     $send = $this->Common->sendmail($post['email'],'Bnindia application password',$msg);
                     if($send){
                         echo 1;

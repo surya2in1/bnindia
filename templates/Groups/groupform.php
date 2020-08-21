@@ -78,7 +78,6 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <span class="form-text text-muted">Enable clear and today helper buttons</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">

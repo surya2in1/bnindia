@@ -90,7 +90,7 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Email:</label>
                                     <div class="col-lg-6">
-                                        <input type="email" class="form-control" name="email" placeholder="Enter Email" value="<?= isset($user->email) ? $user->email : '';?>">
+                                        <input type="email" class="form-control" <?php if($userid > 0){ ?>readonly <?php }?> name="email" placeholder="Enter Email" value="<?= isset($user->email) ? $user->email : '';?>">
                                     </div>
                                 </div> 
                                 <div class="form-group row">
@@ -157,13 +157,12 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <span class="form-text text-muted">Enable clear and today helper buttons</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Address</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" type="text" value="<?= $user->address; ?>" name="address">
+                                        <textarea class="form-control"  name="address"><?= $user->address; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -348,7 +347,7 @@
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
                                             <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
-                                                    <option <?php if(in_array($key, $selected_member_groups)){ echo 'selected'; echo 'desabled'; } ?> value="<?= $key; ?>"><?=$group?></option>
+                                                    <option <?php if(in_array($key, $selected_member_groups)){?> selected='selected' disabled <?php } ?> value="<?= $key; ?>"><?=$group?></option>
                                                <?php }
                                                if($full_groups){
                                                 foreach ($full_groups as $key => $value) { ?>
@@ -359,6 +358,7 @@
                                             <option value="">No groups available</option>
                                             <?php } ?>
                                         </select>
+                                        <span class="form-text text-muted">You can't deselect your already selected groups</span>
                                         <a href="<?= Router::url('/', true);?>groups" class="form-text text-muted">For more delails click here</a>
                                     </div>
                                 </div>

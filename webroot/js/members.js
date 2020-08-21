@@ -169,7 +169,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                },
 	                mobile_number:{
 	                    number: true,
-	                    maxlength: 10
+	                    maxlength: 10,
+	                    minlength:10
 	                },
 	                nominee_name:{
 	                    lettersonly: true,

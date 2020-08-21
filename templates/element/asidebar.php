@@ -87,7 +87,16 @@
                                     <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                         <ul class="kt-menu__subnav kt-menu__item--active">
                                             <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
-                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'members') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true"><a href="members" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">List Members</span></a></li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'members') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">List Members</span>',
+                                                    array('controller'=>'Users','action'=>'members'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>

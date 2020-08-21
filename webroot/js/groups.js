@@ -117,17 +117,20 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                chit_amount: {
 	                        required: true,
 	                        number:true,
-	                        max : 100000000
+	                        max : 100000000,
+	                        min:1
 	                },
 	                total_number: {
 	                        required: true,
 	                        number:true,
-	                        max : 100000000
+	                        max : 100000000,
+	                        min:1
 	                },
 	                premium: {
 	                        required: true,
 	                        number:true,
-	                        max : 100000000
+	                        max : 100000000,
+	                        min:1
 	                },
 	                gov_reg_no: {
 	                        required: true,
@@ -136,7 +139,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                no_of_months: {
 	                        required: true,
 	                        number:true,
-	                        max : 100000
+	                        max : 100000,
+	                        min:1
 	                },
 	                date:{
 	                	required:true
