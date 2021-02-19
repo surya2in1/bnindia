@@ -27,6 +27,7 @@ class UsersController extends AppController
     */
     public function login()
     {
+        \Cake\Cache\Cache::clear();
         if ($this->Auth->user()) {
             return $this->redirect('/dashboard');
         }
@@ -372,7 +373,9 @@ class UsersController extends AppController
         $name = $post->getClientFilename();
         $filename = '';
         if($name){
-        // echo $name.'<pre>';print_r($post);
+            $name = preg_replace('/[(){}]/', '', $name);
+            $name = str_replace(' ', '', $name);
+
             $sffledStr= str_shuffle('encrypt');
             $uniqueString = md5(time().$sffledStr);
             if ($id < 1) {

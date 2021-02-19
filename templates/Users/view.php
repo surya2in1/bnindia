@@ -45,7 +45,7 @@
                                                 <div class="input-group">
                                                     <div class="kt-avatar kt-avatar--outline" id="kt_user_avatar">
                                                         <?php 
-                                                        $profile_picture = 'assets/media/users/default.jpg';
+                                                        $profile_picture = Router::url('/', true).'assets/media/users/default.jpg';
                                                         if($user->profile_picture){
                                                             $profile_picture =  Router::url('/', true).'img/user_imgs/'.$user->profile_picture;
                                                         }
