@@ -571,7 +571,7 @@ class UsersController extends AppController
 
                 $MembersGroupsTable = TableRegistry::get('MembersGroups');
                 //Add member groups
-                if(isset($post['group_ids']) && !empty($post['group_ids'])){
+                if(isset($post['group_ids'][0]) && !empty($post['group_ids'][0])){
                     //delete existing data
                     $this->MembersGroups->deleteAll(['user_id' => $result->id]);
                     foreach ($post['group_ids'] as  $group_id) {

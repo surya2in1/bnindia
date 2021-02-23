@@ -34,7 +34,8 @@ class CommonComponent extends Component {
           'host' => 'ssl://smtp.gmail.com',
           'port' => 25,
           'username' => 'riyajaya692@gmail.com',
-          'password' => 'etgtxblbsftaupzd',
+          //'password' => 'etgtxblbsftaupzd',
+          'password' => 'sbgindxgmawqclcz',
           'className' => 'Smtp'
         ]);
         

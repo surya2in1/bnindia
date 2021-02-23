@@ -148,6 +148,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                    lettersonly: true,
 	                    maxlength: 100
 	                },
+	                'group_ids[]':{
+	                	required: true,
+	                },
 	                address:{
 	                    maxlength: 300
 	                },

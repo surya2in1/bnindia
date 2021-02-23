@@ -3,7 +3,7 @@
                         <div class="kt-aside__brand-logo">
                             <a href="index.html">
                                 <img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/logo-light.png" />
-                            
+                                
                             </a>
                         </div>
                         <div class="kt-aside__brand-tools">
