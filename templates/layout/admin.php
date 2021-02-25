@@ -1,4 +1,5 @@
 <?php
+use Cake\Routing\Router;
 $cakeDescription = 'Bnindia';
 ?>
 <!DOCTYPE html>
@@ -53,8 +54,8 @@ $cakeDescription = 'Bnindia';
     <!-- begin:: Header Mobile -->
     <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
         <div class="kt-header-mobile__logo">
-            <a href="index.html">
-                <img alt="Logo" src="assets/media/logos/logo-light.png" />
+            <a href="<?php echo Router::url('/dashboard', true); ?>">
+                <img alt="Logo" src="assets/media/logos/bn2.png" />
             </a>
         </div>
         <div class="kt-header-mobile__toolbar">
