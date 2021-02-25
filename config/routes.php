@@ -83,6 +83,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/group_form/*', ['controller' => 'Groups', 'action' => 'groupform']);
 
     $builder->connect('/member_form/*', ['controller' => 'Users', 'action' => 'memberform']);
+
+    $builder->connect('/error404', ['controller' => 'Error', 'action' => 'error404']);
     /*
      * Connect catchall routes for all controllers.
      *
