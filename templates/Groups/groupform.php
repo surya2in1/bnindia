@@ -46,19 +46,25 @@
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Chit Amount:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>">
+                                        <input type="number" class="form-control" name="chit_amount" id="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>" onchange="calculate_premium();">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Total Number:</label>
+                                    <label class="col-lg-3 col-form-label">Total Member:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Number" value="<?= isset($group->total_number) ? $group->total_number : '';?>">
+                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : '';?>" id="total_number"  onchange="calculate_premium();">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Number of months:</label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" name="no_of_months" placeholder="Enter Number of months" value="<?= isset($group->no_of_months) ? $group->no_of_months : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Premium:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="premium" placeholder="Enter Premium" value="<?= isset($group->premium) ? $group->premium : '';?>">
+                                        <input type="number" class="form-control" name="premium" placeholder="Enter Premium" value="<?= isset($group->premium) ? $group->premium : '';?>" id="premium">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -78,12 +84,6 @@
                                                 </span>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Number of months:</label>
-                                    <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="no_of_months" placeholder="Enter Number of months" value="<?= isset($group->no_of_months) ? $group->no_of_months : '';?>">
                                     </div>
                                 </div>
                             </div>

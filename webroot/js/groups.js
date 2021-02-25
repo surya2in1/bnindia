@@ -112,7 +112,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	            rules: {
 	                group_number: {
 	                        required: true,
-	                        maxlength : 10
+	                        maxlength : 100
 	                },
 	                chit_amount: {
 	                        required: true,
@@ -134,7 +134,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                },
 	                gov_reg_no: {
 	                        required: true,
-	                        maxlength : 10
+	                        maxlength : 100
 	                },
 	                no_of_months: {
 	                        required: true,
@@ -275,3 +275,14 @@ function deletegroup(id){
         }
     });
 } 
+
+function calculate_premium(){
+	var chit_amount = parseFloat($('#chit_amount').val());
+	var total_member = parseInt($('#total_number').val());
+	if(chit_amount > 0 && total_member > 0){
+		var premium =  chit_amount/total_member;
+		$('#premium').val(premium.toFixed(2));
+	}else{
+		$('#premium').val('');
+	}
+}
