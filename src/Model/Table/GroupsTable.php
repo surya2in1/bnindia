@@ -66,7 +66,7 @@ class GroupsTable extends Table
             ->add('group_number', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->integer('chit_amount')
+            ->decimal('chit_amount')
             ->requirePresence('chit_amount', 'create')
             ->notEmptyString('chit_amount');
 
@@ -76,7 +76,7 @@ class GroupsTable extends Table
             ->notEmptyString('total_number');
 
         $validator
-            ->integer('premium')
+            ->decimal('premium')
             ->requirePresence('premium', 'create')
             ->notEmptyString('premium');
 

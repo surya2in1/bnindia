@@ -44,6 +44,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Group Type:</label>
+                                    <div class="col-lg-6">
+                                        <select id="group_type" name="group_type" class="form-control">
+                                            <option value="monthly">Monthly</option>
+                                            <option value="forthnight">Forthnight</option>
+                                            <option value="weekly">Weekly</option>
+                                            <option value="daily">Daily</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Chit Amount:</label>
                                     <div class="col-lg-6">
                                         <input type="number" class="form-control" name="chit_amount" id="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>" onchange="calculate_premium();">
@@ -74,7 +85,19 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Date:</label>
+                                    <label class="col-lg-3 col-form-label">Auction Day:</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="auction_day" placeholder="Enter Auction Day" value="<?= isset($group->auction_day) ? $group->auction_day : '';?>">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Late fee(in percent):</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="late_fee" placeholder="Enter Late Fee" value="<?= isset($group->late_fee) ? $group->late_fee : '';?>">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Collection Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($group->date) && strtotime($group->date) > 0 ? date('m/d/Y',strtotime($group->date)) : '';?>" id="kt_datepicker_3" name="date">
