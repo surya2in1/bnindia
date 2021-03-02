@@ -286,3 +286,26 @@ function calculate_premium(){
 		$('#premium').val('');
 	}
 }
+
+/**
+*  Calculate no of month by selecting group type
+*/
+function calculate_no_of_months(){
+	var chit_amount = parseFloat($('#chit_amount').val());
+	var total_member = parseInt($('#total_number').val());
+	if(chit_amount > 0 && total_member > 0){
+		//calculate premium
+		var premium =  chit_amount/total_member; 
+		var total_months = chit_amount / premium;
+		var group_type = $('#group_type').val();
+		var no_of_months = Math.ceil(total_months);
+		if(group_type == 'forthnight'){
+			no_of_months = Math.ceil(total_months / 2);
+		}else if(group_type=='weekly'){
+			no_of_months = Math.ceil(total_months / 4);
+		}else if(group_type=='daily'){
+			no_of_months = 1;
+		}
+		$('#no_of_months').val(no_of_months);
+	}
+}

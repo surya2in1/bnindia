@@ -42,5 +42,8 @@ class Group extends Entity
         'no_of_months' => true,
         'created_date' => true,
         'modified_date' => true,
+        'group_type' => true,
+        'auction_day' => true,
+        'late_fee'=> true
     ];
 }

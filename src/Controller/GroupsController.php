@@ -81,7 +81,7 @@ class GroupsController extends AppController
                 echo 1;
             }else{
                  $validationErrors = $group->getErrors();
-                //echo '<pre>';print_r($group->getErrors());exit();
+                echo '<pre>';print_r($group->getErrors());exit();
                 if(isset($validationErrors['group_number']['unique']) && !empty($validationErrors['group_number']['unique'])){
                     echo 'group_number_unique';
                 }else{

@@ -96,6 +96,21 @@ class GroupsTable extends Table
             ->requirePresence('no_of_months', 'create')
             ->notEmptyString('no_of_months');
 
+        $validator
+            ->scalar('group_type') 
+            ->requirePresence('group_type', 'create')
+            ->notEmptyString('group_type');
+
+        $validator
+            ->scalar('auction_day') 
+            ->requirePresence('auction_day', 'create')
+            ->notEmptyString('auction_day');
+
+        $validator
+            ->integer('late_fee')
+            ->requirePresence('late_fee', 'create')
+            ->notEmptyString('late_fee');
+                
         return $validator;
     }
 
