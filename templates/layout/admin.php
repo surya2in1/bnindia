@@ -167,8 +167,12 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('members.js') ?>
         <?php } ?>
 
-        <?php if($this->request->getParam('controller') == 'Groups') { ?> 
+        <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'index') { ?> 
             <?= $this->Html->script('groups.js') ?> 
+        <?php } ?>
+
+        <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'groupform') { ?> 
+            <?= $this->Html->script('group_members.js') ?>
         <?php } ?>
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->

@@ -347,11 +347,11 @@
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
                                             <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
-                                                    <option <?php if(in_array($key, $selected_member_groups)){?> selected='selected' disabled <?php } ?> value="<?= $key; ?>"><?=$group?></option>
+                                                    <option <?php if(in_array($key, $selected_member_groups)){?> selected='selected' readonly <?php } ?> value="<?= $key; ?>"><?=$group?></option>
                                                <?php }
                                                if($full_groups){
                                                 foreach ($full_groups as $key => $value) { ?>
-                                                    <option selected='selected' disabled value="<?= $key; ?>"><?=$value?></option>
+                                                    <option selected='selected' readonly value="<?= $key; ?>"><?=$value?></option>
                                                 <?php  }
                                                }
                                             }else{ ?>

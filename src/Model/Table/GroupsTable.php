@@ -229,4 +229,119 @@ class GroupsTable extends Table
         );
         return $output;
     }
+
+    /***
+    * Get group members list
+    */
+    public function getGroupMembersData($group_id) {
+        $aColumns = array('u.id', 'customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address'); 
+
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "u.id";
+        /* DB table to use */
+        $sTable = "users";
+        $groupstb = "groups";
+        $memberGroupsTb = "members_groups";
+
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */
+        $sOrder = "";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                {
+                    //remove 'as' word if exist
+                    $ordercolumns = preg_replace('/ as.*/', '', $aColumns[$_POST['order'][$i]['column']]);
+                    $sOrder .= "".$ordercolumns." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */
+        $sWhere = "WHERE g.id = ".$group_id;
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $sWhere .= " AND (";
+
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    //remove 'as' word if exist
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                }
+                //remove last 3 words as 'OR'
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
+        FROM   $sTable u  join $memberGroupsTb mg on u.id = mg.user_id  join $groupstb g on  g.id=mg.group_id
+        $sWhere
+        $sOrder
+        $sLimit
+        ";
+        //echo $sQuery;
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+       
+        /* Data set length after filtering */
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+        /* Total data set length */
+        $sQuery = "
+        SELECT COUNT(".$sIndexColumn.") as cnt
+        FROM   $sTable u  join $memberGroupsTb mg on u.id = mg.user_id  join $groupstb g on  g.id=mg.group_id WHERE g.id = ".$group_id."
+        ";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        $iTotal = $aResultTotal[0]['cnt'];
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+        return $output;
+    }
 }

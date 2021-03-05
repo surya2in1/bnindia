@@ -1,3 +1,6 @@
+<?php
+use Cake\Routing\Router;
+?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -27,6 +30,7 @@
                         </h3>
                     </div>
                 </div>
+                <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
                 <!--begin::Form-->
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form',
@@ -109,7 +113,44 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div> 
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                        <div class="typeahead">
+                                            <input class="form-control" id="kt_typeahead_4" type="text" dir="ltr" placeholder="Enter Customer Id">
+                                            <input type="text" id="field2" data-provide="typeahead" name="field1">
+                                        </div> 
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <button type="button" id="btn_add_members" class="btn btn-success">Add Member</button>
+                                    </div>
                                 </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">List of group members:</label>
+                                    <div class="col-lg-6">
+                                    </div>
+                                </div> 
+
+                                <div class="form-group row">
+                                    <div class="col-lg-12">  
+                                            <!--begin: Datatable -->
+                                            <table class="table table-striped- table-bordered table-hover table-checkable" id="group_members_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Customer Id</th>
+                                                        <th>Name</th>
+                                                        <th>Address</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <!--end: Datatable --> 
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

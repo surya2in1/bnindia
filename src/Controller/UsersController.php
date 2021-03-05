@@ -560,14 +560,16 @@ class UsersController extends AppController
                     $updateuser['other_document'] = $this->userDocUpload('other_document',$other_document,'', $result->id);
                 } 
                 //update user docs
-                if(isset($updateuser)){
+                // if(isset($updateuser)){
+                    //update/add customer id
+                    $updateuser['customer_id'] = '00'.$result->id;
                     $usertable = TableRegistry::get("Users");
                     $query = $usertable->query();
                     $query->update()
                             ->set($updateuser)
                             ->where(['id' => $result->id])
                             ->execute();
-                }
+                // }
 
                 $MembersGroupsTable = TableRegistry::get('MembersGroups');
                 //Add member groups
@@ -634,4 +636,33 @@ class UsersController extends AppController
         $this->set('groups',$groups);
      }
 
+     function getMembers(){
+        // $members = [];
+        // if (isset($_POST['query'])) {
+        //     $members = $this->Users->find('all', array('conditions'=>array('customer_id LIKE'=>'%'.$customer_id.'%')));
+        // }
+        // //echo '<pre>';print_r($members);exit;
+        // echo json_encode($members);exit;
+
+        echo '[
+          {
+            "year": "1961",
+            "value": "West Side Story",
+            "tokens": [
+              "West",
+              "Side",
+              "Story"
+            ]
+          },
+          {
+            "year": "1962",
+            "value": "Lawrence of Arabia",
+            "tokens": [
+              "Lawrence",
+              "of",
+              "Arabia"
+            ]
+          }
+        ]';exit;
+     }
 }

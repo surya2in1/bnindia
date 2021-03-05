@@ -22,7 +22,7 @@ class GroupsController extends AppController
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) {
              $output = $this->Groups->GetData();
-             // debug($output);exit;
+              // echo '<pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }
         
@@ -162,6 +162,12 @@ class GroupsController extends AppController
             }
         }
         exit;
+    }
+
+    function getGroupMembers($group_id){
+            $output = $this->Groups->getGroupMembersData($group_id);
+            // echo '<pre>';print_r($output);exit;
+            echo json_encode($output);exit;
     }
 }
 
