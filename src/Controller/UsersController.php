@@ -643,7 +643,8 @@ class UsersController extends AppController
         // }
         // //echo '<pre>';print_r($members);exit;
         // echo json_encode($members);exit;
-
+        $data = ['value'=>'sdfsf','value'=>'aaaaaaaaaaaa'];
+        echo json_encode($data);exit;
         echo '[
           {
             "year": "1961",

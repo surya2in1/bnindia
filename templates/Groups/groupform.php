@@ -119,8 +119,7 @@ use Cake\Routing\Router;
                                     <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="typeahead">
-                                            <input class="form-control" id="kt_typeahead_4" type="text" dir="ltr" placeholder="Enter Customer Id">
-                                            <input type="text" id="field2" data-provide="typeahead" name="field1">
+                                            <input class="form-control" id="kt_typeahead_4" type="text" dir="ltr" placeholder="Enter Customer Id"> 
                                         </div> 
                                     </div>
                                     <div class="col-lg-5">
