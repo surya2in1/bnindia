@@ -636,34 +636,46 @@ class UsersController extends AppController
         $this->set('groups',$groups);
      }
 
-     function getMembers(){
-        // $members = [];
-        // if (isset($_POST['query'])) {
-        //     $members = $this->Users->find('all', array('conditions'=>array('customer_id LIKE'=>'%'.$customer_id.'%')));
-        // }
-        // //echo '<pre>';print_r($members);exit;
-        // echo json_encode($members);exit;
-        $data = ['value'=>'sdfsf','value'=>'aaaaaaaaaaaa'];
-        echo json_encode($data);exit;
-        echo '[
-          {
-            "year": "1961",
-            "value": "West Side Story",
-            "tokens": [
-              "West",
-              "Side",
-              "Story"
-            ]
-          },
-          {
-            "year": "1962",
-            "value": "Lawrence of Arabia",
-            "tokens": [
-              "Lawrence",
-              "of",
-              "Arabia"
-            ]
-          }
-        ]';exit;
+     function getMembers($query_string){
+         $members = [];
+        if (!empty($query_string)) {
+             $query = $this->Users->find();
+             $members = $query->select(['name' => $query->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
+             ->select(['customer_id','id','address'])->where(array('customer_id LIKE'=>'%'.$query_string.'%'))->toArray(); 
+        }
+
+        echo json_encode($members);exit;
+        // $data = ['value'=>'sdfsf','value'=>'aaaaaaaaaaaa'];
+        $jayParsedAry = [
+                           [
+                                 "year" => "1961", 
+                                 "value" => "West Side Story" 
+                              ], 
+                           [
+                                    "year" => "1962", 
+                                    "value" => "Lawrence of Arabia" 
+                                 ] 
+                        ]; 
+         echo json_encode($jayParsedAry);exit;
+        // echo '[
+        //   {
+        //     "year": "1961",
+        //     "value": "West Side Story",
+        //     "tokens": [
+        //       "West",
+        //       "Side",
+        //       "Story"
+        //     ]
+        //   },
+        //   {
+        //     "year": "1962",
+        //     "value": "Lawrence of Arabia",
+        //     "tokens": [
+        //       "Lawrence",
+        //       "of",
+        //       "Arabia"
+        //     ]
+        //   }
+        // ]';exit;
      }
 }

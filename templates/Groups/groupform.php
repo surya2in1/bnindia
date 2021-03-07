@@ -119,11 +119,12 @@ use Cake\Routing\Router;
                                     <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="typeahead">
-                                            <input class="form-control" id="kt_typeahead_4" type="text" dir="ltr" placeholder="Enter Customer Id"> 
+                                            <input class="form-control" id="kt_typeahead_4" type="text" dir="ltr" placeholder="Enter Customer Id" customer_id = ""> 
+                                            <!-- <input type="text" name="customer_id" id="customer_id"/> -->
                                         </div> 
                                     </div>
                                     <div class="col-lg-5">
-                                        <button type="button" id="btn_add_members" class="btn btn-success">Add Member</button>
+                                        <button type="button" id="btn_add_members" class="btn btn-success" onclick="add_member_grop();">Add Member</button>
                                     </div>
                                 </div>
 
