@@ -114,7 +114,11 @@ use Cake\Routing\Router;
                                         </div>
                                     </div>
                                 </div> 
-
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><b>Newly added group members:</b></label>
+                                    <div class="col-lg-6">
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
@@ -127,12 +131,29 @@ use Cake\Routing\Router;
                                         <button type="button" id="btn_add_members" class="btn btn-success" onclick="add_member_grop();">Add Member</button>
                                     </div>
                                 </div>
+                                <div class="form-group row">                                    
+                                    <div class="col-lg-12">  
+                                            <!--begin: Datatable -->
+                                            <table class="table table-striped- table-bordered table-hover table-checkable" id="new_group_members_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Customer Id</th>
+                                                        <th>Name</th>
+                                                        <th>Address</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <!--end: Datatable --> 
+                                    </div>
+                                </div>
 
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">List of group members:</label>
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><b>List of group members:</b></label>
                                     <div class="col-lg-6">
                                     </div>
-                                </div> 
+                                 </div>
 
                                 <div class="form-group row">
                                     <div class="col-lg-12">  
