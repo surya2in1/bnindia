@@ -50,6 +50,10 @@ class UsersTable extends Table
             'foreignKey' => 'role_id',
             'joinType' => 'INNER',
         ]);
+        $this->hasMany('MemberGroups', [
+            'foreignKey' => 'user_id', 
+             'joinType' => 'INNER',
+        ]);
     }
 
     /**

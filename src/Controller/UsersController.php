@@ -11,7 +11,8 @@ use Cake\Utility\Security;
 use Cake\ORM\TableRegistry;
 use Cake\Mailer\TransportFactory;
 use Cake\Mailer\Transport;
-
+use Cake\Log\Log;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Users Controller
@@ -636,46 +637,57 @@ class UsersController extends AppController
         $this->set('groups',$groups);
      }
 
-     function getMembers($query_string){
-         $members = [];
+     function getMembers($query_string,$group_id=0,$selected_member_ids=0){
+        $members = [];
         if (!empty($query_string)) {
              $query = $this->Users->find();
+             $where_Conditions['Users.customer_id LIKE'] = '%'.$query_string.'%';
+             
+             if($selected_member_ids > 0){
+                $where_Conditions['Users.id NOT IN'] = explode(',', $selected_member_ids);
+             }
+
+             if($group_id > 0){ 
+                $where_Conditions['OR'] = [
+                                        'mg.group_id !=' => $group_id,
+                                        'group_id is ' => null
+                                    ];
+             }
              $members = $query->select(['name' => $query->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
-             ->select(['customer_id','id','address'])->where(array('customer_id LIKE'=>'%'.$query_string.'%'))->toArray(); 
+             ->select(['Users.customer_id','Users.id','Users.address'])
+             ->join([
+                'table' => 'member_groups',
+                'alias' => 'mg',
+                'type' => 'LEFT',
+                'conditions' => 'mg.user_id = users.id',
+            ])
+            ->where($where_Conditions)
+            ->toArray(); 
+             // echo '<pre>';print_r($members);exit();
         }
 
         echo json_encode($members);exit;
-        // $data = ['value'=>'sdfsf','value'=>'aaaaaaaaaaaa'];
-        $jayParsedAry = [
-                           [
-                                 "year" => "1961", 
-                                 "value" => "West Side Story" 
-                              ], 
-                           [
-                                    "year" => "1962", 
-                                    "value" => "Lawrence of Arabia" 
-                                 ] 
-                        ]; 
-         echo json_encode($jayParsedAry);exit;
-        // echo '[
-        //   {
-        //     "year": "1961",
-        //     "value": "West Side Story",
-        //     "tokens": [
-        //       "West",
-        //       "Side",
-        //       "Story"
-        //     ]
-        //   },
-        //   {
-        //     "year": "1962",
-        //     "value": "Lawrence of Arabia",
-        //     "tokens": [
-        //       "Lawrence",
-        //       "of",
-        //       "Arabia"
-        //     ]
-        //   }
-        // ]';exit;
+        
+     }
+
+     /**
+     *  Ass member user
+     */
+     function addMemberUser(){
+        $post = $this->request->getData();
+        $result = '';
+        //Add member groups
+        if(isset($post['group_id']) && isset($post['user_id'])){
+            $MembersGroupsTable = TableRegistry::get('MembersGroups');
+            $group_record['user_id'] = $post['user_id'];
+            $group_record['group_id'] = $post['group_id'];
+            $MembersGroups = $this->MembersGroups->newEntities($group_record);
+            $result = $this->MembersGroups->save($MembersGroups);
+        echo 'group_records<pre>';print_r($group_record);
+        echo 'group_records<pre>';print_r($result);exit();
+        }
+
+        echo $result;exit;            
      }
 }
+

@@ -41,7 +41,7 @@ class GroupsTable extends Table
         $this->setTable('groups');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-        $this->hasMany('MembersGroups', [
+        $this->hasMany('MemberGroups', [
             'foreignKey' => 'group_id',
         ]);
     }
@@ -241,7 +241,7 @@ class GroupsTable extends Table
         /* DB table to use */
         $sTable = "users";
         $groupstb = "groups";
-        $memberGroupsTb = "members_groups";
+        $memberGroupsTb = "member_groups";
 
         /*
         * MySQL connection

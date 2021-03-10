@@ -151,18 +151,26 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
     var memberlist = function() {
     	//Bloodhound typeahead
-    	$('#kt_typeahead_4').typeahead(null, {
+    	$('#customer_id_typeahead').typeahead(null, {
 		  //name: 'best-pictures',
 		  display: 'customer_id',
 		  source: function show(q, cb, cba) {
-		    var url = $('#router_url').val()+"Users/getMembers/"+q;
-		    $.ajax({ url: url,contentType: "application/json",
-                            dataType:"json", })
+		  	var values = $("input[name='members_ids[]']")
+              .map(function(){return $(this).val();}).get();
+              // alert(values); 
+    		var mvalues = (values!='') ? values : 0;
+		    var url = $('#router_url').val()+"Users/getMembers/"+q+"/"+group_id+"/"+mvalues;
+		    $.ajax({ 
+		    		url: url,
+		    	    contentType: "application/json",
+                    dataType:"json", 
+                    data:$('#members_ids').val(),
+                 })
 		    .done(function(res) {
 		     cba(res); 
 		    })
 		    .fail(function(err) {
-		      alert(err);
+		      console.log(err);
 		    });
 		  },
 		    limit:10,
@@ -178,9 +186,15 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		      return '<p><strong>' + data.customer_id + '</strong> - ' ;
 		    }
 		  }
-		}).bind('typeahead:selected', function(obj, selected, name) {
-		    var selected_id = selected.id;
-		    $('#kt_typeahead_4').attr('customer_id',selected_id);
+		}).bind('typeahead:selected', function(obj, selected, name) {  
+		    $('#customer_id_typeahead').attr('cust_id',selected.id);
+		    $('#customer_id_typeahead').attr('cust_name',selected.name);
+		    $('#customer_id_typeahead').attr('address',selected.address);
+		    $('#customer_id_typeahead').attr('customer_id',selected.customer_id);
+
+		    //after select remove validations
+		    $("#customer_id_typeahead").next("span").remove();
+			$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
 		}).off('blur'); 
          
     }
@@ -244,27 +258,51 @@ function calculate_no_of_months(){
 }
 
 /*
-* Add member to group form table
+* Add member to new group form table
 */
-function add_member_grop(){ 
-	   $('#new_group_members_table').DataTable().row.add( [
-             '.1',
-             '.2',
-             '.3',
-             '.4',
-             '<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="removeNewGroupMember(this);"><i class="flaticon2-trash"></i></button>'
-        ]).draw( false );;
+function add_member_to_new_group(){ 
+	   var customer_id = $('#customer_id_typeahead').attr('customer_id');
+		$("#customer_id_typeahead").next("span").remove();
+	   if(customer_id != ''){
+		   $('#new_group_members_table').DataTable().row.add([
+	             $('#customer_id_typeahead').attr('cust_id')+'<input type="text" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
+	             $('#customer_id_typeahead').attr('customer_id'),
+	             $('#customer_id_typeahead').attr('cust_name'),
+	             $('#customer_id_typeahead').attr('address'),
+	             '<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="removeNewGroupMember(this);" title="Delete"><i class="flaticon2-trash"></i></button>'
+	        ]).draw( false );
+		    $('#customer_id_typeahead').css('border','1px solid #e2e5ec');
+		    $("#customer_id_typeahead").val('');
+	   }else{
+	   		$('#customer_id_typeahead').css('border-color','red');
+			$("#customer_id_typeahead").after("<span style='color:red'>Please select custome id</span>");
+	   }
 }
 function removeNewGroupMember(thisval){
 	$('#new_group_members_table').DataTable()
         .row( $(thisval).parents('tr') )
         .remove()
         .draw();
+} 
+
+/**
+* add_member_to_existing_group
+*/
+function add_member_to_existing_group(){
+	if( $('#customer_id_typeahead').attr('cust_id') > 0 && group_id > 0){
+		//add member user to meber_groups table
+		$.ajax({
+			   "url": $('#router_url').val()+"Users/addMemberUser",
+	            "type": "POST",
+	            "data": {'user_id':$('#customer_id_typeahead').attr('cust_id'),
+	            			"group_id":group_id}
+	        			,
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) {
+    					new_group_members_table.DataTable().ajax.reload();
+                }
+			}); 
+	}
 }
-// $('#new_group_members_table tbody').on( 'click', 'a.remove_new_group_member', function () {
-// 	alert(11);
-//     new_group_members_table
-//         .row( $(this).parents('tr') )
-//         .remove()
-//         .draw();
-// } );
