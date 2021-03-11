@@ -41,7 +41,7 @@ class GroupsTable extends Table
         $this->setTable('groups');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-        $this->hasMany('MemberGroups', [
+        $this->hasMany('MembersGroups', [
             'foreignKey' => 'group_id',
         ]);
     }
@@ -241,7 +241,7 @@ class GroupsTable extends Table
         /* DB table to use */
         $sTable = "users";
         $groupstb = "groups";
-        $memberGroupsTb = "member_groups";
+        $memberGroupsTb = "members_groups";
 
         /*
         * MySQL connection
@@ -308,7 +308,7 @@ class GroupsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(' , ', ' ', implode(', ', $aColumns))."  , mg.id as action
         FROM   $sTable u  join $memberGroupsTb mg on u.id = mg.user_id  join $groupstb g on  g.id=mg.group_id
         $sWhere
         $sOrder

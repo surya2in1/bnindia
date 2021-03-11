@@ -24,7 +24,21 @@ var KTDatatablesDataSourceAjaxServer = function() {
 				{data: 'customer_id'},
 				{data: 'name'},
 				{data: 'address'}, 
+				{data: 'action', responsivePriority: -1},
 			], 
+			columnDefs: [
+				{
+					targets: -1,
+					title: 'Action',
+					orderable: false,
+					render: function(data, type, full, meta) { 
+                        return '\
+							<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="delete_group_user('+data+');" title="Delete"><i class="flaticon2-trash"></i></button>\
+						';
+
+					},
+				}, 
+			],
 		});
 
 	}
@@ -201,7 +215,15 @@ var KTDatatablesDataSourceAjaxServer = function() {
  
     var initNewGroupMembersTable= function() { 
 		// begin first new_group_members_table
-		new_group_members_table.DataTable();
+		new_group_members_table.DataTable({
+			columnDefs: [
+				{
+					targets: -1,
+					title: 'Action',
+					orderable: false 
+				}, 
+			],
+		});
 
 	}
 
@@ -265,7 +287,7 @@ function add_member_to_new_group(){
 		$("#customer_id_typeahead").next("span").remove();
 	   if(customer_id != ''){
 		   $('#new_group_members_table').DataTable().row.add([
-	             $('#customer_id_typeahead').attr('cust_id')+'<input type="text" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
+	             $('#customer_id_typeahead').attr('cust_id')+'<input type="hidden" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
 	             $('#customer_id_typeahead').attr('customer_id'),
 	             $('#customer_id_typeahead').attr('cust_name'),
 	             $('#customer_id_typeahead').attr('address'),
@@ -278,11 +300,35 @@ function add_member_to_new_group(){
 			$("#customer_id_typeahead").after("<span style='color:red'>Please select custome id</span>");
 	   }
 }
-function removeNewGroupMember(thisval){
-	$('#new_group_members_table').DataTable()
-        .row( $(thisval).parents('tr') )
-        .remove()
-        .draw();
+function removeNewGroupMember(thisval){  
+    swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then(function(result){ 
+        if (result.value) {
+        	$('#new_group_members_table').DataTable()
+	        .row( $(thisval).parents('tr') )
+	        .remove()
+	        .draw();
+    
+            swal.fire(
+		                'Deleted!',
+		                'The member has been deleted.',
+		                'success'
+		            );
+        } else if (result.dismiss === 'cancel') {
+            swal.fire(
+                'Cancelled',
+                'Your data is safe :)',
+                'error'
+            )
+        }
+    });    
 } 
 
 /**
@@ -301,8 +347,69 @@ function add_member_to_existing_group(){
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
                 success: function(response, status, xhr, $form) {
-    					new_group_members_table.DataTable().ajax.reload();
+                		$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
+		    			$("#customer_id_typeahead").val('');
+                		if(response == 'exist_member_group'){
+                			$('#customer_id_typeahead').css('border-color','red');
+							$("#customer_id_typeahead").after("<span style='color:red'>This member already assign, please select another one.</span>");
+                		}else if(response == false){
+                			$('#customer_id_typeahead').css('border-color','red');
+							$("#customer_id_typeahead").after("<span style='color:red'>Some error has been occured, please try again.</span>");
+                		}else{
+    						table.DataTable().ajax.reload();
+                		}
                 }
 			}); 
 	}
 }
+
+/*
+* 
+**/
+function delete_group_user(id){ 
+
+	swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then(function(result){ 
+        if (result.value) {
+        	$.ajax({
+			   "url": $('#router_url').val()+"MembersGroups/deleteGroupUser/"+id,
+	            "type": "GET",
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) {
+                    if(response>0){
+    					table.DataTable().ajax.reload();
+                    	
+                    	swal.fire(
+			                'Deleted!',
+			                'The member has been deleted.',
+			                'success'
+			            );
+                    }else{
+                    	swal.fire(
+			                'Cancelled',
+			                'The member could not be deleted. Please, try again.',
+			                'error'
+			            );                        
+                    } 
+                }
+			}); 
+            // result.dismiss can be 'cancel', 'overlay',
+            // 'close', and 'timer'
+        } else if (result.dismiss === 'cancel') {
+            swal.fire(
+                'Cancelled',
+                'Your data is safe :)',
+                'error'
+            )
+        }
+    });
+} 

@@ -109,4 +109,23 @@ class MembersGroupsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    /**
+     * Strict Delete method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null|void Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function deleteGroupUser($id = null)
+    {
+        $this->request->allowMethod(['get', 'delete']); 
+        $membersGroup = $this->MembersGroups->get($id);
+        if ($this->MembersGroups->delete($membersGroup)) {
+            echo 1;
+        } else {
+            echo 0;
+        } 
+        exit();
+    }
 }

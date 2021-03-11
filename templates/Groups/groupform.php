@@ -146,6 +146,7 @@ use Cake\Routing\Router;
                                                         <th>Customer Id</th>
                                                         <th>Name</th>
                                                         <th>Address</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                             </table>

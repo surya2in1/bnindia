@@ -70,18 +70,28 @@ class GroupsController extends AppController
         }else{
             $group = $this->Groups->newEmptyEntity();
         }
-        // echo 'sdf';exit;
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
-           // echo '<pre>';print_r($group); 
+           // echo '<pre>';print_r($post); exit;
             $post['date'] = date('Y-m-d',strtotime($post['date'])); 
              // echo '<pre>';print_r($post);exit;
             $group = $this->Groups->patchEntity($group, $post);
-            if ($this->Groups->save($group)) {
+            if ($result = $this->Groups->save($group)) {
+                if(isset($post['members_ids']) && !empty($post['members_ids'])){
+                    //add member in this groups
+                     $this->loadModel('MembersGroups');
+                     foreach ($post['members_ids'] as $members_id) {
+                        $group_record['user_id'] = $members_id;
+                        $group_record['group_id'] = $result->id;
+                        $group_records[] = $group_record;
+                     }
+                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
+                     $result = $this->MembersGroups->saveMany($MembersGroups);
+                }
                 echo 1;
             }else{
                  $validationErrors = $group->getErrors();
-                echo '<pre>';print_r($group->getErrors());exit();
+                //echo '<pre>';print_r($group->getErrors());exit();
                 if(isset($validationErrors['group_number']['unique']) && !empty($validationErrors['group_number']['unique'])){
                     echo 'group_number_unique';
                 }else{

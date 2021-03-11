@@ -656,7 +656,7 @@ class UsersController extends AppController
              $members = $query->select(['name' => $query->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
              ->select(['Users.customer_id','Users.id','Users.address'])
              ->join([
-                'table' => 'member_groups',
+                'table' => 'members_groups',
                 'alias' => 'mg',
                 'type' => 'LEFT',
                 'conditions' => 'mg.user_id = users.id',
@@ -676,18 +676,32 @@ class UsersController extends AppController
      function addMemberUser(){
         $post = $this->request->getData();
         $result = '';
-        //Add member groups
         if(isset($post['group_id']) && isset($post['user_id'])){
+            $this->loadModel('MembersGroups');
             $MembersGroupsTable = TableRegistry::get('MembersGroups');
+            $isExistMemberGroup = $MembersGroupsTable->find('all')->where(['user_id'=>$post['user_id'],'group_id' => $post['group_id']])->first();
+
+            if($isExistMemberGroup){
+                echo 'exist_member_group'; exit();
+            } 
+
             $group_record['user_id'] = $post['user_id'];
             $group_record['group_id'] = $post['group_id'];
-            $MembersGroups = $this->MembersGroups->newEntities($group_record);
-            $result = $this->MembersGroups->save($MembersGroups);
-        echo 'group_records<pre>';print_r($group_record);
-        echo 'group_records<pre>';print_r($result);exit();
+            $group_records[] = $group_record;
+            $MembersGroups = $this->MembersGroups->newEntities($group_records);
+            $result = $this->MembersGroups->saveMany($MembersGroups);
+
+            // echo '$isExistMemberGroup<pre>';print_r($group_record); 
+            // echo 'result <pre>';print_r($result);
+            if(isset($result[0]->id)){
+                echo true;exit();
+            }else{ 
+                echo false;exit();
+            }
         }
 
-        echo $result;exit;            
+        echo false;exit;            
      }
+ 
 }
 
