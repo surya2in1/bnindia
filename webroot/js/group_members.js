@@ -7,7 +7,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		var i =0;
 		// begin first group_members_table
 		table.DataTable({
-			"lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
+			// "lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
 			responsive: true,
 			searchDelay: 500,
 			processing: true,
@@ -30,6 +30,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 			columnDefs: [{
 		            "searchable": false ,
 		            "targets": 0,
+		            "orderable": false,
 		            "render": function (data, type, full,meta) {  
 		            	console.log(meta);
 	                	return meta.row + meta.settings._iDisplayStart + 1; 
