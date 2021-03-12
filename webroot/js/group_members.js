@@ -4,14 +4,15 @@ var table = $('#group_members_table');
 var new_group_members_table = $('#new_group_members_table');
 var KTDatatablesDataSourceAjaxServer = function() {
 	var initTable1 = function() {
-
+		var i =0;
 		// begin first group_members_table
 		table.DataTable({
-			// "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+			"lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
 			responsive: true,
 			searchDelay: 500,
 			processing: true,
 			serverSide: true,
+			"order": [[ 1, 'asc' ]],
 			"ajax": {
 	            "url": $('#router_url').val()+"Groups/getGroupMembers/"+group_id,
 	            "type": "POST",
@@ -19,14 +20,26 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
 	        },
-			columns: [
-				{data: 'id'},
+			columns: [ 
+				{
+	                "data": "id",
+	                // "mRender": function (data, type, row,meta) {  
+	                	// return meta.row + meta.settings._iDisplayStart + 1; 
+	                // }
+	            },
 				{data: 'customer_id'},
 				{data: 'name'},
 				{data: 'address'}, 
 				{data: 'action', responsivePriority: -1},
 			], 
-			columnDefs: [
+			columnDefs: [{
+		            "searchable": false ,
+		            "targets": 0,
+		            "render": function (data, type, full,meta) {  
+		            	console.log(meta);
+	                	return meta.row + meta.settings._iDisplayStart + 1; 
+	                }
+		        },
 				{
 					targets: -1,
 					title: 'Action',
@@ -39,8 +52,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					},
 				}, 
 			],
-		});
-
+		}); 
 	}
 
 	var group_form = function () {
@@ -242,7 +254,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 }();
 
 jQuery(document).ready(function() {
-	KTDatatablesDataSourceAjaxServer.init();
+	KTDatatablesDataSourceAjaxServer.init(); 
+	// table.on('order.dt search.dt', function () {
+ //    table.column(3, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	//         cell.innerHTML = i+1;
+	//     });
+	// }).draw();
 });
 
 function calculate_premium(){
