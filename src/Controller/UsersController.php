@@ -652,6 +652,10 @@ class UsersController extends AppController
                                         'mg.group_id !=' => $group_id,
                                         'group_id is ' => null
                                     ];
+
+                //if same member assign for 2 different group then that member must not be display because that member already assign to this group
+                $where_Conditions['AND'] = [1 =>$query->newExpr("NOT EXISTS (SELECT 1 FROM members_groups mg2 WHERE mg2.user_id = Users.id and mg2.group_id = ".$group_id.")")
+                                    ];       
              }
              $members = $query->select(['name' => $query->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
              ->select(['Users.customer_id','Users.id','Users.address'])
@@ -659,9 +663,10 @@ class UsersController extends AppController
                 'table' => 'members_groups',
                 'alias' => 'mg',
                 'type' => 'LEFT',
-                'conditions' => 'mg.user_id = users.id',
+                'conditions' => 'mg.user_id = Users.id',
             ])
             ->where($where_Conditions)
+            ->group('Users.id')
             ->toArray(); 
              // echo '<pre>';print_r($members);exit();
         }

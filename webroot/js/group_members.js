@@ -293,6 +293,7 @@ function calculate_no_of_months(){
 function add_member_to_new_group(){ 
 	   var customer_id = $('#customer_id_typeahead').attr('customer_id');
 		$("#customer_id_typeahead").next("span").remove();
+		$('#btn_add_members').addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 	   if(customer_id != ''){
 		   $('#new_group_members_table').DataTable().row.add([
 	             $('#customer_id_typeahead').attr('cust_id')+'<input type="hidden" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
@@ -303,9 +304,15 @@ function add_member_to_new_group(){
 	        ]).draw( false );
 		    $('#customer_id_typeahead').css('border','1px solid #e2e5ec');
 		    $("#customer_id_typeahead").val('');
+		    $("#customer_id_typeahead").attr('cust_id','');
+    		$("#customer_id_typeahead").attr('customer_id','');
+    		$("#customer_id_typeahead").attr('name','');
+    		$("#customer_id_typeahead").attr('address','');
+		    $('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 	   }else{
 	   		$('#customer_id_typeahead').css('border-color','red');
 			$("#customer_id_typeahead").after("<span style='color:red'>Please select custome id</span>");
+			$('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 	   }
 }
 function removeNewGroupMember(thisval){  
@@ -343,7 +350,10 @@ function removeNewGroupMember(thisval){
 * add_member_to_existing_group
 */
 function add_member_to_existing_group(){
+	$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
+	$("#customer_id_typeahead").next("span").remove();
 	if( $('#customer_id_typeahead').attr('cust_id') > 0 && group_id > 0){
+		$('#btn_add_members').addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		//add member user to meber_groups table
 		$.ajax({
 			   "url": $('#router_url').val()+"Users/addMemberUser",
@@ -355,8 +365,12 @@ function add_member_to_existing_group(){
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
                 success: function(response, status, xhr, $form) {
-                		$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
-		    			$("#customer_id_typeahead").val('');
+                		$('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                		$("#customer_id_typeahead").val('');
+                		$("#customer_id_typeahead").attr('cust_id','');
+                		$("#customer_id_typeahead").attr('customer_id','');
+                		$("#customer_id_typeahead").attr('name','');
+                		$("#customer_id_typeahead").attr('address','');
                 		if(response == 'exist_member_group'){
                 			$('#customer_id_typeahead').css('border-color','red');
 							$("#customer_id_typeahead").after("<span style='color:red'>This member already assign, please select another one.</span>");
@@ -368,6 +382,10 @@ function add_member_to_existing_group(){
                 		}
                 }
 			}); 
+	}else{ 
+
+		$('#customer_id_typeahead').css('border-color','red');
+		$("#customer_id_typeahead").after("<span style='color:red'>Please select customer id.</span>");
 	}
 }
 

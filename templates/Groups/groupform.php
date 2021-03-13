@@ -120,6 +120,8 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                     </div>
                                  </div>
+
+                                 <?php if(($groupid > 0 && $group->status== 1) OR $groupid < 1){ ?>
                                  <div class="form-group row">
                                     <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
@@ -134,6 +136,7 @@ use Cake\Routing\Router;
                                         </button>
                                     </div>
                                 </div>
+                                <?php } ?>
 
                                 <?php if($groupid > 0){ ?> 
                                 <div class="form-group row">
