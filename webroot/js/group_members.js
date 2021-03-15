@@ -12,7 +12,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 			searchDelay: 500,
 			processing: true,
 			serverSide: true,
-			"order": [[ 1, 'asc' ]],
+			"order": [[ 0, 'asc' ]],
 			"ajax": {
 	            "url": $('#router_url').val()+"Groups/getGroupMembers/"+group_id,
 	            "type": "POST",
@@ -31,10 +31,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		            "searchable": false ,
 		            "targets": 0,
 		            "orderable": false,
-		            "render": function (data, type, full,meta) {  
-		            	console.log(meta);
-	                	return meta.row + meta.settings._iDisplayStart + 1; 
-	                }
+		            // "render": function (data, type, full,meta) {  
+	                	// return meta.row + meta.settings._iDisplayStart + 1; 
+	                // }
 		        },
 				{
 					targets: -1,
