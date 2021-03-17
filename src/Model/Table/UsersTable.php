@@ -75,6 +75,12 @@ class UsersTable extends Table
             ->notEmptyString('password');
 
         $validator
+            ->scalar('customer_id')
+            ->maxLength('customer_id', 200)
+            ->requirePresence('customer_id', 'create')
+            ->notEmptyString('customer_id');
+            
+        $validator
             ->scalar('first_name')
             ->maxLength('first_name', 200)
             ->requirePresence('first_name', 'create')

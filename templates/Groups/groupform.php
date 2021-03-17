@@ -126,7 +126,7 @@ use Cake\Routing\Router;
                                     <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="typeahead">
-                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Customer Id" customer_id = "" cust_id="" name="" address=""/>  
+                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Customer Id" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
                                         </div> 
                                     </div>
                                     <div class="col-lg-5">

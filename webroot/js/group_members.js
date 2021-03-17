@@ -216,14 +216,25 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		    //after select remove validations
 		    $("#customer_id_typeahead").next("span").remove();
 			$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
-		}).off('blur'); 
-         
+		}).off('blur') 
+		.on('typeahead:asyncrequest', function() {
+	        $('#customer_id_typeahead').addClass('sLoading');
+	    }).on('typeahead:asynccancel typeahead:asyncreceive', function() {
+	        $('#customer_id_typeahead').removeClass('sLoading');
+	    });
     }
  
     var initNewGroupMembersTable= function() { 
 		// begin first new_group_members_table
 		new_group_members_table.DataTable({
-			columnDefs: [
+			columnDefs: [{
+		            "searchable": false ,
+		            "targets": 0,
+		            "orderable": false,
+		            // "render": function (data, type, full,meta) {  
+	             //    	return meta.row + meta.settings._iDisplayStart + 1 + '<input type="hidden" name="members_ids[]" id="members_ids" value="'+meta.row+'" />'; 
+	             //    }
+		        },
 				{
 					targets: -1,
 					title: 'Action',
@@ -250,6 +261,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();  
+	$('#customer_id_typeahead').on( 'focus', function() {
+          if($(this).val() === '') // you can also check for minLength 
+              $(this).data().ttTypeahead.input.trigger('queryChanged', '');
+      });
 });
 
 function calculate_premium(){

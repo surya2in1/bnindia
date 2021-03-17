@@ -133,6 +133,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	     		// define validation rules
 	            rules: {
 	                //= Client Information(step 3)
+	                customer_id: {
+	                    required: true,
+	                    maxlength: 200
+	                },
 	                first_name: {
 	                    required: true,
 	                    lettersonly: true,

@@ -561,16 +561,16 @@ class UsersController extends AppController
                     $updateuser['other_document'] = $this->userDocUpload('other_document',$other_document,'', $result->id);
                 } 
                 //update user docs
-                // if(isset($updateuser)){
+                if(isset($updateuser)){
                     //update/add customer id
-                    $updateuser['customer_id'] = '00'.$result->id;
+                    // $updateuser['customer_id'] = '00'.$result->id;
                     $usertable = TableRegistry::get("Users");
                     $query = $usertable->query();
                     $query->update()
                             ->set($updateuser)
                             ->where(['id' => $result->id])
                             ->execute();
-                // }
+                }
 
                 $MembersGroupsTable = TableRegistry::get('MembersGroups');
                 //Add member groups
@@ -641,6 +641,8 @@ class UsersController extends AppController
         $members = [];
         if (!empty($query_string)) {
              $query = $this->Users->find();
+             //Excapt admin search all member
+             $where_Conditions['r.name !=']  = 'admin'; 
              $where_Conditions['Users.customer_id LIKE'] = '%'.$query_string.'%';
              
              if($selected_member_ids > 0){
@@ -664,6 +666,12 @@ class UsersController extends AppController
                 'alias' => 'mg',
                 'type' => 'LEFT',
                 'conditions' => 'mg.user_id = Users.id',
+            ])
+             ->join([
+                'table' => 'roles',
+                'alias' => 'r',
+                'type' => 'LEFT',
+                'conditions' => 'r.id = Users.role_id',
             ])
             ->where($where_Conditions)
             ->group('Users.id')

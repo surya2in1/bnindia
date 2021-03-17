@@ -54,3 +54,8 @@
   }
 }
 
+.sLoading {
+  background: url("loaders/rolling.gif") no-repeat right center;
+  background-size: 25px 25px;
+}
+
