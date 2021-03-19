@@ -37,7 +37,7 @@ use Cake\Routing\Router;
                        'id'=>'payment_form',
                        'method'=> 'Post'
                      )); ?>
-                      <input type="hidden" name="id" id="id" value="<?= $paymentid; ?>">
+                    <input type="hidden" name="id" id="id" value="<?= $paymentid; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
@@ -52,7 +52,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Due date of payment:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->due_date) && strtotime($payment->due_date) > 0 ? date('m/d/Y',strtotime($payment->due_date)) : '';?>" id="kt_datepicker_3" name="date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->due_date) && strtotime($payment->due_date) > 0 ? date('m/d/Y',strtotime($payment->due_date)) : '';?>" id="due_date_datepicker" name="date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>
@@ -66,7 +66,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->date) && strtotime($payment->date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="kt_datepicker_3" name="date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->date) && strtotime($payment->date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="payment_date_datepicker" name="date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>
@@ -79,9 +79,17 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Member:</label>
                                     <div class="col-lg-6">
-                                        <?php $payment_member_id =  isset($payment->member_id) ? $payment->member_id : 0;?>
+                                        <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
+                                        ?>
                                         <!-- Get member list -->
-                                        <select id="member_id" name="member_id" class="form-control"> 
+                                        <select id="members" name="user_id" class="form-control">
+                                             <option value="">Select Member</option>
+                                            <?php if($members){ 
+                                                foreach ($members as $key => $member) {
+                                                    ?>
+                                                    <option <?php if($key == $payment_member_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$member?></option>
+                                               <?php } 
+                                            }  ?> 
                                         </select> 
                                     </div>
                                 </div>
@@ -92,7 +100,13 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
                                         <!-- Get groups after select member -->
-                                        <select id="group_id" name="group_id" class="form-control"> 
+                                        <select id="groups" name="group_id" class="form-control">
+                                            <option value="">Select Group</option>
+                                             <?php if($groups){ 
+                                                foreach ($groups as $key => $group) {?>
+                                                    <option <?php if($key == $payment_group_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$group?></option>
+                                               <?php } 
+                                            } ?> 
                                         </select> 
                                     </div>
                                 </div>
@@ -100,23 +114,33 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscriber Ticket No:</label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>" autofocus="true">
+                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>" >
                                     </div>
                                 </div> 
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Instalment No:</label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="instalment_no" placeholder="Enter Instalment No" value="<?= isset($payment->instalment_no) ? $payment->instalment_no : '';?>" autofocus="true">
+                                        <input type="text" class="form-control" name="instalment_no" placeholder="Enter Instalment No" value="<?= isset($payment->instalment_no) ? $payment->instalment_no : '';?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Instalment Month:</label>
                                     <div class="col-lg-6">
+                                        <?php $instalment_month =  isset($payment->instalment_month) ? $payment->instalment_month : 0;?>
+                                        <?php 
+                                        $months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
+
+                                        ?>
                                         <select id="instalment_month" name="instalment_month" class="form-control"> 
                                             <!--Show months in php list-->
-                                            <option></option>
+                                            <?php
+                                                foreach ($months as $num => $name) {
+                                                    $selected = ($num == $instalment_month) ? 'selected' : '';
+                                                    echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
+                                                }
+                                            ?>
                                         </select>  
                                     </div>
                                 </div>
@@ -153,7 +177,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Received  Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->cash_received_date) && strtotime($payment->cash_received_date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="kt_datepicker_3" name="cash_received_date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->cash_received_date) && strtotime($payment->cash_received_date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="cash_received_datepicker" name="cash_received_date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>
@@ -175,7 +199,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->cheque_date) && strtotime($payment->cheque_date) > 0 ? date('m/d/Y',strtotime($payment->cheque_date)) : '';?>" id="kt_datepicker_3" name="cheque_date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->cheque_date) && strtotime($payment->cheque_date) > 0 ? date('m/d/Y',strtotime($payment->cheque_date)) : '';?>" id="cheque_date_datepicker" name="cheque_date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>
@@ -205,7 +229,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->direct_debit_date) && strtotime($payment->direct_debit_date) > 0 ? date('m/d/Y',strtotime($payment->direct_debit_date)) : '';?>" id="kt_datepicker_3" name="direct_debit_date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->direct_debit_date) && strtotime($payment->direct_debit_date) > 0 ? date('m/d/Y',strtotime($payment->direct_debit_date)) : '';?>" id="direct_debit_datepicker" name="direct_debit_date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>

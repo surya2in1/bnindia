@@ -4,6 +4,7 @@ namespace App\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Mailer\TransportFactory;
 use Cake\Mailer\Email;
+use Cake\ORM\TableRegistry;
 
 class CommonComponent extends Component {
 	function searchUserPermission($id, $array) {
@@ -46,6 +47,26 @@ class CommonComponent extends Component {
             $response = 0;
         }
         return $response;
+	}
+
+	function getUserMembers($user_id){
+		$selected_member_groups =[];
+        $membergroups= TableRegistry::get('MembersGroups');
+        $member_groups = $membergroups->find('all', [
+            'contain' => [
+                             'Groups' => function($q) use ($user_id) {
+                                return $q
+                                    ->select(['id','group_number'])
+                                    ->where(['user_id'=>$user_id]);
+                            },      
+                         ],
+        ])->toArray(); 
+        if(!empty($member_groups)){
+            foreach ($member_groups as $key => $value) { 
+                $selected_member_groups[$value->group_id] = $value->group->group_number; 
+            }
+        }
+        return $selected_member_groups;
 	}
 }
 ?>

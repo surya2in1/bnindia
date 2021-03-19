@@ -84,6 +84,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/member_form/*', ['controller' => 'Users', 'action' => 'memberform']);
 
+    $builder->connect('/payment_form/*', ['controller' => 'Payments', 'action' => 'paymentform']);
+
     $builder->connect('/error404', ['controller' => 'Error', 'action' => 'error404']);
     /*
      * Connect catchall routes for all controllers.
