@@ -164,6 +164,7 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                          <?php $received_by =  isset($payment->received_by) ? $payment->received_by : 'monthly';?>
                                         <select id="received_by" name="received_by" class="form-control"> 
+                                            <option value="">Select</option>
                                             <!--Show months in php list-->
                                             <option value="1" <?php if($received_by == 1){ echo 'selected'; } ?>>Cash</option>
                                             <option value="2" <?php if($received_by == 2){ echo 'selected'; } ?>>Cheque</option>
@@ -173,7 +174,7 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <!-- If Cash select then show below -->
-                                <div class="form-group row hide" id="cash_received_date_div">
+                                <div class="form-group row hide-div cash-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Received  Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
@@ -188,14 +189,14 @@ use Cake\Routing\Router;
                                 </div>  
 
                                 <!-- If Cheque select then show below -->
-                                <div class="form-group row cash_div">
+                                <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Cheque No:</label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>">
                                     </div>
                                 </div>
 
-                                 <div class="form-group row hide cash_received_date_div">
+                                 <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
@@ -209,14 +210,14 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>      
 
-                                <div class="form-group row cash_received_date_div">
+                                <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Bank details:</label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="cheque_bank_details" placeholder="Enter Bank details" value="<?= isset($payment->cheque_bank_details) ? $payment->cheque_bank_details : '';?>">
                                     </div>
                                 </div>
 
-                                <div class="form-group row cash_received_date_div">
+                                <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Drown on:</label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="cheque_drown_on" placeholder="Enter Drown on" value="<?= isset($payment->cheque_drown_on) ? $payment->cheque_drown_on : '';?>">
@@ -225,7 +226,7 @@ use Cake\Routing\Router;
 
                                 <!-- If direct_debit select then show below -->
 
-                                <div class="form-group row hide direct_debit_date_div">
+                                <div class="form-group row hide-div direct-debit-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Date:</label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
@@ -239,7 +240,7 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>      
 
-                                <div class="form-group row direct_debit_date_div">
+                                <div class="form-group row hide-div direct-debit-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Transaction no:</label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="direct_debit_transaction_no" placeholder="Enter Transaction no" value="<?= isset($payment->direct_debit_transaction_no) ? $payment->direct_debit_transaction_no : '';?>">

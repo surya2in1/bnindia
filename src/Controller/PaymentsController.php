@@ -57,6 +57,9 @@ class PaymentsController extends AppController
      */
     public function paymentform($id=null)
     {
+    //      $fourRandomDigit = mt_rand(1000,9999);
+    // echo $fourRandomDigit;    exit;
+    
         $this->viewBuilder()->setLayout('admin');
        
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
