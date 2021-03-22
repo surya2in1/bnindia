@@ -69,8 +69,7 @@ class User extends Entity
         'other_document' => true,
         'profile_picture' => true,
         'status' => true,
-        'role_id' => true,
-        'customer_id' => true,
+        'role_id' => true, 
         'created' => true,
         'modified' => true,
     ];

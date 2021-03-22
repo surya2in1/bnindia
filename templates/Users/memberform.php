@@ -68,13 +68,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Customer ID:</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="customer_id" placeholder="Enter Customer ID" value="<?= isset($user->customer_id) ? $user->customer_id : '';?>" autofocus="true">
-                                    </div>
-                                </div>
+                                        </div> 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">First Name:</label>
                                     <div class="col-lg-6">
