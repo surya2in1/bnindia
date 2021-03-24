@@ -234,7 +234,7 @@ class GroupsTable extends Table
     * Get group members list
     */
     public function getGroupMembersData($group_id) {
-        $aColumns = array('u.id', 'customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address'); 
+        $aColumns = array('customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address'); 
 
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";

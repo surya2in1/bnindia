@@ -123,10 +123,10 @@ use Cake\Routing\Router;
 
                                  <?php if(($groupid > 0 && $group->status== 1) OR $groupid < 1){ ?>
                                  <div class="form-group row">
-                                    <label class="col-form-label col-lg-3 col-sm-12">Add new group member:</label>
+                                    <label class="col-form-label col-lg-3 col-sm-12">Search member by name:</label>
                                     <div class="col-lg-4 col-md-9 col-sm-12">
                                         <div class="typeahead">
-                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Customer Id" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
+                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Name" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
                                         </div> 
                                     </div>
                                     <div class="col-lg-5">
@@ -144,8 +144,7 @@ use Cake\Routing\Router;
                                             <!--begin: Datatable -->
                                             <table class="table table-striped- table-bordered table-hover table-checkable" id="group_members_table">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Id</th>
+                                                    <tr> 
                                                         <th>Customer Id</th>
                                                         <th>Name</th>
                                                         <th>Address</th>
@@ -162,8 +161,7 @@ use Cake\Routing\Router;
                                                 <!--begin: Datatable -->
                                                 <table class="table table-striped- table-bordered table-hover table-checkable" id="new_group_members_table">
                                                     <thead>
-                                                        <tr>
-                                                            <th>Id</th>
+                                                        <tr> 
                                                             <th>Customer Id</th>
                                                             <th>Name</th>
                                                             <th>Address</th>

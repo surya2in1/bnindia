@@ -20,8 +20,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
 	        },
-			columns: [ 
-				{data: "id"},
+			columns: [  
 				{data: 'customer_id'},
 				{data: 'name'},
 				{data: 'address'}, 
@@ -174,7 +173,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
     	//Bloodhound typeahead
     	$('#customer_id_typeahead').typeahead(null, {
 		  //name: 'best-pictures',
-		  display: 'customer_id',
+		  display: 'name',
 		  source: function show(q, cb, cba) {
 		  	var values = $("input[name='members_ids[]']")
               .map(function(){return $(this).val();}).get();
@@ -204,7 +203,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		     //suggestion: '<p><strong>{{value}}</strong> –</p>'
 		    suggestion: function(data) { 
 		    // console.log (data);
-		      return '<p><strong>' + data.customer_id + '</strong> - ' ;
+		      return '<p><strong>' + data.name + '</strong> - ' ;
 		    }
 		  }
 		}).bind('typeahead:selected', function(obj, selected, name) {  
@@ -309,9 +308,8 @@ function add_member_to_new_group(){
 		$("#customer_id_typeahead").next("span").remove();
 		$('#btn_add_members').addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 	   if(customer_id != ''){
-		   $('#new_group_members_table').DataTable().row.add([
-	             $('#customer_id_typeahead').attr('cust_id')+'<input type="hidden" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
-	             $('#customer_id_typeahead').attr('customer_id'),
+		   $('#new_group_members_table').DataTable().row.add([ 
+	             $('#customer_id_typeahead').attr('customer_id')+'<input type="hidden" name="members_ids[]" id="members_ids" value="'+$('#customer_id_typeahead').attr('cust_id')+'" />',
 	             $('#customer_id_typeahead').attr('cust_name'),
 	             $('#customer_id_typeahead').attr('address'),
 	             '<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="removeNewGroupMember(this);" title="Delete"><i class="flaticon2-trash"></i></button>'
@@ -325,7 +323,7 @@ function add_member_to_new_group(){
 		    $('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 	   }else{
 	   		$('#customer_id_typeahead').css('border-color','red');
-			$("#customer_id_typeahead").after("<span style='color:red'>Please select custome id</span>");
+			$("#customer_id_typeahead").after("<span style='color:red'>Please select member in list</span>");
 			$('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 	   }
 }
