@@ -87,9 +87,9 @@ class GroupsTable extends Table
             ->notEmptyString('gov_reg_no');
 
         $validator
-            ->date('date')
+            ->integer('date')
             ->requirePresence('date', 'create')
-            ->notEmptyDate('date');
+            ->notEmptyString('date');
 
         $validator
             ->integer('no_of_months')

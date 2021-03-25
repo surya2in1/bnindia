@@ -57,6 +57,10 @@
 									<span class="kt-widget__label">Location:</span>
 									<span class="kt-widget__data"><?= ($user->state) ? $user->state : '-'; ?></span>
 								</div>
+								<div class="kt-widget__info">
+									<span class="kt-widget__label">Branch:</span>
+									<span class="kt-widget__data"><?= ($user->branch_name) ? $user->branch_name : '-'; ?></span>
+								</div>
 							</div>
 							<div class="kt-widget__items">
 								<a href="personalinfo" class="kt-widget__item 

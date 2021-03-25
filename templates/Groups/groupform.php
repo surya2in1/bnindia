@@ -103,15 +103,8 @@ use Cake\Routing\Router;
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Collection Date:</label>
-                                    <div class="col-lg-6">
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($group->date) && strtotime($group->date) > 0 ? date('m/d/Y',strtotime($group->date)) : '';?>" id="kt_datepicker_3" name="date">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="la la-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
+                                    <div class="col-lg-6"> 
+                                        <input type="text" class="form-control" value="<?= isset($group->date) ? $group->date : 0;?>" name="date"> 
                                     </div>
                                 </div>  
 

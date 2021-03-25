@@ -72,9 +72,7 @@ class GroupsController extends AppController
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
-           // echo '<pre>';print_r($post); exit;
-            $post['date'] = date('Y-m-d',strtotime($post['date'])); 
-             // echo '<pre>';print_r($post);exit;
+           // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
                 if(isset($post['members_ids']) && !empty($post['members_ids'])){

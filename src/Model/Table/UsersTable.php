@@ -190,6 +190,10 @@ class UsersTable extends Table
             ->integer('status')
             ->allowEmptyString('status');
 
+         $validator
+            ->scalar('branch_name')
+            ->maxLength('branch_name', 200);    
+
         return $validator;
     }
 

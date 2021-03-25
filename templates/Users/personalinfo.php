@@ -194,6 +194,12 @@
 												<input class="form-control" name="income_amt" type="text" value="<?= $user->income_amt; ?>">
 											</div>
 										</div>
+										<div class="form-group row">
+											<label class="col-xl-3 col-lg-3 col-form-label">Branch Name</label>
+											<div class="col-lg-9 col-xl-6">
+												<input class="form-control" name="branch_name" type="text" value="<?= $user->branch_name; ?>">
+											</div>
+										</div>
 										<div class="row">
 											<label class="col-xl-3"></label>
 											<div class="col-lg-9 col-xl-6">

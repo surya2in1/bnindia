@@ -104,7 +104,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        min:1
 	                },
 	                date:{
-	                	required:true
+	                	required:true,
+	                	max : 31,
+	                    min:1
 	                }
 	            },
 	            errorPlacement: function(error, element) {
