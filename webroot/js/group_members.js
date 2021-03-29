@@ -85,7 +85,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        required: true,
 	                        number:true,
 	                        max : 100000000,
-	                        min:1
+	                        min:5,
+	                        step: 5
 	                },
 	                premium: {
 	                        required: true,
@@ -135,7 +136,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 });
 
 	       		return;
-            }	
+            } 
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
@@ -146,10 +147,20 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 // },
                 success: function(response, status, xhr, $form) {
                     if(response>0){
+                    	swal.fire({
+		                    "title": "",
+		                    "text": "The group has been saved successfully.",
+		                    "type": "success",
+		                    "confirmButtonClass": "btn btn-secondary",
+		                    "onClose": function(e) {
+		                         $('html, body').animate({
+		                            scrollTop: $("#kt_content").offset().top
+		                        }, 1000);
+		                        console.log('on close event fired!');
+		                    }
+		                });
                         // similate 2s delay
                         setTimeout(function() {
-                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'The group has been saved successfully.');
                             window.location.reload();
                         }, 2000); 
                     }else{

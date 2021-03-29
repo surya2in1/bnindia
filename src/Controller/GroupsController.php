@@ -72,6 +72,7 @@ class GroupsController extends AppController
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
+            $post['created_by'] = $this->Auth->user('id');
            // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {

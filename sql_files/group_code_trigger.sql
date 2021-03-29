@@ -1,6 +1,7 @@
 ALTER TABLE `groups` ADD `group_code` VARCHAR(500) NOT NULL AFTER `no_of_months`;
 ALTER TABLE `groups` ADD `created_by` INT(11) NOT NULL COMMENT 'user id' AFTER `group_code`;
 ALTER TABLE `members_groups` ADD `temp_customer_id` VARCHAR(500) NOT NULL AFTER `group_id`;
+ALTER TABLE `members_groups` ADD `ticket_no` INT(11) NOT NULL AFTER `temp_customer_id`;
 
 --
 -- Triggers `users`
@@ -27,6 +28,27 @@ DELIMITER ;
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `customer_id` (`customer_id`);
+
+--
+-- Triggers `members_groups`
+--
+DELIMITER $$
+CREATE TRIGGER `CreateTempCustomerIdTrigger` BEFORE INSERT ON `members_groups` FOR EACH ROW BEGIN     
+   SET @group_code= (SELECT g.group_code from groups g where g.id=New.group_id); 
+    
+   SET @total_members_in_group =  (SELECT count(mg.id) from members_groups mg where mg.group_id= New.group_id)+1; 
+   
+   SET New.ticket_no = @total_members_in_group;
+   
+   IF @total_members_in_group <10 THEN
+   	SET @total_members_in_group = CONCAT('0',@total_members_in_group);
+   END IF;
+   
+   SET NEW.temp_customer_id = CONCAT(@group_code,'/',@total_members_in_group);
+
+END
+$$
+DELIMITER ;  
 
 ----------------------------------------------------------------------------------------
 /* BKBM/08/A20 

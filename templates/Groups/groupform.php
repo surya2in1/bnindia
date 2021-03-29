@@ -68,7 +68,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Total Member:</label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : '';?>" id="total_number"  onchange="calculate_premium(),calculate_no_of_months();">
+                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : 0;?>" id="total_number"  onchange="calculate_premium(),calculate_no_of_months();" step="5">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -91,8 +91,19 @@ use Cake\Routing\Router;
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Auction Day:</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="auction_day" placeholder="Enter Auction Day" value="<?= isset($group->auction_day) ? $group->auction_day : '';?>">
+                                    <div class="col-lg-6"> 
+                                        <?php 
+                                        $weekdays = array('Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday',
+                                            'Friday'=>'Friday','Saturday'=>'Saturday',
+                                            'Sunday'=>'Sunday');
+
+                                        $auction_day =  isset($group->auction_day) ? $group->auction_day : '';
+                                        ?>
+                                        <select id="auction_day" name="auction_day" class="form-control">
+                                            <?php foreach($weekdays  as $key => $weekday){ ?>
+                                            <option value="<?= $key; ?>" <?php if($auction_day == $key){ echo "selected";}?>><?= $weekday; ?></option> 
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -103,8 +114,17 @@ use Cake\Routing\Router;
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Collection Date:</label>
-                                    <div class="col-lg-6"> 
-                                        <input type="text" class="form-control" value="<?= isset($group->date) ? $group->date : 0;?>" name="date"> 
+                                    <div class="col-lg-6">  
+                                        <?php 
+                                        $month_dates = array_combine( range(1,31), range(1,31));  
+                                        $date =  isset($group->date) ? $group->date : 0;
+                                        ?>
+                                        <select id="date" name="date" class="form-control">
+                                            <?php foreach($month_dates  as $key => $month_date){ ?>
+                                            <option value="<?= $key; ?>" <?php if($date == $key){ echo "selected";}?>><?= $month_date; ?></option> 
+                                            <?php } ?>
+                                        </select>
+
                                     </div>
                                 </div>  
 

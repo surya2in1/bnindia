@@ -111,6 +111,11 @@ class GroupsTable extends Table
             ->requirePresence('late_fee', 'create')
             ->notEmptyString('late_fee');
                 
+        $validator
+            ->integer('created_by')
+            ->requirePresence('created_by', 'create')
+            ->notEmptyString('created_by');
+            
         return $validator;
     }
 

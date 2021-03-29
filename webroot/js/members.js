@@ -248,10 +248,23 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 // },
                 success: function(response, status, xhr, $form) {
                     if(response>0){
+                    	swal.fire({
+		                    "title": "",
+		                    "text": "The member has been saved successfully.",
+		                    "type": "success",
+		                    "confirmButtonClass": "btn btn-secondary",
+		                    "onClose": function(e) {
+		                         $('html, body').animate({
+		                            scrollTop: $("#kt_content").offset().top
+		                        }, 1000);
+		                        console.log('on close event fired!');
+		                    }
+		                });
+		                
                         // similate 2s delay
                         setTimeout(function() {
-                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'The member has been saved successfully.');
+                            // btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                            // showErrorMsg(form, 'success', 'The member has been saved successfully.');
                             window.location.reload();
                         }, 2000); 
                     }else{

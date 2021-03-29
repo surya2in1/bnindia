@@ -44,6 +44,7 @@ class Group extends Entity
         'modified_date' => true,
         'group_type' => true,
         'auction_day' => true,
-        'late_fee'=> true
+        'late_fee'=> true,
+        'created_by' => true
     ];
 }

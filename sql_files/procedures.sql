@@ -33,7 +33,7 @@ BEGIN
    END IF;
 
    SET @ConvertAmountInLacToChar = ConvertNumberToChar(@chit_amount_in_lac); 	
-   SET @total_groups = (SELECT count(id) from groups);
+   SET @total_groups = (SELECT count(id) from groups)+1;
    SET @last_code = CONCAT(@ConvertAmountInLacToChar,@total_groups);
    SET group_code = CONCAT('B',branch_name,@concat_total_member,'/',@chit_amount_in_lac,'/',@last_code);
    SET result = group_code;
