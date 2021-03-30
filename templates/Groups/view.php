@@ -62,7 +62,7 @@
                             <div class="form-group row">
                                 <label class="col-lg-3 col-form-label">Date:</label>
                                 <div class="col-lg-6">
-                                    <label class="col-lg-3 col-form-label"><?= isset($group->date) && strtotime($group->date) > 0 ? date('m/d/Y',strtotime($group->date)) : '';?></label>
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->date) ? $group->date : '';?></label>
                                 </div>
                             </div>
                             <div class="form-group row">

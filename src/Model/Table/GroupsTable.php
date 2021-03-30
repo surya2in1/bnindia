@@ -107,7 +107,7 @@ class GroupsTable extends Table
             ->notEmptyString('auction_day');
 
         $validator
-            ->integer('late_fee')
+            ->decimal('late_fee')
             ->requirePresence('late_fee', 'create')
             ->notEmptyString('late_fee');
                 

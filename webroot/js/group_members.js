@@ -81,6 +81,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        max : 100000000,
 	                        min:1
 	                },
+	                late_fee: {
+	                        required: true,
+	                        number:true,
+	                        max : 90,
+	                        min:1
+	                },
 	                total_number: {
 	                        required: true,
 	                        number:true,

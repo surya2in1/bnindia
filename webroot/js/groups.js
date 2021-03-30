@@ -43,28 +43,29 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="groups/view/'+data+'" class="kt-nav__link">\
-												<i class="kt-nav__link-icon flaticon2-expand"></i>\
-												<span class="kt-nav__link-text">View</span>\
-											</a>\
-										</li>\
-										<li class="kt-nav__item">\
 											<a href="group_form/'+data+'" class="kt-nav__link">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
-											</a>\
-										</li>\
-										<li class="kt-nav__item">\
-											<a href="#" class="kt-nav__link" onclick="deletegroup('+data+');">\
-												<i class="kt-nav__link-icon flaticon2-trash"></i>\
-												<span class="kt-nav__link-text">Delete</span>\
 											</a>\
 										</li>\
 									</ul>\
 								</div>\
 							</div>\
 						';
+						//Commented temparary		
+						// <li class="kt-nav__item">\
+						// 	<a href="groups/view/'+data+'" class="kt-nav__link">\
+						// 		<i class="kt-nav__link-icon flaticon2-expand"></i>\
+						// 		<span class="kt-nav__link-text">View</span>\
+						// 	</a>\
+						// </li>\
 
+						// <li class="kt-nav__item">\
+						// 	<a href="#" class="kt-nav__link" onclick="deletegroup('+data+');">\
+						// 		<i class="kt-nav__link-icon flaticon2-trash"></i>\
+						// 		<span class="kt-nav__link-text">Delete</span>\
+						// 	</a>\
+						// </li>\
 					},
 				},
 				{

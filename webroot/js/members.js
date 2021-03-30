@@ -39,27 +39,28 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="users/view/'+data+'" class="kt-nav__link">\
-												<i class="kt-nav__link-icon flaticon2-expand"></i>\
-												<span class="kt-nav__link-text">View</span>\
-											</a>\
-										</li>\
-										<li class="kt-nav__item">\
 											<a href="member_form/'+data+'" class="kt-nav__link">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
-											</a>\
-										</li>\
-										<li class="kt-nav__item">\
-											<a href="#" class="kt-nav__link" onclick="deleteuser('+data+');">\
-												<i class="kt-nav__link-icon flaticon2-trash"></i>\
-												<span class="kt-nav__link-text">Delete</span>\
 											</a>\
 										</li>\
 									</ul>\
 								</div>\
 							</div>\
 						';
+						//Commented temparary
+						// <li class="kt-nav__item">\
+						// 	<a href="users/view/'+data+'" class="kt-nav__link">\
+						// 		<i class="kt-nav__link-icon flaticon2-expand"></i>\
+						// 		<span class="kt-nav__link-text">View</span>\
+						// 	</a>\
+						// </li>\
+						// <li class="kt-nav__item">\
+						// 	<a href="#" class="kt-nav__link" onclick="deleteuser('+data+');">\
+						// 		<i class="kt-nav__link-icon flaticon2-trash"></i>\
+						// 		<span class="kt-nav__link-text">Delete</span>\
+						// 	</a>\
+						// </li>\
 					},
 				},
 				{
@@ -125,6 +126,20 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        KTUtil.animateClass(alert[0], 'fadeIn animated');
 	        alert.find('span').html(msg);
 	    }
+	    $.validator.addMethod("validateGroups", function(value, element) {
+	    	  $('#group_ids').children().each(function(i, opt){
+            			// alert($(opt).attr('disabled'));
+            		if($(opt).attr('disabled')){ 
+            			$(opt).removeAttr('disabled');
+            			$(opt).prop('selected',true);
+            			value.push($(opt).val());
+		                // $(opt).remove();
+		            }
+		      });
+		      console.log(value);
+            return value != '' ;
+           }, "This field is required.");
+
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -153,7 +168,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                    maxlength: 100
 	                },
 	                'group_ids[]':{
-	                	required: true,
+	                	//required: true,
+	                	validateGroups : true
 	                },
 	                address:{
 	                    maxlength: 300
@@ -213,8 +229,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                photo_proof: "File must be JPG, JPEG or PNG",
 	                other_document: "File must be JPG, JPEG or PNG"
 	            }, 
-	        });
-			
+	        }); 
+	        var selected = $("#group_ids :selected").map((_,e) => e.value).get();
+			form.append( 'group_ids',  selected);
+			// alert('selected '+selected);
 			if (!form.valid()) {
                swal.fire({
                     "title": "",
