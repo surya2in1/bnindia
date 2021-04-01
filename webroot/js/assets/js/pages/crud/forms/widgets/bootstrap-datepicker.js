@@ -67,6 +67,16 @@ var KTBootstrapDatepicker = function () {
             endDate: "today",
             autoclose: true,
         });
+        $('#auction_date').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows,
+            startDate: "today",
+            autoclose: true,
+        });
+
         // enable clear button for modal demo
         $('#kt_datepicker_3_modal').datepicker({
             rtl: KTUtil.isRTL(),

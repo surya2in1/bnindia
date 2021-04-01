@@ -116,14 +116,18 @@ class AuctionsController extends AppController
         $this->viewBuilder()->setLayout('admin');
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
-        }
+        } 
+        $selected_group_members = [];  
+        $auction = [];
         if($id>0){
             $auction = $this->Auctions->get($id, [
-                'contain' => [],
-            ]);       
+                'contain' => ['Users','Members'],
+            ]); 
+            $selected_group_members = $this->Common->getGroupMember($auction->group_id); 
         }else{
             $auction = $this->Auctions->newEmptyEntity();
         }
+
         //Get all groups except disable
         $GroupsTable = TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
@@ -133,7 +137,7 @@ class AuctionsController extends AppController
                     ->where(['status !='=>2])->toArray();
 
         //echo '<pre>';print_r($auction);exit();
-        $this->set(compact('auction','groups'));
+        $this->set(compact('auction','groups','selected_group_members'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData(); 
@@ -148,4 +152,16 @@ class AuctionsController extends AppController
             exit;
         }
      }
+
+
+    // Get selected member group list
+    function getMembersByGrooupId(){
+        $post = $this->request->getData();
+        $group_id = isset($post['group_id']) && $post['group_id']>0  ? $post['group_id'] : 0;
+        $selected_group_members = []; 
+        if($group_id>0){ 
+            $selected_group_members = $this->Common->getGroupMember($group_id);
+        }
+        echo json_encode($selected_group_members);exit;
+    }
 }

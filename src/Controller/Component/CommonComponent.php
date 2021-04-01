@@ -49,7 +49,7 @@ class CommonComponent extends Component {
         return $response;
 	}
 
-	function getUserMembers($user_id){
+	function getMemberGroups($user_id){
 		$selected_member_groups =[];
         $membergroups= TableRegistry::get('MembersGroups');
         $member_groups = $membergroups->find('all', [
@@ -68,5 +68,34 @@ class CommonComponent extends Component {
         }
         return $selected_member_groups;
 	}
+
+  function getGroupMember($group_id){
+        $selected_group_members =[];
+        $groupmembers =[];
+        $group_members= TableRegistry::get('MembersGroups');
+        $group_members = $group_members->find('all', [
+            'contain' => [
+                             'Groups' => function($q) use ($group_id) {
+                                return $q
+                                    ->select(['id','chit_amount'])
+                                    ->where(['Groups.id'=>$group_id]);
+                              }, 
+                             'Users' => function($q) use ($group_id) {
+                                return $q
+                                    ->select(['id','name' => $q->func()->concat(['Users.first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
+                                    ->where(['group_id'=>$group_id]);
+                            },      
+                         ],
+        ])->toArray(); 
+        if(!empty($group_members)){
+                $groupmembers['groups'] = $group_members[0]['group'];
+            foreach ($group_members as $key => $value) { 
+                $selected_group_members[$value->user_id] = $value->name; 
+            }
+        }
+        $groupmembers['group_members'] = $selected_group_members;
+        // echo 'group_members<pre>';print_r($groupmembers);exit;
+        return $groupmembers;
+  }
 }
 ?>

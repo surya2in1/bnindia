@@ -27,6 +27,7 @@
                         <h3 class="kt-portlet__head-title">
                             <?= ($userid>0) ? 'Edit Member' : 'Add Member';?>
                         </h3>
+                        <lable>(Fields marked with * are mandatory.)</lable>
                     </div>
                 </div>
                 <!--begin::Form-->
@@ -70,25 +71,25 @@
                                             </div>
                                         </div> 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">First Name:</label>
+                                    <label class="col-lg-3 col-form-label">First Name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true">
                                     </div>
                                 </div>
                                  <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Middle name:</label>
+                                    <label class="col-lg-3 col-form-label">Middle name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="middle_name" placeholder="Enter Middle Name" value="<?= isset($user->middle_name) ? $user->middle_name : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Last Name:</label>
+                                    <label class="col-lg-3 col-form-label">Last Name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="last_name" placeholder="Enter Last Name" value="<?= isset($user->last_name) ? $user->last_name : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Email:</label>
+                                    <label class="col-lg-3 col-form-label">Email:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="email" class="form-control" <?php if($userid > 0){ ?>readonly <?php }?> name="email" placeholder="Enter Email" value="<?= isset($user->email) ? $user->email : '';?>">
                                     </div>
@@ -342,7 +343,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups</label>
+                                    <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6 col-xl-6">
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
                                             <?php if($groups){ 

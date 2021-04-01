@@ -132,7 +132,7 @@ jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();  
 });
 
-//Show groups after select group
+//Show groups after select member
 $('#members').change(function(e) {
 	//get selected member id
 	var member_id = $(this).val(); 

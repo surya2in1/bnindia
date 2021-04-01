@@ -50,6 +50,10 @@ class AuctionsTable extends Table
         $this->belongsTo('Groups', [
             'foreignKey' => 'group_id',
             'joinType' => 'INNER',
+        ]); 
+        $this->belongsTo('Users', [
+            'foreignKey' => 'auction_winner_member',
+            'joinType' => 'INNER',
         ]);
     }
 

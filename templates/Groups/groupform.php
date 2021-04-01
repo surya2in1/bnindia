@@ -28,6 +28,7 @@ use Cake\Routing\Router;
                         <h3 class="kt-portlet__head-title">
                             <?= ($groupid > 0 ) ? 'Edit Group' : 'Add Group'; ?> 
                         </h3>
+                        <lable>(Fields marked with * are mandatory.)</lable>
                     </div>
                 </div>
                 <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
@@ -42,13 +43,13 @@ use Cake\Routing\Router;
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group Number:</label>
+                                    <label class="col-lg-3 col-form-label">Group Number:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="group_number" placeholder="Enter Group Number" value="<?= isset($group->group_number) ? $group->group_number : '';?>" autofocus="true">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group Type:</label>
+                                    <label class="col-lg-3 col-form-label">Group Type:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $group_type =  isset($group->group_type) ? $group->group_type : 'monthly';?>
                                         <select id="group_type" name="group_type" class="form-control" onchange="calculate_no_of_months();">
@@ -60,37 +61,37 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Chit Amount:</label>
+                                    <label class="col-lg-3 col-form-label">Chit Amount:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" class="form-control" name="chit_amount" id="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>" onchange="calculate_premium(),calculate_no_of_months();">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Total Member:</label>
+                                    <label class="col-lg-3 col-form-label">Total Member:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : 0;?>" id="total_number"  onchange="calculate_premium(),calculate_no_of_months();" step="5">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Number of months:</label>
+                                    <label class="col-lg-3 col-form-label">Number of months:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" class="form-control" name="no_of_months" placeholder="Enter Number of months" value="<?= isset($group->no_of_months) ? $group->no_of_months : '';?>" id="no_of_months" onchange="calculate_no_of_months();">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Premium:</label>
+                                    <label class="col-lg-3 col-form-label">Premium:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" class="form-control" name="premium" placeholder="Enter Premium" value="<?= isset($group->premium) ? $group->premium : '';?>" id="premium" readonly onchange="calculate_no_of_months();">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Goverment Registration Number:</label>
+                                    <label class="col-lg-3 col-form-label">Goverment Registration Number:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="gov_reg_no" placeholder="Enter Goverment Registration Number" value="<?= isset($group->gov_reg_no) ? $group->gov_reg_no : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Auction Day:</label>
+                                    <label class="col-lg-3 col-form-label">Auction Day:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6"> 
                                         <?php 
                                         $weekdays = array('Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday',
@@ -107,13 +108,13 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Late fee(in percent):</label>
+                                    <label class="col-lg-3 col-form-label">Late fee(in percent):<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="late_fee" placeholder="Enter Late Fee" value="<?= isset($group->late_fee) ? $group->late_fee : '';?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Collection Date:</label>
+                                    <label class="col-lg-3 col-form-label">Collection Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">  
                                         <?php 
                                         $month_dates = array_combine( range(1,31), range(1,31));  

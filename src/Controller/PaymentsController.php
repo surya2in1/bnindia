@@ -76,7 +76,7 @@ class PaymentsController extends AppController
             ]);
             $payment_member_id =  $payment->user_id;
             $payment_group_id =  $payment->group_id;
-            $groups = $this->Common->getUserMembers($payment_member_id); 
+            $groups = $this->Common->getMemberGroups($payment_member_id); 
         }else{
             $payment = $this->Payments->newEmptyEntity();
         }
@@ -113,7 +113,7 @@ class PaymentsController extends AppController
         $member_id = isset($post['member_id']) && $post['member_id']>0  ? $post['member_id'] : 0;
         $selected_member_groups = []; 
         if($member_id>0){ 
-            $selected_member_groups = $this->Common->getUserMembers($member_id);
+            $selected_member_groups = $this->Common->getMemberGroups($member_id);
         }
         echo json_encode($selected_member_groups);exit;
     }

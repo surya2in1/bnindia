@@ -75,6 +75,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        required: true,
 	                        maxlength : 100
 	                },
+	                group_type: {
+	                        required: true,
+	                },
+	                auction_day: {
+	                        required: true,
+	                },
 	                chit_amount: {
 	                        required: true,
 	                        number:true,

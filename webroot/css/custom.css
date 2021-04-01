@@ -62,3 +62,7 @@
 .hide-div{
   display: none !important;
 }
+
+.required{
+  color: red;
+}
