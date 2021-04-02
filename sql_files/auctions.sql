@@ -59,3 +59,6 @@ ALTER TABLE `auctions`
 ALTER TABLE `auctions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
+
+
+ALTER TABLE `groups` ADD `is_all_auction_completed` INT(2) NOT NULL COMMENT '0-not done, 1- done' AFTER `group_code`;

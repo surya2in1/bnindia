@@ -44,6 +44,9 @@ class GroupsTable extends Table
         $this->hasMany('MembersGroups', [
             'foreignKey' => 'group_id',
         ]);
+        $this->hasMany('Auctions', [
+            'foreignKey' => 'group_id',
+        ]);
     }
 
     /**

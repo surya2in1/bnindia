@@ -77,18 +77,26 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','chit_amount'])
-                                    ->where(['Groups.id'=>$group_id]);
+                                    ->select(['id','chit_amount','total_number'])
+                                    ->contain(['Auctions' => function($q) use ($group_id) {
+                                          return $q
+                                              ->select(['Auctions.group_id',
+                                                'auction_count' => $q->func()->count('Auctions.id')
+                                                ])
+                                              ->where(['Auctions.group_id'=>$group_id]);
+                                        }, ])
+                                    ->where(['Groups.id'=>$group_id,'Groups.is_all_auction_completed' => 0]);
                               }, 
                              'Users' => function($q) use ($group_id) {
                                 return $q
                                     ->select(['id','name' => $q->func()->concat(['Users.first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
                                     ->where(['group_id'=>$group_id]);
-                            },      
+                            },    
                          ],
         ])->toArray(); 
         if(!empty($group_members)){
-                $groupmembers['groups'] = $group_members[0]['group'];
+            $groupmembers['auction_count'] = isset($group_members[0]['group']['auctions'][0]['auction_count']) && ($group_members[0]['group']['auctions'][0]['auction_count'] > 0) ? ($group_members[0]['group']['auctions'][0]['auction_count']+1) : 1;
+            $groupmembers['groups'] = isset($group_members[0]['group']) ? $group_members[0]['group'] : '';
             foreach ($group_members as $key => $value) { 
                 $selected_group_members[$value->user_id] = $value->name; 
             }
