@@ -56,6 +56,7 @@ use Cake\Routing\Router;
                                             } ?> 
                                         </select> 
                                         <input type="hidden" name="total_members" id="total_members">
+                                        <input type="hidden" name="premium" id="premium">
                                     </div>
                                 </div>
 
@@ -109,7 +110,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Chit Amount:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($auction->chit_amount) ? $auction->chit_amount : '';?>" id="chit_amount" readonly  onchange="calculate_subscription_amount();" title="You can not change this value.">
+                                        <input type="text" class="form-control" name="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($auction->chit_amount) ? $auction->chit_amount : '';?>" id="chit_amount" readonly  onchange="calculate_subscription_amount();" data-toggle="tooltip" title="You can not change this value.">
                                     </div>
                                 </div> 
 

@@ -134,7 +134,7 @@ class AuctionsController extends AppController
                                         'keyField' => 'id',
                                         'valueField' => 'group_code' 
                                     ])
-                    ->where(['status !='=>2])->toArray();
+                    ->where(['status !='=>2,'is_all_auction_completed' => 0])->toArray();
 
         //echo '<pre>';print_r($auction);exit();
         $this->set(compact('auction','groups','selected_group_members'));

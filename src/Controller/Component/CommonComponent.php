@@ -77,7 +77,7 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','chit_amount','total_number'])
+                                    ->select(['id','chit_amount','total_number','premium'])
                                     ->contain(['Auctions' => function($q) use ($group_id) {
                                           return $q
                                               ->select(['Auctions.group_id',
@@ -85,7 +85,7 @@ class CommonComponent extends Component {
                                                 ])
                                               ->where(['Auctions.group_id'=>$group_id]);
                                         }, ])
-                                    ->where(['Groups.id'=>$group_id,'Groups.is_all_auction_completed' => 0]);
+                                    ->where(['Groups.id'=>$group_id]);
                               }, 
                              'Users' => function($q) use ($group_id) {
                                 return $q
@@ -94,6 +94,7 @@ class CommonComponent extends Component {
                             },    
                          ],
         ])->toArray(); 
+        // echo 'group_members<pre>';print_r($groupmembers);exit;
         if(!empty($group_members)){
             $groupmembers['auction_count'] = isset($group_members[0]['group']['auctions'][0]['auction_count']) && ($group_members[0]['group']['auctions'][0]['auction_count'] > 0) ? ($group_members[0]['group']['auctions'][0]['auction_count']+1) : 1;
             $groupmembers['groups'] = isset($group_members[0]['group']) ? $group_members[0]['group'] : '';
@@ -102,7 +103,6 @@ class CommonComponent extends Component {
             }
         }
         $groupmembers['group_members'] = $selected_group_members;
-        // echo 'group_members<pre>';print_r($groupmembers);exit;
         return $groupmembers;
   }
 }
