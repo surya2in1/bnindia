@@ -1,70 +1,72 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Auction[]|\Cake\Collection\CollectionInterface $auctions
- */
-?>
-<div class="auctions index content">
-    <?= $this->Html->link(__('New Auction'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Auctions') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('group_id') ?></th>
-                    <th><?= $this->Paginator->sort('auction_no') ?></th>
-                    <th><?= $this->Paginator->sort('auction_date') ?></th>
-                    <th><?= $this->Paginator->sort('auction_highest_percent') ?></th>
-                    <th><?= $this->Paginator->sort('auction_winner_member') ?></th>
-                    <th><?= $this->Paginator->sort('chit_amount') ?></th>
-                    <th><?= $this->Paginator->sort('discount_amount') ?></th>
-                    <th><?= $this->Paginator->sort('priced_amount') ?></th>
-                    <th><?= $this->Paginator->sort('foreman_commission') ?></th>
-                    <th><?= $this->Paginator->sort('total_subscriber_dividend') ?></th>
-                    <th><?= $this->Paginator->sort('subscriber_dividend') ?></th>
-                    <th><?= $this->Paginator->sort('net_subscription_amount') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($auctions as $auction): ?>
-                <tr>
-                    <td><?= $this->Number->format($auction->id) ?></td>
-                    <td><?= $auction->has('group') ? $this->Html->link($auction->group->id, ['controller' => 'Groups', 'action' => 'view', $auction->group->id]) : '' ?></td>
-                    <td><?= $this->Number->format($auction->auction_no) ?></td>
-                    <td><?= h($auction->auction_date) ?></td>
-                    <td><?= $this->Number->format($auction->auction_highest_percent) ?></td>
-                    <td><?= $this->Number->format($auction->auction_winner_member) ?></td>
-                    <td><?= $this->Number->format($auction->chit_amount) ?></td>
-                    <td><?= $this->Number->format($auction->discount_amount) ?></td>
-                    <td><?= $this->Number->format($auction->priced_amount) ?></td>
-                    <td><?= $this->Number->format($auction->foreman_commission) ?></td>
-                    <td><?= $this->Number->format($auction->total_subscriber_dividend) ?></td>
-                    <td><?= $this->Number->format($auction->subscriber_dividend) ?></td>
-                    <td><?= $this->Number->format($auction->net_subscription_amount) ?></td>
-                    <td><?= h($auction->created) ?></td>
-                    <td><?= h($auction->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $auction->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $auction->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $auction->id], ['confirm' => __('Are you sure you want to delete # {0}?', $auction->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+<!-- begin:: Content Head -->
+<div class="kt-subheader  kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">Auctions</h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <div class="kt-input-icon kt-input-icon--right kt-subheader__search kt-hidden">
+                <input type="text" class="form-control" placeholder="Search order..." id="generalSearch">
+                <span class="kt-input-icon__icon kt-input-icon__icon--right">
+                    <span><i class="flaticon2-search-1"></i></span>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- end:: Content Head -->
+
+<!-- begin:: Content -->
+<?= $this->Form->create(null,[]); ?>
+<?= $this->Form->end(); ?>
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand  fa fa-gavel" aria-hidden="true"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Auction list
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        
+                        <a href="auction_form" class="btn btn-brand btn-elevate btn-icon-sm">
+                            <i class="la la-plus"></i>
+                            New Record
+                        </a>                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+
+            <!--begin: Datatable -->
+            <table class="table table-striped- table-bordered table-hover table-checkable" id="auctions_table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Group No.</th>
+                        <th>Auction No</th>
+                        <th>Auction Date</th>
+                        <th>Highest Percent</th>
+                        <th>Winner</th>
+                        <th>Chit Amt</th>
+                        <th>Priced Amt</th>
+                        <th>Foreman Commission</th>
+                        <th>Total Subscriber Dividend</th>
+                        <th>Subscriber Dividend</th>
+                        <th>Net Subscription Amt</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <!--end: Datatable -->
+        </div>
+    </div>
+</div>
+
+<!-- end:: Content -->

@@ -18,13 +18,12 @@ class AuctionsController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Groups'],
-        ];
-        $auctions = $this->paginate($this->Auctions);
-
-        $this->set(compact('auctions'));
+    { 
+        $this->viewBuilder()->setLayout('admin');    
+        if ($this->request->is('post')) { 
+             $output = $this->Auctions->GetData();
+             echo json_encode($output);exit;
+        }
     }
 
     /**

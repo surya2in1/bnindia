@@ -197,7 +197,7 @@ use Cake\Routing\Router;
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
                                     <button type="button" id="submit" class="btn btn-success">Submit</button>
-                                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                                    <a href="groups" class="btn btn-secondary">Cancel</a>
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,40 @@
 "use strict"; 
 var table = $('#auctions_table'); 
-var KTDatatablesDataSourceAjaxServer = function() {
+var KTDatatablesDataSourceAjaxServer = function() { 
+    var initTable1 = function() {
+
+        // begin first table
+        table.DataTable({
+            // "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            responsive: true,
+            searchDelay: 500,
+            processing: true,
+            serverSide: true,
+            "ajax": {
+                "url": "Auctions/index",
+                "type": "POST",
+                beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+            },
+            columns: [
+                {data: 'id'},
+                {data: 'group_code'},
+                {data: 'auction_no'},
+                {data: 'auction_date'},
+                {data: 'auction_highest_percent'},
+                {data: 'winner'},
+                {data: 'chit_amount'},
+                {data: 'priced_amount'},
+                {data: 'foreman_commission'}, 
+                {data: 'total_subscriber_dividend'},
+                {data: 'subscriber_dividend'},
+                {data: 'net_subscription_amount'}, 
+            ], 
+        });
+
+    };
+     
     var auctions_module = function () {
         var showErrorMsg = function(form, type, msg) {
             var alert = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert">\
@@ -159,7 +193,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
     return {
         //main function to initiate the module
         init: function() {
-            // initTable1();  
+            initTable1();  
             auctions_module();
         },
 
@@ -183,6 +217,7 @@ $('#groups').change(function(e) {
         $('#auction_winner_member').html(member_options);
         return false;
     }
+    $('.bnspinner').removeClass('hide');
 	$.ajax({
 		   "url": $('#router_url').val()+"Auctions/getMembersByGrooupId",
             "type": "POST",
@@ -193,6 +228,7 @@ $('#groups').change(function(e) {
                 xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
             },
             success: function(response, status, xhr, $form) {
+                $('.bnspinner').addClass('hide');
                 var result = JSON.parse(response);
                 if(result != ''){
                 	if((result.group_members)!=''){

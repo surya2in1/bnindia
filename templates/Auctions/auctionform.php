@@ -58,6 +58,7 @@ use Cake\Routing\Router;
                                         <input type="hidden" name="total_members" id="total_members">
                                         <input type="hidden" name="premium" id="premium">
                                     </div>
+                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner"></div>
                                 </div>
 
                                 <div class="form-group row">
@@ -165,7 +166,7 @@ use Cake\Routing\Router;
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
                                     <button type="button" id="submit" class="btn btn-success">Submit</button>
-                                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                                    <a href="auctions" class="btn btn-secondary">Cancel</a>
                                 </div>
                             </div>
                         </div>
