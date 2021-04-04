@@ -31,6 +31,18 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 {data: 'subscriber_dividend'},
                 {data: 'net_subscription_amount'}, 
             ], 
+            columnDefs: [ 
+                {
+                    targets: 3,
+                    title: 'Action Date',
+                    orderable: false,
+                    render: function(data, type, full, meta) { 
+                        var date = new Date(data);
+                        return ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
+                
+                    },
+                }, 
+            ],
         });
 
     };
