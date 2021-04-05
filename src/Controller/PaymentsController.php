@@ -57,9 +57,6 @@ class PaymentsController extends AppController
      */
     public function paymentform($id=null)
     {
-    //      $fourRandomDigit = mt_rand(1000,9999);
-    // echo $fourRandomDigit;    exit;
-    
         $this->viewBuilder()->setLayout('admin');
        
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
@@ -70,6 +67,8 @@ class PaymentsController extends AppController
         $payment_member_id =  0;
         $payment_group_id = 0;
         $groups = [];
+        $receipt_no = 1;
+        $members = [];
         if($id>0){
             $payment = $this->Payments->get($id, [
                 'contain' => ['Groups','Members'],
@@ -77,9 +76,28 @@ class PaymentsController extends AppController
             $payment_member_id =  $payment->user_id;
             $payment_group_id =  $payment->group_id;
             $groups = $this->Common->getMemberGroups($payment_member_id); 
+            $members = $this->Common->getGroupMember($payment_group_id);
         }else{
+            $payment_receipt_no = $this->Payments->find()->count();
+            $receipt_no = $payment_receipt_no +1;
             $payment = $this->Payments->newEmptyEntity();
         }
+
+        //Get available Users
+        $AuctionsTable = TableRegistry::get('Auctions');
+        $groups = $AuctionsTable->find('list', [
+                                        'keyField' => 'group_id',
+                                        'valueField' => function ($row) {
+                                            return $row->group->group_code;
+                                        }          
+                                    ])
+                     ->contain([
+                            'Groups'  
+                        ])
+                    ->group(['Auctions.group_id'])->toArray();
+        // echo '$groups<pre>';print_r($groups);exit;
+       
+        $this->set(compact('payment', 'groups', 'members','payment_member_id','payment_group_id','receipt_no'));
 
         if ($this->request->is('post')) {
             $payment = $this->Payments->patchEntity($payment, $this->request->getData());
@@ -90,32 +108,17 @@ class PaymentsController extends AppController
             }
             $this->Flash->error(__('The payment could not be saved. Please, try again.'));
         }
-         
-         //Get available Users
-        $UsersTable = TableRegistry::get('Users');
-        $members = $UsersTable->find('list', [
-                                        'keyField' => 'id',
-                                        'valueField' => 'customer_id'
-                                        // 'valueField' => function ($e) {
-                                        //     return ucwords($e->first_name . ' ' . $e->middle_name . ' ' . $e->last_name);
-                                        // }
-                                    ])
-                     ->contain([
-                            'Roles'  => ['conditions' => ['name !=' => 'admin']]
-                        ])
-                    ->where(['status'=>1])->toArray();
-        $this->set(compact('payment', 'groups', 'members','payment_member_id','payment_group_id'));
     }
 
-    // Get selected member group list
-    function getGroupsByMemberId(){
+    // Get selected group members list
+    function getMembersByGroupId(){
         $post = $this->request->getData();
-        $member_id = isset($post['member_id']) && $post['member_id']>0  ? $post['member_id'] : 0;
-        $selected_member_groups = []; 
-        if($member_id>0){ 
-            $selected_member_groups = $this->Common->getMemberGroups($member_id);
+        $group_id = isset($post['group_id']) && $post['group_id']>0  ? $post['group_id'] : 0;
+        $selected_group_members = []; 
+        if($group_id>0){ 
+            $selected_group_members = $this->Common->getGroupMember($group_id);
         }
-        echo json_encode($selected_member_groups);exit;
+        echo json_encode($selected_group_members);exit;
     }
 
     /**

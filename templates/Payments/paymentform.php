@@ -44,9 +44,44 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Receipt no:</label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="receipt_no" placeholder="Enter Receipt No" value="<?= isset($payment->receipt_no) ? $payment->receipt_no : '';?>" autofocus="true">
+                                        <input type="text" class="form-control" name="receipt_no" placeholder="Enter Receipt No" value="<?= isset($payment->receipt_no) ? $payment->receipt_no : $receipt_no;?>" autofocus="true" readonly title="You can not change this value.">
                                     </div>
                                 </div> 
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Group:</label>
+                                    <div class="col-lg-6">
+                                        <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
+                                        <!-- Get groups after select member -->
+                                        <select id="groups" name="group_id" class="form-control">
+                                            <option value="">Select Group</option>
+                                             <?php if($groups){ 
+                                                foreach ($groups as $key => $group) {?>
+                                                    <option <?php if($key == $payment_group_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$group?></option>
+                                               <?php } 
+                                            } ?> 
+                                        </select> 
+                                    </div>
+                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner"></div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Member:</label>
+                                    <div class="col-lg-6">
+                                        <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
+                                        ?>
+                                        <!-- Get member list -->
+                                        <select id="members" name="user_id" class="form-control">
+                                             <option value="">Select Member</option>
+                                            <?php if($members){ 
+                                                foreach ($members as $key => $member) {
+                                                    ?>
+                                                    <option <?php if($key == $payment_member_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$member?></option>
+                                               <?php } 
+                                            }  ?> 
+                                        </select> 
+                                    </div>
+                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Due date of payment:</label>
@@ -75,41 +110,6 @@ use Cake\Routing\Router;
                                         </div>
                                     </div>
                                 </div>  
-
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Member:</label>
-                                    <div class="col-lg-6">
-                                        <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
-                                        ?>
-                                        <!-- Get member list -->
-                                        <select id="members" name="user_id" class="form-control">
-                                             <option value="">Select Member</option>
-                                            <?php if($members){ 
-                                                foreach ($members as $key => $member) {
-                                                    ?>
-                                                    <option <?php if($key == $payment_member_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$member?></option>
-                                               <?php } 
-                                            }  ?> 
-                                        </select> 
-                                    </div>
-                                </div>
-
-                                <!-- Show hear member details after select member -->
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group:</label>
-                                    <div class="col-lg-6">
-                                        <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
-                                        <!-- Get groups after select member -->
-                                        <select id="groups" name="group_id" class="form-control">
-                                            <option value="">Select Group</option>
-                                             <?php if($groups){ 
-                                                foreach ($groups as $key => $group) {?>
-                                                    <option <?php if($key == $payment_group_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$group?></option>
-                                               <?php } 
-                                            } ?> 
-                                        </select> 
-                                    </div>
-                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscriber Ticket No:</label>
