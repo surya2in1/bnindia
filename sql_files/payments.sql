@@ -5,10 +5,19 @@ ALTER TABLE `payments` ADD `auction_id` INT(11) NOT NULL AFTER `remark`;
 ALTER TABLE `payments` ADD `is_installment_complete` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '1-complete, 0-not complete' AFTER `auction_id`;
 
 
--- SELECT a.auction_no,max(p.id) as pid FROM auctions a left join payments p on a.id=p.auction_id where a.group_id = 13 group by a.auction_no having pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id ASC
--- ) or pid is null
+SELECT a.auction_no,max(p.id) as pid FROM auctions a left join payments p on a.id=p.auction_id where a.group_id = 13 group by a.auction_no having pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id ASC) or pid is null
 
 ---------------------------------------------------------------------------------------------
+SELECT a.auction_no,max(p.id) as pid 
+
+	FROM auctions a 
+	left join payments p on a.id=p.auction_id 
+
+where a.group_id = 13 
+group by a.auction_no 
+having pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id ASC) or pid is null
+
+ 
 
 -- SELECT a.auction_no,p.id FROM auctions a left join payments p on a.id=p.auction_id where a.group_id = 13 and (p.is_installment_complete = 0 or p.is_installment_complete is null)  
 -- SELECT group_id,user_id, MAX(id) AS mId FROM payments where user_id = 2 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id ASC

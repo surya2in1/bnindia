@@ -56,6 +56,9 @@ class PaymentsTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
+        $this->belongsTo('Auctions', [
+            'foreignKey' => 'auction_id' 
+        ]);
     }
 
     /**

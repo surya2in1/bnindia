@@ -105,5 +105,31 @@ class CommonComponent extends Component {
         $groupmembers['group_members'] = $selected_group_members;
         return $groupmembers;
   }
+
+  // Get installment no by selecting group and member
+  //   SELECT a.auction_no,max(p.id) as pid 
+  //   FROM auctions a 
+  //   left join payments p on a.id=p.auction_id 
+  // where a.group_id = 13 
+  // group by a.auction_no 
+  // having pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id ASC) or pid is null
+  function getInstalmentNoList($group_id,$member_id){
+    $auctionTable= TableRegistry::get('Auctions'); 
+    $query = $auctionTable->find();
+    $instalment_nos = $query->select(['pid' => $query->func()->max('p.id'),'Auctions.auction_no','Auctions.id'])
+           ->join([
+              'table' => 'payments',
+              'alias' => 'p',
+              'type' => 'LEFT',
+              'conditions' => 'p.auction_id=Auctions.id',
+          ]) 
+          ->where(['Auctions.group_id'=>$group_id])
+          ->group('Auctions.auction_no HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = '.$member_id.' and group_id = '.$group_id.' and is_installment_complete = 1 GROUP BY group_id,user_id ASC) or pid is null')
+          ->toArray(); 
+    // echo '111<pre>';print_r($instalment_nos);exit;
+          return $instalment_nos;
+  }
+
+  
 }
 ?>

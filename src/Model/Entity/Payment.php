@@ -65,9 +65,9 @@ class Payment extends Entity
         'direct_debit_date' => true,
         'direct_debit_transaction_no' => true,
         'remark' => true,
+        'auction_id' => true,
+        'is_installment_complete' => true,
         'created' => true,
         'modified' => true,
-        'group' => true,
-        'member' => true,
     ];
 }

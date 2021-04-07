@@ -130,6 +130,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();  
+	getInstalmentNo();
 });
 
 //Show groups after select member
@@ -154,7 +155,7 @@ $('#groups').change(function(e) {
             success: function(response, status, xhr, $form) {
             	$('.bnspinner').addClass('hide');
             	var result = JSON.parse(response);
-            	var member_options = '';
+            	// var member_options = '';
             	if(result !=''){
             		if((result.group_members)!=''){
 	            		$.each(result.group_members, function( key, value ) { 
@@ -178,3 +179,56 @@ $('#received_by').change(function(e) {
 		$('.direct-debit-div').removeClass('hide-div');
 	}
 });
+
+//Show installment no.s after select group and member
+function getInstalmentNo(){
+	//get selected member id
+	var group_id = $('#groups').val(); 
+	var member_id = $('#members').val(); 
+	var instalment_nos_options = '<option value="">Select Instalment No</option>';
+	if(group_id == '' || member_id == ''){
+        $('#instalment_no').html(instalment_nos_options);
+        return false;
+    } 
+	$('.bnspinner-member').removeClass('hide');
+	$.ajax({
+		   "url": $('#router_url').val()+"Payments/getInstalmentNo",
+            "type": "POST",
+            "data": {"group_id":group_id,"member_id":member_id}
+        			,
+            beforeSend: function (xhr) { // Add this line
+                xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+            },
+            success: function(response, status, xhr, $form) {
+            	$('.bnspinner-member').addClass('hide');
+            	var result = JSON.parse(response); 
+            	if(result !=''){ 
+	            		$.each(result, function( key, value ) { 
+						  instalment_nos_options += '<option value="'+value.auction_no+'" data-id="'+value.id+'">'+value.auction_no+'</option>';
+						}); 
+            	} 
+            	$('#instalment_no').html(instalment_nos_options);
+            }
+		}); 
+}
+
+function getRemaingPayments(){
+	var auction_id = $('#instalment_no').find(':selected').attr('data-id');
+	 if(auction_id == ''){ 
+        return false;
+    } 
+	$('.bnspinner-instalment').removeClass('hide');
+	$.ajax({
+		   "url": $('#router_url').val()+"Payments/getPaymentsInfo",
+            "type": "POST",
+            "data": {"auction_id":auction_id}
+        			,
+            beforeSend: function (xhr) { // Add this line
+                xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+            },
+            success: function(response, status, xhr, $form) {
+            	$('.bnspinner-instalment').addClass('hide');
+            	var result = JSON.parse(response);  
+            }
+		}); 
+}

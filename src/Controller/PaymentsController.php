@@ -121,6 +121,37 @@ class PaymentsController extends AppController
         echo json_encode($selected_group_members);exit;
     }
 
+    // Get installment no by selecting group and member
+    function getInstalmentNo(){
+        $post = $this->request->getData();
+        $group_id = isset($post['group_id']) && $post['group_id']>0  ? $post['group_id'] : 0;
+        $member_id = isset($post['member_id']) && $post['member_id']>0  ? $post['member_id'] : 0;
+        $selected_instalment_nos = []; 
+        if($group_id>0  && $member_id > 0){ 
+            $selected_instalment_nos = $this->Common->getInstalmentNoList($group_id,$member_id);
+        }
+        echo json_encode($selected_instalment_nos);exit;
+    }
+
+    function getPaymentsInfo(){
+        $post = $this->request->getData();
+        $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
+        $auctionTable= TableRegistry::get('Auctions'); 
+        $query = $auctionTable->find();
+        $payment_info = $query->select(['pid' => $query->func()->max('p.id'),'Auctions.id','p.id'])
+               ->join([
+                  'table' => 'payments',
+                  'alias' => 'p',
+                  'type' => 'LEFT',
+                  'conditions' => 'p.auction_id=Auctions.id',
+              ]) 
+              ->where(['Auctions.id'=>$auction_id])
+              ->group('p.auction_id')
+              ->toArray(); 
+    echo '111<pre>';print_r($payment_info);exit;
+    }
+
+
     /**
      * Edit method
      *

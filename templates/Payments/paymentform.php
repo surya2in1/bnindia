@@ -53,7 +53,7 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
                                         <!-- Get groups after select member -->
-                                        <select id="groups" name="group_id" class="form-control">
+                                        <select id="groups" name="group_id" class="form-control"  onchange="getInstalmentNo();">
                                             <option value="">Select Group</option>
                                              <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
@@ -71,7 +71,7 @@ use Cake\Routing\Router;
                                         <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
                                         ?>
                                         <!-- Get member list -->
-                                        <select id="members" name="user_id" class="form-control">
+                                        <select id="members" name="user_id" class="form-control" onchange="getInstalmentNo();">
                                              <option value="">Select Member</option>
                                             <?php if($members){ 
                                                 foreach ($members as $key => $member) {
@@ -80,6 +80,46 @@ use Cake\Routing\Router;
                                                <?php } 
                                             }  ?> 
                                         </select> 
+                                    </div>
+                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner-member"></div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Instalment No:</label>
+                                    <div class="col-lg-6">
+                                        <?php $payment_instalment_no =  isset($payment->instalment_no) ? $payment->instalment_no : 0;
+                                        ?>
+                                        <!-- Get payment_instalment_no list -->
+                                        <select id="instalment_no" name="instalment_no" class="form-control" onchange="getRemaingPayments();">
+                                             <option value="">Select Instalment No</option>
+                                            <?php if($instalment_nos){ 
+                                                foreach ($instalment_nos as $key => $value) {
+                                                    ?>
+                                                    <option <?php if($key == $payment_instalment_no){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$value?></option>
+                                               <?php } 
+                                            }  ?> 
+                                        </select> 
+                                    </div>
+                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner-instalment"></div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Instalment Month:</label>
+                                    <div class="col-lg-6">
+                                        <?php $instalment_month =  isset($payment->instalment_month) ? $payment->instalment_month : 0;?>
+                                        <?php 
+                                        $months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
+
+                                        ?>
+                                        <select id="instalment_month" name="instalment_month" class="form-control"> 
+                                            <!--Show months in php list-->
+                                            <?php
+                                                foreach ($months as $num => $name) {
+                                                    $selected = ($num == $instalment_month) ? 'selected' : '';
+                                                    echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
+                                                }
+                                            ?>
+                                        </select>  
                                     </div>
                                 </div>
 
@@ -117,33 +157,6 @@ use Cake\Routing\Router;
                                         <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>" >
                                     </div>
                                 </div> 
-
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Instalment No:</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="instalment_no" placeholder="Enter Instalment No" value="<?= isset($payment->instalment_no) ? $payment->instalment_no : '';?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Instalment Month:</label>
-                                    <div class="col-lg-6">
-                                        <?php $instalment_month =  isset($payment->instalment_month) ? $payment->instalment_month : 0;?>
-                                        <?php 
-                                        $months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
-
-                                        ?>
-                                        <select id="instalment_month" name="instalment_month" class="form-control"> 
-                                            <!--Show months in php list-->
-                                            <?php
-                                                foreach ($months as $num => $name) {
-                                                    $selected = ($num == $instalment_month) ? 'selected' : '';
-                                                    echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
-                                                }
-                                            ?>
-                                        </select>  
-                                    </div>
-                                </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscription Rs:</label>

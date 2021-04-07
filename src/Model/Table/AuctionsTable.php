@@ -56,6 +56,9 @@ class AuctionsTable extends Table
             'foreignKey' => 'auction_winner_member',
             'joinType' => 'INNER',
         ]);
+        $this->hasMany('Payments', [
+            'foreignKey' => 'auction_id',
+        ]);
     }
 
     /**
