@@ -82,6 +82,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/group_form/*', ['controller' => 'Groups', 'action' => 'groupform']);
 
+    $builder->connect('/add_group_members', ['controller' => 'Groups', 'action' => 'addGroupMembers']);
+
     $builder->connect('/member_form/*', ['controller' => 'Users', 'action' => 'memberform']);
 
     $builder->connect('/auction_form/*', ['controller' => 'Auctions', 'action' => 'auctionform']);

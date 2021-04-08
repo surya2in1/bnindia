@@ -64,8 +64,18 @@
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">Add Group</span>',
+                                                    <span class="kt-menu__link-text">Create Group</span>',
                                                     array('controller'=>'Groups','action'=>'groupform'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'addGroupMembers') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">Add member in group</span>',
+                                                    array('controller'=>'Groups','action'=>'addGroupMembers'),
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>

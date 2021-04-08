@@ -103,6 +103,10 @@ class GroupsController extends AppController
         $this->set(compact('group'));
      }
 
+     function addGroupMembers(){
+        $this->viewBuilder()->setLayout('admin');
+     }
+
     /**
      * Add method
      *

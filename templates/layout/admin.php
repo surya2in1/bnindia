@@ -171,7 +171,7 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('groups.js') ?> 
         <?php } ?>
 
-        <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'groupform') { ?> 
+        <?php if($this->request->getParam('controller') == 'Groups' && ($this->request->getParam('action') == 'groupform' || $this->request->getParam('action') == 'addGroupMembers')) { ?> 
             <?= $this->Html->script('group_members.js') ?>
         <?php } ?>
         <?php if($this->request->getParam('controller') == 'Auctions') { ?> 

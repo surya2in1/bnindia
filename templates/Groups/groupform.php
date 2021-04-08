@@ -26,7 +26,7 @@ use Cake\Routing\Router;
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                            <?= ($groupid > 0 ) ? 'Edit Group' : 'Add Group'; ?> 
+                            <?= ($groupid > 0 ) ? 'Edit Group' : 'Create Group'; ?> 
                         </h3>
                         <lable>(Fields marked with * are mandatory.)</lable>
                     </div>
