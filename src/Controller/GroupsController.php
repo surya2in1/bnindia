@@ -105,6 +105,12 @@ class GroupsController extends AppController
 
      function addGroupMembers(){
         $this->viewBuilder()->setLayout('admin');
+        $groups = $this->Groups->find('list', [
+                                        'keyField' => 'id',
+                                        'valueField' => 'group_code'
+                                    ])
+                     ->where(['status' => 1 ])->toArray();
+        $this->set(compact('groups'));
      }
 
     /**
@@ -179,7 +185,7 @@ class GroupsController extends AppController
 
     function getGroupMembers($group_id){
             $output = $this->Groups->getGroupMembersData($group_id);
-            // echo '<pre>';print_r($output);exit;
+            // echo $group_id.'<pre>';print_r($output);exit;
             echo json_encode($output);exit;
     }
 }

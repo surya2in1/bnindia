@@ -1,10 +1,11 @@
 "use strict";
-var group_id = $('#id').val();
+var group_id = $('#id').val(); 
 var table = $('#group_members_table');
 var new_group_members_table = $('#new_group_members_table');
 var KTDatatablesDataSourceAjaxServer = function() {
 	var initTable1 = function() {
 		var i =0;
+
 		// begin first group_members_table
 		table.DataTable({
 			// "lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
@@ -194,16 +195,17 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		});
     }
 
-    var memberlist = function() {
+    var memberlist = function() { 
     	//Bloodhound typeahead
     	$('#customer_id_typeahead').typeahead(null, {
 		  //name: 'best-pictures',
-		  display: 'name',
+		  display: 'customer_id',
 		  source: function show(q, cb, cba) {
 		  	var values = $("input[name='members_ids[]']")
               .map(function(){return $(this).val();}).get();
               // alert(values); 
     		var mvalues = (values!='') ? values : 0;
+	    	var group_id = $('#id').val(); 
 		    var url = $('#router_url').val()+"Users/getMembers/"+q+"/"+group_id+"/"+mvalues;
 		    $.ajax({ 
 		    		url: url,
@@ -228,7 +230,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		     //suggestion: '<p><strong>{{value}}</strong> –</p>'
 		    suggestion: function(data) { 
 		    // console.log (data);
-		      return '<p><strong>' + data.name + '</strong> - ' ;
+		      return '<p><strong>' + data.customer_id + '</strong> - ' ;
 		    }
 		  }
 		}).bind('typeahead:selected', function(obj, selected, name) {  
@@ -289,6 +291,11 @@ jQuery(document).ready(function() {
           if($(this).val() === '') // you can also check for minLength 
               $(this).data().ttTypeahead.input.trigger('queryChanged', '');
       });
+
+		var group_code = $('#id option:selected').text();
+	if(group_code !=''){
+		$('#list_label').html('<b>List of "'+group_code+'" group members:</b>');
+	}
 });
 
 function calculate_premium(){
@@ -386,7 +393,8 @@ function removeNewGroupMember(thisval){
 /**
 * add_member_to_existing_group
 */
-function add_member_to_existing_group(){
+function add_member_to_existing_group(){ 
+	var group_id = $('#id').val(); 
 	$('#customer_id_typeahead').css('border','1px solid #e2e5ec');
 	$("#customer_id_typeahead").next("span").remove();
 	if( $('#customer_id_typeahead').attr('cust_id') > 0 && group_id > 0){
@@ -422,7 +430,7 @@ function add_member_to_existing_group(){
 	}else{ 
 
 		$('#customer_id_typeahead').css('border-color','red');
-		$("#customer_id_typeahead").after("<span style='color:red'>Please select customer id.</span>");
+		$("#customer_id_typeahead").after("<span style='color:red'>Please select customer id in search list.</span>");
 	}
 }
 
@@ -476,3 +484,9 @@ function delete_group_user(id){
         }
     });
 } 
+
+function refresh_member_table(){  
+	var group_id = $('#id').val();
+	$('#group_members_table').DataTable().ajax.url($('#router_url').val()+"Groups/getGroupMembers/"+group_id).load();
+	$('#customer_id_typeahead').val('');
+}

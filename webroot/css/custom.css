@@ -66,3 +66,15 @@
 .required{
   color: red;
 }
+
+.pad-bot-0{
+  padding-bottom: 0px !important;
+}
+
+.marg-bot-0{
+  margin-bottom: 0px !important;
+}
+
+.typeahead .tt-menu{
+  min-width: 100% !important;
+}

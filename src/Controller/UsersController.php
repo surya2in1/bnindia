@@ -644,8 +644,8 @@ class UsersController extends AppController
              $query = $this->Users->find();
              //Excapt admin search all member
              $where_Conditions['r.name !=']  = 'admin'; 
-             //$where_Conditions['Users.customer_id LIKE'] = '%'.$query_string.'%';
-             $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
+             $where_Conditions['Users.customer_id'] = $query_string;
+             // $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
 
              if($selected_member_ids > 0){
                 $where_Conditions['Users.id NOT IN'] = explode(',', $selected_member_ids);
