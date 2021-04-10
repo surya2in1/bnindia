@@ -13,6 +13,7 @@ use Cake\Mailer\TransportFactory;
 use Cake\Mailer\Transport;
 use Cake\Log\Log;
 use Cake\Datasource\ConnectionManager;
+use Cake\Core\Configure;
 
 /**
  * Users Controller
@@ -90,18 +91,6 @@ class UsersController extends AppController
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function index()
-    {
-        $users = $this->paginate($this->Users);
-
-        $this->set(compact('users'));
-    }
-
-    /**
      * View method
      *
      * @param string|null $id User id.
@@ -155,45 +144,6 @@ class UsersController extends AppController
             }
             exit;
         }
-    }
-
-    public function add()
-    {
-        $user = $this->Users->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $this->set(compact('user'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
-        $this->set(compact('user'));
     }
 
     /**
@@ -472,45 +422,46 @@ class UsersController extends AppController
             $user = $this->Users->get($id, [
                 'contain' => [],
             ]);
-            $MembersGroupsTable = TableRegistry::get('MembersGroups');
-            $member_groups = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->toArray();
-            if(!empty($member_groups)){
-                foreach ($member_groups as $key => $value) { 
-                    $selected_member_groups[$key] = $value->group_id; 
-                }
-            }
+            // $MembersGroupsTable = TableRegistry::get('MembersGroups');
+            // $member_groups = $MembersGroupsTable->find('all')->where(['user_id'=>$id])->toArray();
+            // if(!empty($member_groups)){
+            //     foreach ($member_groups as $key => $value) { 
+            //         $selected_member_groups[$key] = $value->group_id; 
+            //     }
+            // }
         }else{
             $user = $this->Users->newEmptyEntity();
         }
-        $this->set('selected_member_groups',$selected_member_groups);
+        // $this->set('selected_member_groups',$selected_member_groups);
         //Get available groups
-        $GroupsTable = TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                        'keyField' => 'id',
-                                        'valueField' => 'group_number'
-                                    ])->where(['status'=>1])->toArray();
-        // echo '<pre>';print_r($selected_member_groups);
-        // echo '<pre>';print_r($groups);exit;
-        $full_groups= [];
-        if(!empty($groups)){
-            foreach ($groups as $key=> $value) {
-                  $grouplist[] = $key; 
-            }
-             if(!empty($selected_member_groups)){
-                $remaning_full_groups = array_diff($selected_member_groups, $grouplist);
-                 if($remaning_full_groups){
-                    foreach ($remaning_full_groups as  $value) {
-                        $result = $GroupsTable->find('list', [
-                                                'keyField' => 'id',
-                                                'valueField' => 'group_number'
-                                            ])->where(['id'=>$value])->toArray();
-                        $full_groups = $full_groups + $result;
-                    }
-                }
-            }
+        // $GroupsTable = TableRegistry::get('Groups');
+        // $groups = $GroupsTable->find('list', [
+        //                                 'keyField' => 'id',
+        //                                 'valueField' => 'group_number'
+        //                             ])->where(['status'=>1])->toArray();
+        // // echo '<pre>';print_r($selected_member_groups);
+        // // echo '<pre>';print_r($groups);exit;
+        // $full_groups= [];
+        // if(!empty($groups)){
+        //     foreach ($groups as $key=> $value) {
+        //           $grouplist[] = $key; 
+        //     }
+        //      if(!empty($selected_member_groups)){
+        //         $remaning_full_groups = array_diff($selected_member_groups, $grouplist);
+        //          if($remaning_full_groups){
+        //             foreach ($remaning_full_groups as  $value) {
+        //                 $result = $GroupsTable->find('list', [
+        //                                         'keyField' => 'id',
+        //                                         'valueField' => 'group_number'
+        //                                     ])->where(['id'=>$value])->toArray();
+        //                 $full_groups = $full_groups + $result;
+        //             }
+        //         }
+        //     }
 
-        }
-         $this->set('full_groups',$full_groups);
+        // }
+        //  $this->set('full_groups',$full_groups);
+        // $this->set('groups',$groups);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $post = $this->request->getData();
@@ -572,39 +523,39 @@ class UsersController extends AppController
                             ->execute();
                 }
 
-                $MembersGroupsTable = TableRegistry::get('MembersGroups');
-                //Add member groups
-                if(isset($post['group_ids'][0]) && !empty($post['group_ids'][0])){
-                    //delete existing data
-                    $this->MembersGroups->deleteAll(['user_id' => $result->id]);
-                    foreach ($post['group_ids'] as  $group_id) {
-                        $group_record['user_id'] = $result->id;
-                        $group_record['group_id'] = $group_id;
-                        $group_records[] = $group_record;
-                    }
+                // $MembersGroupsTable = TableRegistry::get('MembersGroups');
+                // //Add member groups
+                // if(isset($post['group_ids'][0]) && !empty($post['group_ids'][0])){
+                //     //delete existing data
+                //     $this->MembersGroups->deleteAll(['user_id' => $result->id]);
+                //     foreach ($post['group_ids'] as  $group_id) {
+                //         $group_record['user_id'] = $result->id;
+                //         $group_record['group_id'] = $group_id;
+                //         $group_records[] = $group_record;
+                //     }
 
-                    $MembersGroups = $this->MembersGroups->newEntities($group_records);
-                    $this->MembersGroups->saveMany($MembersGroups);
+                //     $MembersGroups = $this->MembersGroups->newEntities($group_records);
+                //     $this->MembersGroups->saveMany($MembersGroups);
                     
-                    //Check group is full and change the group status
-                    //Get the member groups count
-                    foreach ($post['group_ids'] as $group_id) {
-                        $GroupsTable = TableRegistry::get('Groups');
-                        $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
-                        $member_group_count = $query->count();
-                        $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
+                //     //Check group is full and change the group status
+                //     //Get the member groups count
+                //     foreach ($post['group_ids'] as $group_id) {
+                //         $GroupsTable = TableRegistry::get('Groups');
+                //         $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
+                //         $member_group_count = $query->count();
+                //         $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
 
-                        if($group_total_no['total_number'] == $member_group_count){
-                            //update group status as full i.e 0
-                            $query = $GroupsTable->query();
-                            $query->update()
-                                ->set(['status' => 0])
-                                ->where(['id' => $group_id])
-                                ->execute();
+                //         if($group_total_no['total_number'] == $member_group_count){
+                //             //update group status as full i.e 0
+                //             $query = $GroupsTable->query();
+                //             $query->update()
+                //                 ->set(['status' => 0])
+                //                 ->where(['id' => $group_id])
+                //                 ->execute();
 
-                        }
-                    }
-                }   
+                //         }
+                //     }
+                // }   
 
                 if($id<1){
                     // send password to user
@@ -635,15 +586,15 @@ class UsersController extends AppController
         }
         //echo '<pre>';print_r($user);exit();
         $this->set(compact('user'));
-        $this->set('groups',$groups);
      }
 
      function getMembers($query_string,$group_id=0,$selected_member_ids=0){
         $members = [];
         if (!empty($query_string)) {
              $query = $this->Users->find();
+             $config_member_role=Configure::read('ROLE_MEMBER');
              //Excapt admin search all member
-             $where_Conditions['r.name !=']  = 'admin'; 
+             $where_Conditions['r.name']  = $config_member_role; 
              $where_Conditions['Users.customer_id'] = $query_string;
              // $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
 
@@ -705,11 +656,27 @@ class UsersController extends AppController
             $group_records[] = $group_record;
             $MembersGroups = $this->MembersGroups->newEntities($group_records);
             $result = $this->MembersGroups->saveMany($MembersGroups);
-
-            // echo '$isExistMemberGroup<pre>';print_r($group_record); 
             // echo 'result <pre>';print_r($result);
             if(isset($result[0]->id)){
-                echo true;exit();
+                //Check group is full and change the group status
+                //Get the member groups count
+                $group_id = $post['group_id']; 
+                $GroupsTable = TableRegistry::get('Groups');
+                $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
+                $member_group_count = $query->count();
+                $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
+
+                if($group_total_no['total_number'] == $member_group_count){
+                    //update group status as full i.e 0
+                    $query = $GroupsTable->query();
+                    $query->update()
+                        ->set(['status' => 0])
+                        ->where(['id' => $group_id])
+                        ->execute();
+                    echo 'full_group';    
+                }else{
+                    echo true;exit();
+                } 
             }else{ 
                 echo false;exit();
             }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
 
 /**
  * Groups Controller
@@ -25,17 +26,6 @@ class GroupsController extends AppController
               // echo '<pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }
-        
-    }
-
-    /**
-    * Group list
-    */
-    public function groups()
-    {
-        $groups = $this->paginate($this->Groups);
-
-        $this->set(compact('groups'));
         
     }
 
@@ -76,17 +66,6 @@ class GroupsController extends AppController
            // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
-                if(isset($post['members_ids']) && !empty($post['members_ids'])){
-                    //add member in this groups
-                     $this->loadModel('MembersGroups');
-                     foreach ($post['members_ids'] as $members_id) {
-                        $group_record['user_id'] = $members_id;
-                        $group_record['group_id'] = $result->id;
-                        $group_records[] = $group_record;
-                     }
-                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
-                     $result = $this->MembersGroups->saveMany($MembersGroups);
-                }
                 echo 1;
             }else{
                  $validationErrors = $group->getErrors();
@@ -104,59 +83,24 @@ class GroupsController extends AppController
      }
 
      function addGroupMembers(){
+        $UsersTable= TableRegistry::get('Users');
+        $user = $UsersTable->find('all', [ 
+            'contain' => ['Roles' => function ($q) {
+                                return $q
+                                    ->select(['name']);
+                            },     
+                         ],
+        ])->where(['Users.id' => $this->Auth->user('id') ])->first();
+        $role = isset($user->role->name) ? $user->role->name : ''; 
+        $config_superadmin_role=Configure::read('ROLE_SUPERADMIN');
         $this->viewBuilder()->setLayout('admin');
         $groups = $this->Groups->find('list', [
                                         'keyField' => 'id',
                                         'valueField' => 'group_code'
                                     ])
                      ->where(['status' => 1 ])->toArray();
-        $this->set(compact('groups'));
+        $this->set(compact('groups','role','config_superadmin_role'));
      }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $this->viewBuilder()->setLayout('admin');    
-        $group = $this->Groups->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $group = $this->Groups->patchEntity($group, $this->request->getData());
-            if ($this->Groups->save($group)) {
-                $this->Flash->success(__('The group has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The group could not be saved. Please, try again.'));
-        }
-        $this->set(compact('group'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Group id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $group = $this->Groups->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $group = $this->Groups->patchEntity($group, $this->request->getData());
-            if ($this->Groups->save($group)) {
-                $this->Flash->success(__('The group has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The group could not be saved. Please, try again.'));
-        }
-        $this->set(compact('group'));
-    }
 
     /**
      * Delete method

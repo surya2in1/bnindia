@@ -25,6 +25,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 				{data: 'customer_id'},
 				{data: 'name'},
 				{data: 'address'}, 
+				{data: 'ticket_no'}, 
 				{data: 'action', responsivePriority: -1},
 			], 
 			columnDefs: [{
@@ -40,9 +41,17 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					title: 'Action',
 					orderable: false,
 					render: function(data, type, full, meta) { 
-                        return '\
-							<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="delete_group_user('+data+');" title="Delete"><i class="flaticon2-trash"></i></button>\
-						';
+						var config_superadmin_role = $('#config_superadmin_role').val();
+						var user_role = $('#user_role').val(); 
+						if(user_role== config_superadmin_role){ 
+	                        return '\
+								<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="delete_group_user('+data+');" title="Delete"><i class="flaticon2-trash"></i></button>\
+							';
+						}else{
+							return '\
+								<button  type="button" class="btn btn-secondary remove_new_group_member" onclick="restrict_alert();" title="Delete"><i class="flaticon2-trash"></i></button>\
+							';
+						}
 
 					},
 				}, 
@@ -292,7 +301,7 @@ jQuery(document).ready(function() {
               $(this).data().ttTypeahead.input.trigger('queryChanged', '');
       });
 
-		var group_code = $('#id option:selected').text();
+	var group_code = $('#id option:selected').text();
 	if(group_code !=''){
 		$('#list_label').html('<b>List of "'+group_code+'" group members:</b>');
 	}
@@ -359,6 +368,9 @@ function add_member_to_new_group(){
 			$('#btn_add_members').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
 	   }
 }
+function restrict_alert(){
+	swal.fire('You have not access to delete group members');
+}
 function removeNewGroupMember(thisval){  
     swal.fire({
         title: 'Are you sure?',
@@ -419,6 +431,9 @@ function add_member_to_existing_group(){
                 		if(response == 'exist_member_group'){
                 			$('#customer_id_typeahead').css('border-color','red');
 							$("#customer_id_typeahead").after("<span style='color:red'>This member already assign, please select another one.</span>");
+                		}else if(response == 'full_group'){
+                			//remove selected group from dropdown if group is full
+                			$("#id option[value="+$('#id').val()+"]").remove();
                 		}else if(response == false){
                 			$('#customer_id_typeahead').css('border-color','red');
 							$("#customer_id_typeahead").after("<span style='color:red'>Some error has been occured, please try again.</span>");
@@ -487,6 +502,12 @@ function delete_group_user(id){
 
 function refresh_member_table(){  
 	var group_id = $('#id').val();
+	$('#customer_id_typeahead').val(''); 
+	if(group_id !=''){
+		$('#list_label').html('<b>List of "'+$('#id option:selected').text()+'" group members:</b>');
+	}else{
+		group_id = 0;
+		$('#list_label').html('<b>List of group members:</b>');
+	}
 	$('#group_members_table').DataTable().ajax.url($('#router_url').val()+"Groups/getGroupMembers/"+group_id).load();
-	$('#customer_id_typeahead').val('');
 }

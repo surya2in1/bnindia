@@ -336,13 +336,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <label class="col-xl-3"></label>
                                     <div class="col-lg-6 col-xl-6">
                                         <h3 class="kt-section__title kt-section__title-sm">Groups:</h3>
                                     </div>
-                                </div>
-                                <div class="form-group row">
+                                </div> -->
+                                <!-- <div class="form-group row">
                                     <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6 col-xl-6">
                                         <select multiple="" name="group_ids[]" class="form-control" id="group_ids">
@@ -362,7 +362,7 @@
                                         <span class="form-text text-muted">You can't deselect your already selected groups</span>
                                         <a href="<?= Router::url('/', true);?>groups" class="form-text text-muted">For more delails click here</a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

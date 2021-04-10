@@ -11,6 +11,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 			searchDelay: 500,
 			processing: true,
 			serverSide: true,
+			"order": false,
 			"ajax": {
 	            "url": "Groups/index",
 	            "type": "POST",

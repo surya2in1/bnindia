@@ -31,6 +31,8 @@ use Cake\Routing\Router;
                     </div>
                 </div>
                 <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
+                <input type="hidden" id="config_superadmin_role" value="<?= $config_superadmin_role;?>">
+                <input type="hidden" id="user_role" value="<?= $role;?>">
                 <!--begin::Form-->
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form',
@@ -98,6 +100,7 @@ use Cake\Routing\Router;
                                             <th>Customer Id</th>
                                             <th>Name</th>
                                             <th>Address</th>
+                                            <th>Ticket No</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>

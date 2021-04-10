@@ -140,7 +140,7 @@ class GroupsTable extends Table
     public function GetData() {
         $aColumns = array( 'g.group_number','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
-        $sIndexColumn = "g.group_number";
+        $sIndexColumn = "g.id";
         /* DB table to use */
         $sTable = "groups g";
        
@@ -178,6 +178,9 @@ class GroupsTable extends Table
             {
                 $sOrder = "";
             }
+        }else{
+            //default order 
+            $sOrder = "ORDER BY g.id desc ";
         }
         /*
         * Filtering
@@ -208,6 +211,7 @@ class GroupsTable extends Table
         $sOrder
         $sLimit
         ";
+        // echo $sQuery;exit;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
        
@@ -242,7 +246,7 @@ class GroupsTable extends Table
     * Get group members list
     */
     public function getGroupMembersData($group_id) {
-        $aColumns = array('customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address'); 
+        $aColumns = array('customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address','mg.ticket_no'); 
 
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";

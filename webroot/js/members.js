@@ -167,10 +167,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                    lettersonly: true,
 	                    maxlength: 100
 	                },
-	                'group_ids[]':{
-	                	//required: true,
-	                	validateGroups : true
-	                },
+	                // 'group_ids[]':{ 
+	                // 	validateGroups : true
+	                // },
 	                address:{
 	                    maxlength: 300
 	                },
@@ -230,8 +229,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                other_document: "File must be JPG, JPEG or PNG"
 	            }, 
 	        }); 
-	        var selected = $("#group_ids :selected").map((_,e) => e.value).get();
-			form.append( 'group_ids',  selected);
+	  //       var selected = $("#group_ids :selected").map((_,e) => e.value).get();
+			// form.append( 'group_ids',  selected);
 			// alert('selected '+selected);
 			if (!form.valid()) {
                swal.fire({

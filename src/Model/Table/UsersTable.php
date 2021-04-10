@@ -8,6 +8,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Datasource\ConnectionManager;
+use Cake\Core\Configure;
 
 /**
  * Users Model
@@ -260,7 +261,8 @@ class UsersTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = "WHERE r.name = 'member' ";
+        $config_role_member = Configure::read('ROLE_MEMBER'); 
+        $sWhere = "WHERE r.name = '".$config_role_member."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
             $sWhere .= " AND (";
@@ -297,7 +299,7 @@ class UsersTable extends Table
         $sQuery = "
         SELECT COUNT(".$sIndexColumn.") as cnt
         FROM   $sTable left JOIN roles r on u.role_id = r.id 
-        where r.name= 'admin'
+        where r.name= '".$config_role_member."'
         ";
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
