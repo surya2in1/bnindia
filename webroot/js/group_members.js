@@ -433,7 +433,9 @@ function add_member_to_existing_group(){
 							$("#customer_id_typeahead").after("<span style='color:red'>This member already assign, please select another one.</span>");
                 		}else if(response == 'full_group'){
                 			//remove selected group from dropdown if group is full
-                			$("#id option[value="+$('#id').val()+"]").remove();
+                			swal.fire($('#id option:selected').text()+" group is full now, that's why removed from dropdown list");
+                			$("#id option[value="+$('#id').val()+"]").remove(); 
+                			refresh_member_table();
                 		}else if(response == false){
                 			$('#customer_id_typeahead').css('border-color','red');
 							$("#customer_id_typeahead").after("<span style='color:red'>Some error has been occured, please try again.</span>");

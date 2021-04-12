@@ -43,7 +43,7 @@ use Cake\Routing\Router;
                         <div class="kt-section kt-section--first marg-bot-0">
                             <div class="kt-section__body">
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group:</label>
+                                    <label class="col-lg-3 col-form-label">Group:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6"> 
                                         <select id="id" name="group_id" class="form-control" onchange="refresh_member_table()">
                                             <option value="">Select Group</option>
