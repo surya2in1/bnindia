@@ -109,10 +109,10 @@ class UsersController extends AppController
             'contain' => [
                              'Groups' => function ($q) {
                                 return $q
-                                    ->select(['id','group_number']);
+                                    ->select(['id','group_code']);
                             },      
                          ],
-        ])->toArray();
+        ])->where(['MembersGroups.user_id' => $id])->toArray();
         // echo '<pre>';print_r($membergroup);exit;
         $this->set(compact('user'));
         $this->set('membergroups',$membergroup);

@@ -43,7 +43,16 @@ class GroupsController extends AppController
             'contain' => [],
         ]);
 
-        $this->set(compact('group'));
+        $membergroups= TableRegistry::get('MembersGroups');
+        $membergroup = $membergroups->find('all', [
+            'contain' => [
+                             'Users' => function ($q) {
+                                return $q
+                                    ->select(['name' => $q->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])]);
+                            },      
+                         ],
+        ])->where(['MembersGroups.group_id' => $id])->toArray(); 
+        $this->set(compact('group','membergroup'));
     }
     /*
     ** add editgroup

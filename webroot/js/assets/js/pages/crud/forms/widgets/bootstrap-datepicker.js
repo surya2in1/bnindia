@@ -58,7 +58,16 @@ var KTBootstrapDatepicker = function () {
             templates: arrows,
             autoclose:true
         });
-        $('#date_of_birth, #nominee_dob').datepicker({
+        $('#date_of_birth').datepicker({
+            rtl: KTUtil.isRTL(), 
+            clearBtn: true,  
+            templates: arrows,
+            endDate: '-18y',
+            autoclose: true,
+        }).on("clearDate", function(e) { 
+            $('#date_of_birth').val("").datepicker("update");
+        });;
+        $('#nominee_dob').datepicker({
             rtl: KTUtil.isRTL(),
             todayBtn: "linked",
             clearBtn: true,

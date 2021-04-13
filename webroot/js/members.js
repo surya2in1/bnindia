@@ -44,17 +44,17 @@ var KTDatatablesDataSourceAjaxServer = function() {
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\
 										</li>\
+										<li class="kt-nav__item">\
+											<a href="users/view/'+data+'" class="kt-nav__link">\
+												<i class="kt-nav__link-icon flaticon2-expand"></i>\
+												<span class="kt-nav__link-text">View</span>\
+											</a>\
+										</li>\
 									</ul>\
 								</div>\
 							</div>\
 						';
 						//Commented temparary
-						// <li class="kt-nav__item">\
-						// 	<a href="users/view/'+data+'" class="kt-nav__link">\
-						// 		<i class="kt-nav__link-icon flaticon2-expand"></i>\
-						// 		<span class="kt-nav__link-text">View</span>\
-						// 	</a>\
-						// </li>\
 						// <li class="kt-nav__item">\
 						// 	<a href="#" class="kt-nav__link" onclick="deleteuser('+data+');">\
 						// 		<i class="kt-nav__link-icon flaticon2-trash"></i>\
@@ -140,6 +140,23 @@ var KTDatatablesDataSourceAjaxServer = function() {
             return value != '' ;
            }, "This field is required.");
 
+	    $.validator.addMethod("minAge", function(value, element, min) {
+		    var today = new Date();
+		    var birthDate = new Date(value);
+		    var age = today.getFullYear() - birthDate.getFullYear();
+		 
+		    if (age > min+1) {
+		        return true;
+		    }
+		 
+		    var m = today.getMonth() - birthDate.getMonth();
+		 
+		    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+		        age--;
+		    }
+		 
+		    return age >= min;
+		}, "You must be at least 18 years of age!");
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -206,7 +223,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                address_proof: { extension: "png|jpe?g|pdf" },
 	                photo_proof: { extension: "png|jpe?g|pdf" },
 	                other_document: { extension: "png|jpe?g|pdf" },
-	            },
+	                date_of_birth:{
+	                	minAge: 18
+	                }
+	            }, 
 	            errorPlacement: function(error, element) {
 	                var group = element.closest('.input-group');
 	                if (group.length) {

@@ -158,6 +158,7 @@
                                                 </span>
                                             </div>
                                         </div>
+                                         <lable>You must be at least 18 years of age.</lable>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -220,7 +221,30 @@
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Nominee relation</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" name="nominee_relation" type="text" value="<?= $user->nominee_relation; ?>">
+                                       <?php 
+                                        $nominee_relations = ['Father' => 'Father',
+                                                              'Mother' => 'Mother',
+                                                              'Sister' => 'Sister',
+                                                              'Brother' => 'Brother',
+                                                              'Wife' => 'Wife',
+                                                              'Son' => 'Son',  
+                                                              'Daughter' => 'Daughter',
+                                                              'Grand mother' => 'Grand mother',
+                                                              'Grand father' => 'Grand father',
+                                                              'Mother in law' => 'Mother in law',
+                                                              'Father in law' => 'Father in law',
+                                                              'Other' => 'Other', 
+                                                             ];
+
+                                        ?>
+                                        <select class="form-control" name="nominee_relation">
+                                            <?php
+                                                foreach ($nominee_relations as $num => $name) {
+                                                    $selected = ($num == $user->nominee_relation) ? 'selected' : '';
+                                                    echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
+                                                }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">

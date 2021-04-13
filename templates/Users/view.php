@@ -220,19 +220,13 @@
                                             <?php } ?>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-xl-3"></label>
-                                    <div class="col-lg-6 col-xl-6">
-                                        <h3 class="kt-section__title kt-section__title-sm">Groups:</h3>
-                                    </div>
-                                </div>
+                                </div> 
                                 <div class="form-group row">
-                                    <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Select Groups</label>
+                                    <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Selected Groups</label>
                                     <div class="col-lg-6 col-xl-6">
                                         <?php if($membergroups){ 
                                             foreach ($membergroups as $key => $value) {
-                                                    echo $value->group->group_number."<br/>";
+                                                    echo ($key+1).'. '.$value->group->group_code."<br/><br/>";
                                                 }    
                                         }else{
                                             echo 'No groups available';

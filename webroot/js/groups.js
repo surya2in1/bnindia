@@ -21,6 +21,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        },
 			columns: [
 				{data: 'group_number'},
+				{data: 'group_code'},
 				{data: 'chit_amount'},
 				{data: 'total_number'},
 				{data: 'premium'},
@@ -49,17 +50,17 @@ var KTDatatablesDataSourceAjaxServer = function() {
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\
 										</li>\
+										<li class="kt-nav__item">\
+											<a href="groups/view/'+data+'" class="kt-nav__link">\
+												<i class="kt-nav__link-icon flaticon2-expand"></i>\
+												<span class="kt-nav__link-text">View</span>\
+											</a>\
+										</li>\
 									</ul>\
 								</div>\
 							</div>\
 						';
 						//Commented temparary		
-						// <li class="kt-nav__item">\
-						// 	<a href="groups/view/'+data+'" class="kt-nav__link">\
-						// 		<i class="kt-nav__link-icon flaticon2-expand"></i>\
-						// 		<span class="kt-nav__link-text">View</span>\
-						// 	</a>\
-						// </li>\
 
 						// <li class="kt-nav__item">\
 						// 	<a href="#" class="kt-nav__link" onclick="deletegroup('+data+');">\

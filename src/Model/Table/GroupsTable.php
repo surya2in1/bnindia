@@ -138,7 +138,7 @@ class GroupsTable extends Table
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'g.group_number','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
+        $aColumns = array( 'g.group_number','g.group_code','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "g.id";
         /* DB table to use */

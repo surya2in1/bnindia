@@ -70,6 +70,18 @@
                                 <div class="col-lg-6">
                                     <label class="col-lg-3 col-form-label"><?= isset($group->no_of_months) ? $group->no_of_months : '';?></label>
                                 </div>
+                            </div> 
+                            <div class="form-group row">
+                                <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Group Members:</label>
+                                <div class="col-lg-6 col-xl-6">
+                                    <?php if($membergroup){ 
+                                        foreach ($membergroup as $key => $value) {
+                                                echo ($key+1).'. '.$value->name."<br/> <br/>";
+                                            }    
+                                    }else{
+                                        echo 'No members available';
+                                    } ?>
+                                </div>  
                             </div>
                         </div>
                     </div>

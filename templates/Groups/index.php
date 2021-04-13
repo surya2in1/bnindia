@@ -49,6 +49,7 @@
                 <thead>
                     <tr>
                         <th>Group No.</th>
+                        <th>Group Code</th>
                         <th>Chit Amount</th>
                         <th>Total No</th>
                         <th>Premium</th>
