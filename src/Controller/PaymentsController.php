@@ -138,7 +138,7 @@ class PaymentsController extends AppController
         $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
         $auctionTable= TableRegistry::get('Auctions'); 
         $query = $auctionTable->find();
-        $payment_info = $query->select(['pid' => $query->func()->max('p.id'),'Auctions.id','p.id'])
+        $payment_info = $query->select(['pid' => $query->func()->max('p.id'),'Auctions.id','Auctions.net_subscription_amount','p.id','p.instalment_month','p.subscription_amount','p.late_fee','p.remark'])
                ->join([
                   'table' => 'payments',
                   'alias' => 'p',
@@ -149,6 +149,7 @@ class PaymentsController extends AppController
               ->group('p.auction_id')
               ->toArray(); 
     echo '111<pre>';print_r($payment_info);exit;
+              echo json_encode($payment_info);exit;
     }
 
 

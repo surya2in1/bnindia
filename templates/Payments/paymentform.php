@@ -27,6 +27,7 @@ use Cake\Routing\Router;
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
                             <?= ($paymentid > 0 ) ? 'Edit Payment' : 'Add Payment'; ?> 
+                            <lable>(Fields marked with * are mandatory.)</lable>
                         </h3>
                     </div>
                 </div>
@@ -49,7 +50,7 @@ use Cake\Routing\Router;
                                 </div> 
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group:</label>
+                                    <label class="col-lg-3 col-form-label">Group:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
                                         <!-- Get groups after select member -->
@@ -66,7 +67,7 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Member:</label>
+                                    <label class="col-lg-3 col-form-label">Member:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
                                         ?>
@@ -85,7 +86,7 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Instalment No:</label>
+                                    <label class="col-lg-3 col-form-label">Instalment No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $payment_instalment_no =  isset($payment->instalment_no) ? $payment->instalment_no : 0;
                                         ?>
@@ -104,7 +105,7 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Instalment Month:</label>
+                                    <label class="col-lg-3 col-form-label">Instalment Month:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $instalment_month =  isset($payment->instalment_month) ? $payment->instalment_month : 0;?>
                                         <?php 
@@ -124,10 +125,10 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Due date of payment:</label>
+                                    <label class="col-lg-3 col-form-label">Due date of payment:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->due_date) && strtotime($payment->due_date) > 0 ? date('m/d/Y',strtotime($payment->due_date)) : '';?>" id="due_date_datepicker" name="date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->due_date) && strtotime($payment->due_date) > 0 ? date('m/d/Y',strtotime($payment->due_date)) : '';?>" id="due_date_datepicker" name="due_date">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">
                                                     <i class="la la-calendar"></i>
@@ -138,7 +139,7 @@ use Cake\Routing\Router;
                                 </div>  
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($payment->date) && strtotime($payment->date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="payment_date_datepicker" name="date">
@@ -152,28 +153,28 @@ use Cake\Routing\Router;
                                 </div>  
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Subscriber Ticket No:</label>
+                                    <label class="col-lg-3 col-form-label">Subscriber Ticket No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>" >
+                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>"  id="subscriber_ticket_no">
                                     </div>
                                 </div> 
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Subscription Rs:</label>
+                                    <label class="col-lg-3 col-form-label">Subscription Rs:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" >
+                                        <input type="text" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Late fee:</label>
+                                    <label class="col-lg-3 col-form-label">Late fee:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>">
+                                        <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Received by:</label>
+                                    <label class="col-lg-3 col-form-label">Received by:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                          <?php $received_by =  isset($payment->received_by) ? $payment->received_by : 'monthly';?>
                                         <select id="received_by" name="received_by" class="form-control"> 
@@ -188,7 +189,7 @@ use Cake\Routing\Router;
 
                                 <!-- If Cash select then show below -->
                                 <div class="form-group row hide-div cash-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Received  Date:</label>
+                                    <label class="col-lg-3 col-form-label">Received  Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($payment->cash_received_date) && strtotime($payment->cash_received_date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="cash_received_datepicker" name="cash_received_date">
@@ -203,14 +204,14 @@ use Cake\Routing\Router;
 
                                 <!-- If Cheque select then show below -->
                                 <div class="form-group row hide-div cheque-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Cheque No:</label>
+                                    <label class="col-lg-3 col-form-label">Cheque No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>">
+                                        <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>" id="cheque_no">
                                     </div>
                                 </div>
 
                                  <div class="form-group row hide-div cheque-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($payment->cheque_date) && strtotime($payment->cheque_date) > 0 ? date('m/d/Y',strtotime($payment->cheque_date)) : '';?>" id="cheque_date_datepicker" name="cheque_date">
@@ -224,23 +225,23 @@ use Cake\Routing\Router;
                                 </div>      
 
                                 <div class="form-group row hide-div cheque-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Bank details:</label>
+                                    <label class="col-lg-3 col-form-label">Bank details:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="cheque_bank_details" placeholder="Enter Bank details" value="<?= isset($payment->cheque_bank_details) ? $payment->cheque_bank_details : '';?>">
+                                        <input type="text" class="form-control" name="cheque_bank_details" placeholder="Enter Bank details" value="<?= isset($payment->cheque_bank_details) ? $payment->cheque_bank_details : '';?>" id="cheque_bank_details">
                                     </div>
                                 </div>
 
                                 <div class="form-group row hide-div cheque-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Drown on:</label>
+                                    <label class="col-lg-3 col-form-label">Drown on:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="cheque_drown_on" placeholder="Enter Drown on" value="<?= isset($payment->cheque_drown_on) ? $payment->cheque_drown_on : '';?>">
+                                        <input type="text" class="form-control" name="cheque_drown_on" placeholder="Enter Drown on" value="<?= isset($payment->cheque_drown_on) ? $payment->cheque_drown_on : '';?>" id="cheque_drown_on">
                                     </div>
                                 </div>
 
                                 <!-- If direct_debit select then show below -->
 
                                 <div class="form-group row hide-div direct-debit-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Date:</label>
+                                    <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($payment->direct_debit_date) && strtotime($payment->direct_debit_date) > 0 ? date('m/d/Y',strtotime($payment->direct_debit_date)) : '';?>" id="direct_debit_datepicker" name="direct_debit_date">
@@ -254,16 +255,16 @@ use Cake\Routing\Router;
                                 </div>      
 
                                 <div class="form-group row hide-div direct-debit-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Transaction no:</label>
+                                    <label class="col-lg-3 col-form-label">Transaction no:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="direct_debit_transaction_no" placeholder="Enter Transaction no" value="<?= isset($payment->direct_debit_transaction_no) ? $payment->direct_debit_transaction_no : '';?>">
+                                        <input type="text" class="form-control" name="direct_debit_transaction_no" placeholder="Enter Transaction no" value="<?= isset($payment->direct_debit_transaction_no) ? $payment->direct_debit_transaction_no : '';?>" id="direct_debit_transaction_no">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Remark:</label>
+                                    <label class="col-lg-3 col-form-label">Remark:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>">
+                                        <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>">
                                     </div>
                                 </div>
 

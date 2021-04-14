@@ -20,41 +20,70 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        form.validate({
 	     		// define validation rules
 	            rules: {
-	                group_number: {
-	                        required: true,
-	                        maxlength : 100
+	                group_id: {
+	                        required: true, 
 	                },
-	                chit_amount: {
-	                        required: true,
-	                        number:true,
-	                        max : 100000000,
-	                        min:1
+	                user_id: {
+	                        required: true, 
 	                },
-	                total_number: {
-	                        required: true,
-	                        number:true,
-	                        max : 100000000,
-	                        min:1
+	                instalment_no: {
+	                        required: true 
 	                },
-	                premium: {
-	                        required: true,
-	                        number:true,
-	                        max : 100000000,
-	                        min:1
+	                instalment_month: {
+	                        required: true 
 	                },
-	                gov_reg_no: {
-	                        required: true,
-	                        maxlength : 100
-	                },
-	                no_of_months: {
-	                        required: true,
-	                        number:true,
-	                        max : 100000,
-	                        min:1
+	                due_date:{
+	                	required:true
 	                },
 	                date:{
 	                	required:true
-	                }
+	                },
+	                subscriber_ticket_no:{
+	                	required:true,
+	                	number:true
+	                },
+	                subscription_amount:{
+	                	required:true,
+	                	number:true
+	                },
+	                late_fee:{
+	                	required:true,
+	                	number:true
+	                },
+	                received_by:{
+	                	required:true
+	                }, 
+	                cash_received_date: { required: function(element){
+                            return $("#received_by option:selected").val() == 1;
+                            }
+            		},
+            		cheque_no: { required: function(element){
+                            return $("#received_by option:selected").val() == 2;
+                            }
+            		},
+            		cheque_date: { required: function(element){
+                            return $("#received_by option:selected").val() == 2;
+                            }
+            		},
+            		cheque_bank_details: { required: function(element){
+                            return $("#received_by option:selected").val() == 2;
+                            }
+            		},
+            		cheque_drown_on: { required: function(element){
+                            return $("#received_by option:selected").val() == 2;
+                            }
+            		},
+            		direct_debit_date: { required: function(element){
+                            return $("#received_by option:selected").val() == 3;
+                            }
+            		},
+            		direct_debit_transaction_no: { required: function(element){
+                            return $("#received_by option:selected").val() == 3;
+                            }
+            		},
+            		remark:{
+	                	required:true
+	                }, 
 	            },
 	            errorPlacement: function(error, element) {
 	                var group = element.closest('.input-group');
@@ -228,7 +257,13 @@ function getRemaingPayments(){
             },
             success: function(response, status, xhr, $form) {
             	$('.bnspinner-instalment').addClass('hide');
-            	var result = JSON.parse(response);  
+            	var result = JSON.parse(response); 
+            	var subscription_amount = result.net_subscription_amount;
+            	var late_fee = result.p.late_fee;
+            	var remark = result.p.remark;
+            	$('#subscription_amount').val(subscription_amount); 
+            	$('#late_fee').val(late_fee); 
+            	$('#remark').val(remark);
             }
 		}); 
 }

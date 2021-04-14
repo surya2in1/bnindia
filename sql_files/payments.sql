@@ -1,3 +1,7 @@
+INSERT INTO `modules` (`id`, `name`, `created`, `modified`) VALUES (NULL, 'payments', current_timestamp(), current_timestamp());
+INSERT INTO `role_permissions` (`id`, `role_id`, `module_id`, `permission_id`, `created`, `modified`) VALUES (NULL, '1', '5', '1', current_timestamp(), current_timestamp())
+
+
 ALTER TABLE `payments` CHANGE `receipt_no` `receipt_no` INT(11) NOT NULL;
 
 ALTER TABLE `payments` ADD `auction_id` INT(11) NOT NULL AFTER `remark`;

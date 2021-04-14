@@ -105,6 +105,7 @@ class AppController extends Controller
             $this->set('member_side_menu', $this->Common->searchUserPermission('members',$user['role']['role_permissions']));
             $this->set('groups_side_menu', $this->Common->searchUserPermission('groups',$user['role']['role_permissions']));
             $this->set('auctions_side_menu', $this->Common->searchUserPermission('auctions',$user['role']['role_permissions']));
+            $this->set('payments_side_menu', $this->Common->searchUserPermission('payments',$user['role']['role_permissions']));
         }
     }
 
