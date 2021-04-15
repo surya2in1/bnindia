@@ -127,14 +127,15 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Due date of payment:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->due_date) && strtotime($payment->due_date) > 0 ? date('m/d/Y',strtotime($payment->due_date)) : '';?>" id="due_date_datepicker" name="due_date">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="la la-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <?php 
+                                        $month_dates = array_combine( range(1,31), range(1,31));  
+                                        $date =  isset($payment->due_date) ? $payment->due_date : 0;
+                                        ?>
+                                        <select id="due_date" name="due_date" class="form-control">
+                                            <?php foreach($month_dates  as $key => $month_date){ ?>
+                                            <option value="<?= $key; ?>" <?php if($date == $key){ echo "selected";}?>><?= $month_date; ?></option> 
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>  
 

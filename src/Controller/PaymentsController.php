@@ -136,19 +136,37 @@ class PaymentsController extends AppController
     function getPaymentsInfo(){
         $post = $this->request->getData();
         $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
+         
+
+        $payment= TableRegistry::get('Payments');
+        $subquery = $payment->find();
+
+        $subquery->select([
+            'pauction_id' => 'Payments.auction_id',
+            'premark'=>'Payments.remark',
+            'pinstalment_month' => 'Payments.instalment_month',
+            'plate_fee' => 'Payments.late_fee',
+            'pis_installment_complete ' => 'Payments.is_installment_complete '
+        ])->order(['id desc'])->LIMIT(1);
+
         $auctionTable= TableRegistry::get('Auctions'); 
         $query = $auctionTable->find();
-        $payment_info = $query->select(['pid' => $query->func()->max('p.id'),'Auctions.id','Auctions.net_subscription_amount','p.id','p.instalment_month','p.subscription_amount','p.late_fee','p.remark'])
+        $payment_info = $query->select(['Auctions.id','Auctions.net_subscription_amount',
+                            'remark'=>'p.premark',
+                            'instalment_month'=>'p.pinstalment_month',
+                            'late_fee'=>'p.plate_fee',
+                          ])
                ->join([
-                  'table' => 'payments',
+                  'table' => '('.$subquery.')',
                   'alias' => 'p',
                   'type' => 'LEFT',
-                  'conditions' => 'p.auction_id=Auctions.id',
+                  'conditions' => 'pauction_id=Auctions.id',
               ]) 
               ->where(['Auctions.id'=>$auction_id])
-              ->group('p.auction_id')
-              ->toArray(); 
-    echo '111<pre>';print_r($payment_info);exit;
+              ->where(['OR'=>['p.pis_installment_complete !='=>1,'p.pis_installment_complete is '=> NULL]
+            ])
+              ->first(); 
+    // echo '111<pre>';print_r($payment_info);exit;
               echo json_encode($payment_info);exit;
     }
 

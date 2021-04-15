@@ -86,6 +86,14 @@ var KTBootstrapDatepicker = function () {
             autoclose: true,
         });
 
+        $('#payment_date_datepicker').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows
+        });
+
         // enable clear button for modal demo
         $('#kt_datepicker_3_modal').datepicker({
             rtl: KTUtil.isRTL(),

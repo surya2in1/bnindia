@@ -162,6 +162,12 @@ jQuery(document).ready(function() {
 	getInstalmentNo();
 });
 
+function clear_fields(){
+    $('#subscription_amount').val(''); 
+    $('#late_fee').val(''); 
+    $('#remark').val('');
+    $('#instalment_month').val('');
+}
 //Show groups after select member
 $('#groups').change(function(e) {
 	//get selected member id
@@ -171,6 +177,9 @@ $('#groups').change(function(e) {
         $('#members').html(member_options);
         return false;
     }
+    $('#due_date').val('');
+    $('#subscriber_ticket_no').val('');
+    clear_fields();
 	$('.bnspinner').removeClass('hide');
 	$.ajax({
 		   "url": $('#router_url').val()+"Payments/getMembersByGroupId",
@@ -191,6 +200,9 @@ $('#groups').change(function(e) {
 						  member_options += '<option value="'+key+'">'+value+'</option>';
 						});
             		}
+                    $('#due_date').val(result.groups.date);
+                    $('#subscriber_ticket_no').val(result.ticket_no);
+                    
             	} 
             	$('#members').html(member_options);
             }
@@ -211,6 +223,7 @@ $('#received_by').change(function(e) {
 
 //Show installment no.s after select group and member
 function getInstalmentNo(){
+    clear_fields();
 	//get selected member id
 	var group_id = $('#groups').val(); 
 	var member_id = $('#members').val(); 
@@ -243,6 +256,7 @@ function getInstalmentNo(){
 
 function getRemaingPayments(){
 	var auction_id = $('#instalment_no').find(':selected').attr('data-id');
+    clear_fields();
 	 if(auction_id == ''){ 
         return false;
     } 
@@ -259,11 +273,13 @@ function getRemaingPayments(){
             	$('.bnspinner-instalment').addClass('hide');
             	var result = JSON.parse(response); 
             	var subscription_amount = result.net_subscription_amount;
-            	var late_fee = result.p.late_fee;
-            	var remark = result.p.remark;
+            	var late_fee = result.late_fee;
+            	var remark = result.remark;
+                var instalment_month = (result.instalment_month) ? result.instalment_month : 1;
             	$('#subscription_amount').val(subscription_amount); 
             	$('#late_fee').val(late_fee); 
             	$('#remark').val(remark);
+                $('#instalment_month').val(instalment_month);
             }
 		}); 
 }
