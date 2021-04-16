@@ -167,6 +167,7 @@ function clear_fields(){
     $('#late_fee').val(''); 
     $('#remark').val('');
     $('#instalment_month').val('');
+    $('#total_amount').val('');
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -276,10 +277,12 @@ function getRemaingPayments(){
             	var late_fee = result.late_fee;
             	var remark = result.remark;
                 var instalment_month = (result.instalment_month) ? result.instalment_month : 1;
+                var total_amount = result.total_amount;
             	$('#subscription_amount').val(subscription_amount); 
             	$('#late_fee').val(late_fee); 
             	$('#remark').val(remark);
                 $('#instalment_month').val(instalment_month);
+                $('#total_amount').val(total_amount);
             }
 		}); 
 }

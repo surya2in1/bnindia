@@ -146,7 +146,8 @@ class PaymentsController extends AppController
             'premark'=>'Payments.remark',
             'pinstalment_month' => 'Payments.instalment_month',
             'plate_fee' => 'Payments.late_fee',
-            'pis_installment_complete ' => 'Payments.is_installment_complete '
+            'pis_installment_complete' => 'Payments.is_installment_complete',
+            'ptotal_amount' => 'Payments.total_amount',
         ])->order(['id desc'])->LIMIT(1);
 
         $auctionTable= TableRegistry::get('Auctions'); 
@@ -155,6 +156,7 @@ class PaymentsController extends AppController
                             'remark'=>'p.premark',
                             'instalment_month'=>'p.pinstalment_month',
                             'late_fee'=>'p.plate_fee',
+                            'ptotal_amount'=>'p.ptotal_amount',
                           ])
                ->join([
                   'table' => '('.$subquery.')',

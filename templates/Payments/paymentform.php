@@ -170,7 +170,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Late fee:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>">
+                                        <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>" readonly>
                                     </div>
                                 </div>
 
@@ -265,7 +265,14 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Remark:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>">
+                                        <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Total Amount:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="total_amount" id="total_amount" placeholder="Enter Total Amount" value="<?= isset($payment->total_amount) ? $payment->total_amount : '';?>" readonly>
                                     </div>
                                 </div>
 
