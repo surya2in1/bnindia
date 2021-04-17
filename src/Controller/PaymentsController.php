@@ -100,6 +100,7 @@ class PaymentsController extends AppController
         $this->set(compact('payment', 'groups', 'members','payment_member_id','payment_group_id','receipt_no'));
 
         if ($this->request->is('post')) {
+          echo '<pre>';print_r($this->request->getData());exit;
             $payment = $this->Payments->patchEntity($payment, $this->request->getData());
             if ($this->Payments->save($payment)) {
                 $this->Flash->success(__('The payment has been saved.'));
@@ -148,15 +149,18 @@ class PaymentsController extends AppController
             'plate_fee' => 'Payments.late_fee',
             'pis_installment_complete' => 'Payments.is_installment_complete',
             'ptotal_amount' => 'Payments.total_amount',
+            'ppending_amount' => 'Payments.pending_amount',
         ])->order(['id desc'])->LIMIT(1);
 
         $auctionTable= TableRegistry::get('Auctions'); 
         $query = $auctionTable->find();
         $payment_info = $query->select(['Auctions.id','Auctions.net_subscription_amount',
+                            'Auctions.auction_date',
                             'remark'=>'p.premark',
                             'instalment_month'=>'p.pinstalment_month',
                             'late_fee'=>'p.plate_fee',
-                            'ptotal_amount'=>'p.ptotal_amount',
+                            'total_amount'=>'p.ptotal_amount',
+                            'pending_amount'=>'p.ppending_amount',
                           ])
                ->join([
                   'table' => '('.$subquery.')',

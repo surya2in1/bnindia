@@ -107,20 +107,21 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Instalment Month:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="instalment_month" name="instalment_month" placeholder="Enter Instalment Month" value="<?= isset($payment->instalment_month) ? $payment->instalment_month : '';?>"  readonly title="You can not change this value.">
                                         <?php $instalment_month =  isset($payment->instalment_month) ? $payment->instalment_month : 0;?>
                                         <?php 
                                         $months = array(1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'May', 6 => 'Jun', 7 => 'Jul', 8 => 'Aug', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dec');
 
                                         ?>
-                                        <select id="instalment_month" name="instalment_month" class="form-control"> 
                                             <!--Show months in php list-->
+                                        <!-- <select id="instalment_month" name="instalment_month" class="form-control"> 
                                             <?php
-                                                foreach ($months as $num => $name) {
-                                                    $selected = ($num == $instalment_month) ? 'selected' : '';
-                                                    echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
-                                                }
+                                                // foreach ($months as $num => $name) {
+                                                //     $selected = ($num == $instalment_month) ? 'selected' : '';
+                                                //     echo '<option value="'.$num.'" '.$selected.'>'.$name.'</option>';
+                                                // }
                                             ?>
-                                        </select>  
+                                        </select>  --> 
                                     </div>
                                 </div>
 
@@ -131,11 +132,13 @@ use Cake\Routing\Router;
                                         $month_dates = array_combine( range(1,31), range(1,31));  
                                         $date =  isset($payment->due_date) ? $payment->due_date : 0;
                                         ?>
-                                        <select id="due_date" name="due_date" class="form-control">
+                                        <!-- <select id="due_date" name="due_date" class="form-control">
                                             <?php foreach($month_dates  as $key => $month_date){ ?>
                                             <option value="<?= $key; ?>" <?php if($date == $key){ echo "selected";}?>><?= $month_date; ?></option> 
                                             <?php } ?>
-                                        </select>
+                                        </select> -->
+
+                                        <input type="text" class="form-control" readonly  id="due_date" name="due_date"  title="You can not change this value."/>
                                     </div>
                                 </div>  
 
@@ -171,6 +174,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Late fee:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>" readonly>
+                                        <input type="hidden" name="group_late_fee" id="group_late_fee" />
                                     </div>
                                 </div>
 

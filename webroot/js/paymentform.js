@@ -115,7 +115,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'group_form/'+$('#id').val(),
+                url: 'payment_form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
@@ -163,11 +163,11 @@ jQuery(document).ready(function() {
 });
 
 function clear_fields(){
-    $('#subscription_amount').val(''); 
-    $('#late_fee').val(''); 
-    $('#remark').val('');
+    $('#subscription_amount').val('0.00'); 
+    $('#late_fee').val('0.00'); 
+    $('#remark').val('0.00');
     $('#instalment_month').val('');
-    $('#total_amount').val('');
+    $('#total_amount').val('0.00');
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -180,6 +180,7 @@ $('#groups').change(function(e) {
     }
     $('#due_date').val('');
     $('#subscriber_ticket_no').val('');
+    $('#group_late_fee').val('');
     clear_fields();
 	$('.bnspinner').removeClass('hide');
 	$.ajax({
@@ -201,9 +202,10 @@ $('#groups').change(function(e) {
 						  member_options += '<option value="'+key+'">'+value+'</option>';
 						});
             		}
-                    $('#due_date').val(result.groups.date);
+
+                    $('#due_date').val(create_date_from_day(result.groups.date));
                     $('#subscriber_ticket_no').val(result.ticket_no);
-                    
+                    $('#group_late_fee').val(result.groups.late_fee);
             	} 
             	$('#members').html(member_options);
             }
@@ -273,16 +275,45 @@ function getRemaingPayments(){
             success: function(response, status, xhr, $form) {
             	$('.bnspinner-instalment').addClass('hide');
             	var result = JSON.parse(response); 
+                var pending_amount = result.pending_amount;
             	var subscription_amount = result.net_subscription_amount;
-            	var late_fee = result.late_fee;
+                //If pending amount is remainging for selected instalment then set pending amount for subscription rs
+                if(pending_amount > 0 ){
+                     subscription_amount = pending_amount;
+                }
+
+                //Calculate late fee
+                var group_late_fee = $('#group_late_fee').val();
+                var group_due_date = $('#due_date').val(); 
+                var late_fee =0;
+
+                if(group_late_fee > 0 && group_due_date != ''){
+                    var CurrentDate = new Date(); 
+                    if(new Date(group_due_date) < CurrentDate){
+                        late_fee = (parseFloat(result.net_subscription_amount) * parseFloat(group_late_fee))/100;
+                     }
+                }
+                
             	var remark = result.remark;
-                var instalment_month = (result.instalment_month) ? result.instalment_month : 1;
-                var total_amount = result.total_amount;
+                var instalment_month = (result.auction_date) ? get_month_name(result.auction_date) : '';
+                var total_amount = parseFloat(subscription_amount) + late_fee;
+
+                $('#instalment_month').val(instalment_month); 
+            	$('#remark').val((remark > 0) ? remark : '0.00');
             	$('#subscription_amount').val(subscription_amount); 
-            	$('#late_fee').val(late_fee); 
-            	$('#remark').val(remark);
-                $('#instalment_month').val(instalment_month);
-                $('#total_amount').val(total_amount);
+            	$('#late_fee').val(late_fee.toFixed(2)); 
+                $('#total_amount').val(total_amount.toFixed(2));
             }
 		}); 
 }
+function create_date_from_day(day){
+    var now_dt = new Date();
+    var month = (now_dt.getMonth()+1) < 10 ? '0'+(now_dt.getMonth()+1) : (now_dt.getMonth()+1);
+    var day =  (day <10 ) ? '0'+day : day;
+    return month+'/'+day+'/'+now_dt.getFullYear(); 
+    // return new Date(now_dt.getFullYear(), now_dt.getMonth(), day);
+}
+function get_month_name(dt){
+    var mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[new Date(dt).getMonth()];
+};

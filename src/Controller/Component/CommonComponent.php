@@ -77,7 +77,7 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','chit_amount','total_number','premium','date'])
+                                    ->select(['id','chit_amount','total_number','premium','date','late_fee'])
                                     ->contain(['Auctions' => function($q) use ($group_id) {
                                           return $q
                                               ->select(['Auctions.group_id',
@@ -95,7 +95,7 @@ class CommonComponent extends Component {
                          ],
         ])->toArray(); 
         // echo 'group_members<pre>';print_r($group_members);exit;
-        if(!empty($group_members)){
+        if(!empty($group_members)){ 
             $groupmembers['ticket_no'] = isset($group_members[0]['ticket_no']) ? $group_members[0]['ticket_no'] : '';
             $groupmembers['auction_count'] = isset($group_members[0]['group']['auctions'][0]['auction_count']) && ($group_members[0]['group']['auctions'][0]['auction_count'] > 0) ? ($group_members[0]['group']['auctions'][0]['auction_count']+1) : 1;
             $groupmembers['groups'] = isset($group_members[0]['group']) ? $group_members[0]['group'] : '';
