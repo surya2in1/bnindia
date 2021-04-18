@@ -125,14 +125,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
                         // similate 2s delay
                         setTimeout(function() {
                             btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'The group has been saved successfully.');
+                            showErrorMsg(form, 'success', 'The payment has been saved successfully.');
                             window.location.reload();
                         }, 2000); 
                     }else{
-                    	var err = 'Some error has been occured. Please try again.';
-                    	if(response == 'group_number_unique'){
-                    		err= "Group number is duplicate, please change group number."
-                    	}
+                    	var err = 'Some error has been occured. Please try again.'; 
                     	// similate 2s delay
                     	setTimeout(function() {
     	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
@@ -168,6 +165,7 @@ function clear_fields(){
     $('#remark').val('0.00');
     $('#instalment_month').val('');
     $('#total_amount').val('0.00');
+    $('#net_subscription_amount').val('0.00');
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -215,6 +213,9 @@ $('#groups').change(function(e) {
 $('#received_by').change(function(e) {
 	var received_by = $(this).val();
 	$('.rec-by-div').addClass('hide-div');
+    $('.rec-by-div').find(':input').each(function () {
+         $(this).val('');
+    });
 	if(received_by == 1){ 
 		$('.cash-div').removeClass('hide-div');
 	}else if(received_by == 2){
@@ -303,6 +304,8 @@ function getRemaingPayments(){
             	$('#subscription_amount').val(subscription_amount); 
             	$('#late_fee').val(late_fee.toFixed(2)); 
                 $('#total_amount').val(total_amount.toFixed(2));
+                $('#net_subscription_amount').val(result.net_subscription_amount); 
+                calculate_total_amount();
             }
 		}); 
 }
@@ -316,4 +319,14 @@ function create_date_from_day(day){
 function get_month_name(dt){
     var mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
     return mlist[new Date(dt).getMonth()];
-};
+}
+
+function calculate_total_amount(){
+    var subscription_amount = $('#subscription_amount').val();
+    var net_subscription_amount = $('#net_subscription_amount').val();
+    var late_fee = $('#late_fee').val();
+    var total_amount = parseFloat(subscription_amount) + parseFloat(late_fee);
+    $('#total_amount').val(total_amount.toFixed(2));
+    var pending_amount = net_subscription_amount - subscription_amount;
+    $('#remark').val(pending_amount);
+}

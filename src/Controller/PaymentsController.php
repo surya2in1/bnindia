@@ -100,14 +100,27 @@ class PaymentsController extends AppController
         $this->set(compact('payment', 'groups', 'members','payment_member_id','payment_group_id','receipt_no'));
 
         if ($this->request->is('post')) {
-          echo '<pre>';print_r($this->request->getData());exit;
-            $payment = $this->Payments->patchEntity($payment, $this->request->getData());
-            if ($this->Payments->save($payment)) {
-                $this->Flash->success(__('The payment has been saved.'));
+          $post = $this->request->getData();
+          
+          //convert dates to db field format
+          $post['due_date'] = (strtotime($post['due_date']) > 0) ? date('Y-m-d',strtotime($post['due_date'])): '';
+          $post['date'] = (strtotime($post['date']) > 0) ? date('Y-m-d',strtotime($post['date'])): '';
+          
+          $post['cash_received_date'] = (strtotime($post['cash_received_date']) > 0) ? date('Y-m-d',strtotime($post['cash_received_date'])): '';
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The payment could not be saved. Please, try again.'));
+          $post['cheque_date'] = (strtotime($post['cheque_date']) > 0) ? date('Y-m-d',strtotime($post['cheque_date'])): '';
+          
+          $post['direct_debit_date'] = (strtotime($post['direct_debit_date']) > 0) ? date('Y-m-d',strtotime($post['direct_debit_date'])): '';
+
+          // echo '<pre>';print_r($post);exit;
+          $payment = $this->Payments->patchEntity($payment, $post);
+          if ($this->Payments->save($payment)) {
+               echo 1;exit;
+          }else{
+              $validationErrors = $payment->getErrors();
+                // echo '<pre>';print_r($payment->getErrors());exit();
+              echo 0;exit;
+          }
         }
     }
 

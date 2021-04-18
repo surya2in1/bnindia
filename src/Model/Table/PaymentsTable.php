@@ -101,17 +101,17 @@ class PaymentsTable extends Table
             ->notEmptyString('instalment_no');
 
         $validator
-            ->integer('instalment_month')
+            ->scalar('instalment_month')
             ->requirePresence('instalment_month', 'create')
             ->notEmptyString('instalment_month');
 
         $validator
-            ->integer('subscription_amount')
+            ->decimal('subscription_amount')
             ->requirePresence('subscription_amount', 'create')
             ->notEmptyString('subscription_amount');
 
         $validator
-            ->integer('late_fee')
+            ->decimal('late_fee')
             ->requirePresence('late_fee', 'create')
             ->notEmptyString('late_fee');
 
@@ -119,42 +119,42 @@ class PaymentsTable extends Table
             ->requirePresence('received_by', 'create')
             ->notEmptyString('received_by');
 
-        $validator
-            ->date('cash_received_date')
-            ->requirePresence('cash_received_date', 'create')
-            ->notEmptyDate('cash_received_date');
+        // $validator
+        //     ->date('cash_received_date')
+        //     ->requirePresence('cash_received_date', 'create')
+        //     ->notEmptyDate('cash_received_date');
 
-        $validator
-            ->scalar('cheque_no')
-            ->maxLength('cheque_no', 500)
-            ->requirePresence('cheque_no', 'create')
-            ->notEmptyString('cheque_no');
+        // $validator
+        //     ->scalar('cheque_no')
+        //     ->maxLength('cheque_no', 500)
+        //     ->requirePresence('cheque_no', 'create')
+        //     ->notEmptyString('cheque_no');
 
-        $validator
-            ->date('cheque_date')
-            ->requirePresence('cheque_date', 'create')
-            ->notEmptyDate('cheque_date');
+        // $validator
+        //     ->date('cheque_date')
+        //     ->requirePresence('cheque_date', 'create')
+        //     ->notEmptyDate('cheque_date');
 
-        $validator
-            ->integer('cheque_bank_details')
-            ->requirePresence('cheque_bank_details', 'create')
-            ->notEmptyString('cheque_bank_details');
+        // $validator
+        //     ->integer('cheque_bank_details')
+        //     ->requirePresence('cheque_bank_details', 'create')
+        //     ->notEmptyString('cheque_bank_details');
 
-        $validator
-            ->integer('cheque_drown_on')
-            ->requirePresence('cheque_drown_on', 'create')
-            ->notEmptyString('cheque_drown_on');
+        // $validator
+        //     ->integer('cheque_drown_on')
+        //     ->requirePresence('cheque_drown_on', 'create')
+        //     ->notEmptyString('cheque_drown_on');
 
-        $validator
-            ->date('direct_debit_date')
-            ->requirePresence('direct_debit_date', 'create')
-            ->notEmptyDate('direct_debit_date');
+        // $validator
+        //     ->date('direct_debit_date')
+        //     ->requirePresence('direct_debit_date', 'create')
+        //     ->notEmptyDate('direct_debit_date');
 
-        $validator
-            ->scalar('direct_debit_transaction_no')
-            ->maxLength('direct_debit_transaction_no', 500)
-            ->requirePresence('direct_debit_transaction_no', 'create')
-            ->notEmptyString('direct_debit_transaction_no');
+        // $validator
+        //     ->scalar('direct_debit_transaction_no')
+        //     ->maxLength('direct_debit_transaction_no', 500)
+        //     ->requirePresence('direct_debit_transaction_no', 'create')
+        //     ->notEmptyString('direct_debit_transaction_no');
 
         $validator
             ->scalar('remark')
@@ -175,7 +175,7 @@ class PaymentsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['group_id'], 'Groups'));
-        $rules->add($rules->existsIn(['user_id'], 'Members'));
+        $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
     }

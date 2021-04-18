@@ -94,6 +94,33 @@ var KTBootstrapDatepicker = function () {
             templates: arrows
         });
 
+        $('#cash_received_datepicker').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
+        
+        $('#cheque_date_datepicker').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
+
+        $('#direct_debit_datepicker').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
+        
         // enable clear button for modal demo
         $('#kt_datepicker_3_modal').datepicker({
             rtl: KTUtil.isRTL(),

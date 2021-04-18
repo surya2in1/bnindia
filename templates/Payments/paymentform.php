@@ -159,22 +159,23 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscriber Ticket No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>"  id="subscriber_ticket_no">
+                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>"  id="subscriber_ticket_no" readonly title="You can not change this value.">
                                     </div>
                                 </div> 
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscription Rs:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount">
+                                        <input type="number" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount" onchange="calculate_total_amount()">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Late fee:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>" readonly>
+                                        <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>" readonly title="You can not change this value.">
                                         <input type="hidden" name="group_late_fee" id="group_late_fee" />
+                                        <input type="hidden" name="net_subscription_amount" id="net_subscription_amount" />
                                     </div>
                                 </div>
 
@@ -211,7 +212,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Cheque No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>" id="cheque_no">
+                                        <input type="number" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>" id="cheque_no">
                                     </div>
                                 </div>
 
@@ -267,18 +268,19 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Total Amount:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="total_amount" id="total_amount" placeholder="Enter Total Amount" value="<?= isset($payment->total_amount) ? $payment->total_amount : '';?>" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Remark:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>" readonly>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Total Amount:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="total_amount" id="total_amount" placeholder="Enter Total Amount" value="<?= isset($payment->total_amount) ? $payment->total_amount : '';?>" readonly>
-                                    </div>
-                                </div>
 
                             </div>
                         </div>
