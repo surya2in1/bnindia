@@ -113,7 +113,7 @@ class PaymentsController extends AppController
           $post['direct_debit_date'] = (strtotime($post['direct_debit_date']) > 0) ? date('Y-m-d',strtotime($post['direct_debit_date'])): '';
 
           // echo '<pre>';print_r($post);exit;
-          $payment = $this->Payments->patchEntity($payment, $post);
+          $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
           if ($this->Payments->save($payment)) {
                echo 1;exit;
           }else{

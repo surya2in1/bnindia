@@ -59,7 +59,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             		},
             		cheque_no: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
-                            }
+                            }, 
             		},
             		cheque_date: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
@@ -166,6 +166,8 @@ function clear_fields(){
     $('#instalment_month').val('');
     $('#total_amount').val('0.00');
     $('#net_subscription_amount').val('0.00');
+    $('#pending_amount').val('0.00');
+    $('#auction_id').val('0.00'); 
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -305,6 +307,8 @@ function getRemaingPayments(){
             	$('#late_fee').val(late_fee.toFixed(2)); 
                 $('#total_amount').val(total_amount.toFixed(2));
                 $('#net_subscription_amount').val(result.net_subscription_amount); 
+                $('#pending_amount').val(pending_amount); 
+                $('#auction_id').val(result.id); 
                 calculate_total_amount();
             }
 		}); 
@@ -324,9 +328,14 @@ function get_month_name(dt){
 function calculate_total_amount(){
     var subscription_amount = $('#subscription_amount').val();
     var net_subscription_amount = $('#net_subscription_amount').val();
+    var pending_amount = $('#pending_amount').val();
     var late_fee = $('#late_fee').val();
     var total_amount = parseFloat(subscription_amount) + parseFloat(late_fee);
     $('#total_amount').val(total_amount.toFixed(2));
-    var pending_amount = net_subscription_amount - subscription_amount;
+    if(pending_amount > 0){ 
+        var pending_amount = (parseFloat(pending_amount) - parseFloat(subscription_amount)).toFixed(2);
+    }else{
+        var pending_amount = (parseFloat(net_subscription_amount) - parseFloat(subscription_amount)).toFixed(2);
+    }
     $('#remark').val(pending_amount);
 }

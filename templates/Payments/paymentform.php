@@ -176,6 +176,8 @@ use Cake\Routing\Router;
                                         <input type="text" class="form-control" name="late_fee" id="late_fee" placeholder="Enter Late fee" value="<?= isset($payment->late_fee) ? $payment->late_fee : '';?>" readonly title="You can not change this value.">
                                         <input type="hidden" name="group_late_fee" id="group_late_fee" />
                                         <input type="hidden" name="net_subscription_amount" id="net_subscription_amount" />
+                                        <input type="hidden" name="pending_amount" id="pending_amount" />
+                                        <input type="hidden" name="auction_id" id="auction_id" />
                                     </div>
                                 </div>
 

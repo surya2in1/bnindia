@@ -165,6 +165,93 @@ class PaymentsTable extends Table
         return $validator;
     }
 
+    public function validationReceivedby(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+
+        $validator->allowEmpty('cash_received_date', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('cheque_no', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('cheque_date', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('cheque_bank_details', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('cheque_drown_on', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('direct_debit_date', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->allowEmpty('direct_debit_transaction_no', function ($context) {
+            return $context['data']['received_by'] === '';
+        });
+
+        $validator->add('creditcard_number', 'cc', [
+            'rule' => 'cc',
+            'message' => 'Please enter valid Credit Card',
+            'on' => function ($context) {
+                return $context['data']['received_by'] === 'credit_card';
+            }
+        ]);
+
+        //for cash
+        $validator->notEmpty('cash_received_date', 'Received Date is required', function ($context) {
+            return $context['data']['received_by'] === 1;
+        });
+        $validator->date('cash_received_date', 'Enter valid Received Date', function ($context) {
+            return $context['data']['received_by'] === 1;
+        });
+
+        //for cheque
+        $validator->notEmpty('cheque_no', 'Cheque No is required', function ($context) {
+            return $context['data']['received_by'] === 2;
+        });
+
+        $validator->add('cheque_no', 'length', 
+                        [
+                            'rule' => ['maxLength', 500],
+                            'on' => function ($context) {
+                                return ($context['data']['received_by'] === 2);
+                            }
+                        ]);
+        $validator->notEmpty('cheque_date', 'Cheque Date is required', function ($context) {
+            return $context['data']['received_by'] === 2;
+        });
+        $validator->date('cheque_date', 'Enter valid Cheque Date', function ($context) {
+            return $context['data']['received_by'] === 2;
+        });
+        $validator->notEmpty('cheque_bank_details', 'Cheque Bank Details is required', function ($context) {
+            return $context['data']['received_by'] === 2;
+        });
+        $validator->notEmpty('cheque_drown_on', 'Cheque Drown On is required', function ($context) {
+            return $context['data']['received_by'] === 2;
+        });
+
+        //for Direct debit
+        $validator->notEmpty('direct_debit_date', 'Direct Debit Date is required', function ($context) {
+            return $context['data']['received_by'] === 3;
+        });
+        $validator->date('direct_debit_date', 'Enter valid Direct Debit Date', function ($context) {
+            return $context['data']['received_by'] === 3;
+        });
+        $validator->notEmpty('direct_debit_transaction_no', 'Direct Debit Transaction No. is required', function ($context) {
+            return $context['data']['received_by'] === 3;
+        });
+
+        return $validator;
+    }
+
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
