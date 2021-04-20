@@ -166,7 +166,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscription Rs:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount" onchange="calculate_total_amount()">
+                                        <input type="number" min="1" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount" onchange="calculate_total_amount()">
                                     </div>
                                 </div>
 
@@ -214,7 +214,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row hide-div cheque-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Cheque No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>" id="cheque_no">
+                                        <input type="number" min="1" class="form-control" name="cheque_no" placeholder="Enter Cheque No" value="<?= isset($payment->cheque_no) ? $payment->cheque_no : '';?>" id="cheque_no">
                                     </div>
                                 </div>
 
@@ -265,7 +265,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row hide-div direct-debit-div rec-by-div">
                                     <label class="col-lg-3 col-form-label">Transaction no:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="direct_debit_transaction_no" placeholder="Enter Transaction no" value="<?= isset($payment->direct_debit_transaction_no) ? $payment->direct_debit_transaction_no : '';?>" id="direct_debit_transaction_no">
+                                        <input type="number" min="1" class="form-control" name="direct_debit_transaction_no" placeholder="Enter Transaction no" value="<?= isset($payment->direct_debit_transaction_no) ? $payment->direct_debit_transaction_no : '';?>" id="direct_debit_transaction_no">
                                     </div>
                                 </div>
 

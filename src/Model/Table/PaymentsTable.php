@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Payments Model
@@ -197,21 +198,18 @@ class PaymentsTable extends Table
             return $context['data']['received_by'] === '';
         });
 
-        $validator->add('creditcard_number', 'cc', [
-            'rule' => 'cc',
-            'message' => 'Please enter valid Credit Card',
-            'on' => function ($context) {
-                return $context['data']['received_by'] === 'credit_card';
-            }
-        ]);
+        // $validator->add('creditcard_number', 'cc', [
+        //     'rule' => 'cc',
+        //     'message' => 'Please enter valid Credit Card',
+        //     'on' => function ($context) {
+        //         return $context['data']['received_by'] === 'credit_card';
+        //     }
+        // ]);
 
         //for cash
         $validator->notEmpty('cash_received_date', 'Received Date is required', function ($context) {
             return $context['data']['received_by'] === 1;
-        });
-        $validator->date('cash_received_date', 'Enter valid Received Date', function ($context) {
-            return $context['data']['received_by'] === 1;
-        });
+        }); 
 
         //for cheque
         $validator->notEmpty('cheque_no', 'Cheque No is required', function ($context) {
@@ -227,10 +225,7 @@ class PaymentsTable extends Table
                         ]);
         $validator->notEmpty('cheque_date', 'Cheque Date is required', function ($context) {
             return $context['data']['received_by'] === 2;
-        });
-        $validator->date('cheque_date', 'Enter valid Cheque Date', function ($context) {
-            return $context['data']['received_by'] === 2;
-        });
+        }); 
         $validator->notEmpty('cheque_bank_details', 'Cheque Bank Details is required', function ($context) {
             return $context['data']['received_by'] === 2;
         });
@@ -241,10 +236,7 @@ class PaymentsTable extends Table
         //for Direct debit
         $validator->notEmpty('direct_debit_date', 'Direct Debit Date is required', function ($context) {
             return $context['data']['received_by'] === 3;
-        });
-        $validator->date('direct_debit_date', 'Enter valid Direct Debit Date', function ($context) {
-            return $context['data']['received_by'] === 3;
-        });
+        }); 
         $validator->notEmpty('direct_debit_transaction_no', 'Direct Debit Transaction No. is required', function ($context) {
             return $context['data']['received_by'] === 3;
         });
@@ -265,5 +257,119 @@ class PaymentsTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    //Function for ajax listing, filter, sort, search
+    public function GetData() {
+        $aColumns = array( 'p.receipt_no','g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",'p.subscription_amount','p.late_fee','p.total_amount',"(
+            CASE 
+                WHEN received_by =1 THEN 'Cash'
+                WHEN received_by =2 THEN 'Cheque'
+                WHEN received_by =3 THEN 'Direct Debit' 
+                ELSE '--'
+            END) AS received_by");
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "p.receipt_no";
+        /* DB table to use */
+        $sTable = "payments p";
+       
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */
+        $sOrder = "";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                {
+                     //remove 'as' word if exist
+                    $ordercolumns = preg_replace('/ as.*/', '', $aColumns[$_POST['order'][$i]['column']]);
+                    $sOrder .= "".$ordercolumns." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */
+        $sWhere = "";
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $sWhere .= " WHERE (";
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    //remove 'as' word if exist
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                }
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns)).", p.id as action
+        FROM   $sTable join groups g on g.id = p.group_id join users u on u.id = p.user_id
+        $sWhere
+        $sOrder
+        $sLimit
+        ";
+        // echo  $sQuery;exit;
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+       
+        /* Data set length after filtering */
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+        /* Total data set length */
+        $sQuery = "
+        SELECT COUNT(".$sIndexColumn.") as cnt
+        FROM   $sTable
+        ";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        $iTotal = $aResultTotal[0]['cnt'];
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+         // echo '<pre>';print_r($output);exit;
+        return $output;
     }
 }

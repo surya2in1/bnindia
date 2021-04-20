@@ -25,13 +25,12 @@ class PaymentsController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Groups', 'Members'],
-        ];
-        $payments = $this->paginate($this->Payments);
-
-        $this->set(compact('payments'));
+    {  
+        $this->viewBuilder()->setLayout('admin');    
+        if ($this->request->is('post')) { 
+             $output = $this->Payments->GetData();
+             echo json_encode($output);exit;
+        }
     }
 
     /**
@@ -112,13 +111,16 @@ class PaymentsController extends AppController
           
           $post['direct_debit_date'] = (strtotime($post['direct_debit_date']) > 0) ? date('Y-m-d',strtotime($post['direct_debit_date'])): '';
 
+          $post['pending_amount'] = $post['remark'];
+          if($post['remark'] < 1){
+            $post['is_installment_complete'] = 1;
+          }
           // echo '<pre>';print_r($post);exit;
           $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
           if ($this->Payments->save($payment)) {
                echo 1;exit;
           }else{
-              $validationErrors = $payment->getErrors();
-                // echo '<pre>';print_r($payment->getErrors());exit();
+              $validationErrors = $payment->getErrors(); 
               echo 0;exit;
           }
         }

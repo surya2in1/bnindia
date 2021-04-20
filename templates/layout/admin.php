@@ -180,6 +180,9 @@ $cakeDescription = 'Bnindia';
         <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'paymentform') { ?> 
             <?= $this->Html->script('paymentform.js') ?>
         <?php } ?>
+        <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'index') { ?> 
+            <?= $this->Html->script('payments.js') ?>
+        <?php } ?>
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer> 

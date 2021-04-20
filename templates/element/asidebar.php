@@ -164,7 +164,7 @@
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">List Auction</span>',
+                                                    <span class="kt-menu__link-text">List Auctions</span>',
                                                     array('controller'=>'Auctions','action'=>'index'),
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
@@ -203,7 +203,7 @@
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">List Auction</span>',
+                                                    <span class="kt-menu__link-text">List Payments</span>',
                                                     array('controller'=>'Payments','action'=>'index'),
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>

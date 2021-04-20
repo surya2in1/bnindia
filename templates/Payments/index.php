@@ -1,84 +1,68 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Payment[]|\Cake\Collection\CollectionInterface $payments
- */
-?>
-<div class="payments index content">
-    <?= $this->Html->link(__('New Payment'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Payments') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('receipt_no') ?></th>
-                    <th><?= $this->Paginator->sort('due_date') ?></th>
-                    <th><?= $this->Paginator->sort('date') ?></th>
-                    <th><?= $this->Paginator->sort('group_id') ?></th>
-                    <th><?= $this->Paginator->sort('subscriber_ticket_no') ?></th>
-                    <th><?= $this->Paginator->sort('user_id') ?></th>
-                    <th><?= $this->Paginator->sort('instalment_no') ?></th>
-                    <th><?= $this->Paginator->sort('instalment_month') ?></th>
-                    <th><?= $this->Paginator->sort('subscription_amount') ?></th>
-                    <th><?= $this->Paginator->sort('late_fee') ?></th>
-                    <th><?= $this->Paginator->sort('received_by') ?></th>
-                    <th><?= $this->Paginator->sort('cash_received_date') ?></th>
-                    <th><?= $this->Paginator->sort('cheque_no') ?></th>
-                    <th><?= $this->Paginator->sort('cheque_date') ?></th>
-                    <th><?= $this->Paginator->sort('cheque_bank_details') ?></th>
-                    <th><?= $this->Paginator->sort('cheque_drown_on') ?></th>
-                    <th><?= $this->Paginator->sort('direct_debit_date') ?></th>
-                    <th><?= $this->Paginator->sort('direct_debit_transaction_no') ?></th>
-                    <th><?= $this->Paginator->sort('remark') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($payments as $payment): ?>
-                <tr>
-                    <td><?= $this->Number->format($payment->id) ?></td>
-                    <td><?= h($payment->receipt_no) ?></td>
-                    <td><?= h($payment->due_date) ?></td>
-                    <td><?= h($payment->date) ?></td>
-                    <td><?= $payment->has('group') ? $this->Html->link($payment->group->id, ['controller' => 'Groups', 'action' => 'view', $payment->group->id]) : '' ?></td>
-                    <td><?= h($payment->subscriber_ticket_no) ?></td>
-                    <td><?= $this->Number->format($payment->user_id) ?></td>
-                    <td><?= $this->Number->format($payment->instalment_no) ?></td>
-                    <td><?= $this->Number->format($payment->instalment_month) ?></td>
-                    <td><?= $this->Number->format($payment->subscription_amount) ?></td>
-                    <td><?= $this->Number->format($payment->late_fee) ?></td>
-                    <td><?= $this->Number->format($payment->received_by) ?></td>
-                    <td><?= h($payment->cash_received_date) ?></td>
-                    <td><?= h($payment->cheque_no) ?></td>
-                    <td><?= h($payment->cheque_date) ?></td>
-                    <td><?= $this->Number->format($payment->cheque_bank_details) ?></td>
-                    <td><?= $this->Number->format($payment->cheque_drown_on) ?></td>
-                    <td><?= h($payment->direct_debit_date) ?></td>
-                    <td><?= h($payment->direct_debit_transaction_no) ?></td>
-                    <td><?= h($payment->remark) ?></td>
-                    <td><?= h($payment->created) ?></td>
-                    <td><?= h($payment->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $payment->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $payment->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $payment->id], ['confirm' => __('Are you sure you want to delete # {0}?', $payment->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+<!-- begin:: Content Head -->
+<div class="kt-subheader  kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">Payments</h3>
+            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+            <div class="kt-input-icon kt-input-icon--right kt-subheader__search kt-hidden">
+                <input type="text" class="form-control" placeholder="Search order..." id="generalSearch">
+                <span class="kt-input-icon__icon kt-input-icon__icon--right">
+                    <span><i class="flaticon2-search-1"></i></span>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- end:: Content Head -->
+
+<!-- begin:: Content -->
+<?= $this->Form->create(null,[]); ?>
+<?= $this->Form->end(); ?>
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon-users-1"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Payment list
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        
+                        <a href="payment_form" class="btn btn-brand btn-elevate btn-icon-sm">
+                            <i class="la la-plus"></i>
+                            New Record
+                        </a>                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+
+            <!--begin: Datatable -->
+            <table class="table table-striped- table-bordered table-hover table-checkable" id="payment_table">
+                <thead>
+                    <tr>
+                        <th>Receipt No.</th>
+                        <th>Group Code</th>
+                        <th>Member</th>
+                        <th>Subscription Amount</th>
+                        <th>Late Fee</th>
+                        <th>Total Amount</th>
+                        <th>Received By</th> 
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <!--end: Datatable -->
+        </div>
+    </div>
+</div>
+
+<!-- end:: Content -->

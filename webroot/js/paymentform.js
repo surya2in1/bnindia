@@ -1,6 +1,7 @@
 "use strict"; 
-var table = $('#group_members_table'); 
+var table = $('#payment_table'); 
 var KTDatatablesDataSourceAjaxServer = function() {
+
 	var payment_form = function () {
 		var showErrorMsg = function(form, type, msg) {
 	        var alert = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert">\
@@ -55,11 +56,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                }, 
 	                cash_received_date: { required: function(element){
                             return $("#received_by option:selected").val() == 1;
-                            }
+                            } 
             		},
             		cheque_no: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
-                            }, 
+                            }, number:true
             		},
             		cheque_date: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
@@ -79,10 +80,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
             		},
             		direct_debit_transaction_no: { required: function(element){
                             return $("#received_by option:selected").val() == 3;
-                            }
+                            },number:true
             		},
             		remark:{
-	                	required:true
+	                	required:true,number:true
 	                }, 
 	            },
 	            errorPlacement: function(error, element) {
@@ -122,12 +123,23 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 // },
                 success: function(response, status, xhr, $form) {
                     if(response>0){
+                        swal.fire({
+                            "title": "",
+                            "text": "The payment has been saved successfully.",
+                            "type": "success",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function(e) {
+                                 $('html, body').animate({
+                                    scrollTop: $("#kt_content").offset().top
+                                }, 1000);
+                                console.log('on close event fired!');
+                            }
+                        });
                         // similate 2s delay
                         setTimeout(function() {
-                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-                            showErrorMsg(form, 'success', 'The payment has been saved successfully.');
                             window.location.reload();
                         }, 2000); 
+
                     }else{
                     	var err = 'Some error has been occured. Please try again.'; 
                     	// similate 2s delay
@@ -147,7 +159,6 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	return {
 		//main function to initiate the module
 		init: function() {
-			// initTable1();  
 			payment_form();
 		},
 

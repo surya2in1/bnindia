@@ -67,6 +67,7 @@ class Payment extends Entity
         'remark' => true,
         'auction_id' => true,
         'total_amount' => true,
+        'pending_amount' => true,
         'is_installment_complete' => true,
         'created' => true,
         'modified' => true,
