@@ -267,7 +267,7 @@ class PaymentsTable extends Table
                 WHEN received_by =2 THEN 'Cheque'
                 WHEN received_by =3 THEN 'Direct Debit' 
                 ELSE '--'
-            END) AS received_by");
+            END) as received_by");
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "p.receipt_no";
         /* DB table to use */
@@ -323,7 +323,7 @@ class PaymentsTable extends Table
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
                     //remove 'as' word if exist
-                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]); 
                     $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
                 }
                 $sWhere = substr_replace( $sWhere, "", -3 );
