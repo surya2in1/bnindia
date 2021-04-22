@@ -64,11 +64,26 @@ class GroupsController extends AppController
         }
         if($id>0){
             $group = $this->Groups->get($id, [
-                'contain' => [],
+                'contain' => [ 
+                                'Auctions' => function($q) use ($id) {
+                                return $q
+                                    ->select(['Auctions.group_id','Auctions.auction_date',
+                                                'auction_count' => $q->func()->count('Auctions.id')
+                                                ])
+                                              ->where(['Auctions.group_id'=>$id]);
+                              }, 
+                            ],
             ]);       
         }else{
             $group = $this->Groups->newEmptyEntity();
         }
+        $auction_count = isset($group['auctions'][0]['auction_count']) && $group['auctions'][0]['auction_count'] > 0 ? $group['auctions'][0]['auction_count'] : 0;
+        if($auction_count >0){
+            return $this->redirect(['action' => 'index']);
+        }
+         // echo '<pre>';print_r($group);exit();
+        $this->set(compact('group'));
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
             $post['created_by'] = $this->Auth->user('id');
@@ -84,11 +99,9 @@ class GroupsController extends AppController
                 }else{
                     echo 0;
                 } 
-            }
-            exit;
+            } 
         }
-        //echo '<pre>';print_r($group);exit();
-        $this->set(compact('group'));
+       
      }
 
      function addGroupMembers(){

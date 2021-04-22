@@ -45,13 +45,13 @@ class AuctionsController extends AppController
             $auction = $this->Auctions->newEmptyEntity();
         }
          
-        //Get all groups except disable
+        //Get all fulle member groups  
         $GroupsTable = TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
                                         'keyField' => 'id',
                                         'valueField' => 'group_code' 
                                     ])
-                    ->where(['status !='=>2,'is_all_auction_completed' => 0])->toArray();
+                    ->where(['status'=>0,'is_all_auction_completed' => 0])->toArray();
 
         //echo '<pre>';print_r($auction);exit();
         $this->set(compact('auction','groups','selected_group_members'));

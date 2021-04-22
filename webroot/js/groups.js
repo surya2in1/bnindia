@@ -36,7 +36,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					targets: -1,
 					title: 'Actions',
 					orderable: false,
-					render: function(data, type, full, meta) { 
+					render: function(data, type, full, meta) {  
+						var isDisabled = (full.auctions_cnt > 0) ? 'isDisabled' : '';
+						var isDisabledTitle = (full.auctions_cnt > 0) ? 'You can not edit this group because auction is already generated for this group' : '';
                         return '\
 							<div class="dropdown">\
 								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
@@ -45,7 +47,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="group_form/'+data+'" class="kt-nav__link">\
+											<a href="group_form/'+data+'" class="kt-nav__link '+isDisabled+'" title="'+isDisabledTitle+'">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\

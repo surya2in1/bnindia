@@ -78,3 +78,10 @@
 .typeahead .tt-menu{
   min-width: 100% !important;
 }
+
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+}

@@ -205,9 +205,10 @@ class GroupsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." , id as actions
-        FROM   $sTable 
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." , g.id as actions, count(a.group_id) as auctions_cnt
+        FROM   $sTable  left join auctions a on g.id =a.group_id 
         $sWhere
+        group by g.id
         $sOrder
         $sLimit
         ";

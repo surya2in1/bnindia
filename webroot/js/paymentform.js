@@ -213,8 +213,8 @@ $('#groups').change(function(e) {
 						  member_options += '<option value="'+key+'">'+value+'</option>';
 						});
             		}
-
-                    $('#due_date').val(create_date_from_day(result.groups.date));
+                    var auction_date = (result.groups.auctions) ? result.groups.auctions[0].auction_date : '';
+                    $('#due_date').val(create_date_from_day(result.groups.date,auction_date));
                     $('#subscriber_ticket_no').val(result.ticket_no);
                     $('#group_late_fee').val(result.groups.late_fee);
             	} 
@@ -324,11 +324,11 @@ function getRemaingPayments(){
             }
 		}); 
 }
-function create_date_from_day(day){
-    var now_dt = new Date();
+function create_date_from_day(day,auction_date){
+    var now_dt = new Date(auction_date);
     var month = (now_dt.getMonth()+1) < 10 ? '0'+(now_dt.getMonth()+1) : (now_dt.getMonth()+1);
-    var day =  (day <10 ) ? '0'+day : day;
-    return month+'/'+day+'/'+now_dt.getFullYear(); 
+    var day =  (day <10 ) ? '0'+day : day; 
+    return month+'/'+day+'/'+now_dt.getFullYear();
     // return new Date(now_dt.getFullYear(), now_dt.getMonth(), day);
 }
 function get_month_name(dt){
