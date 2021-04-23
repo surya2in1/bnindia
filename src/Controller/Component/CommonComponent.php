@@ -90,7 +90,7 @@ class CommonComponent extends Component {
                              'Users' => function($q) use ($group_id) {
                                 return $q
                                     ->select(['id','name' => $q->func()->concat(['Users.first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
-                                    ->where(['group_id'=>$group_id]);
+                                    ->where(['group_id'=>$group_id,'Users.status' => 1]);
                             },    
                          ],
         ])->toArray(); 
