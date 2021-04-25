@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
-
+use Cake\I18n\FrozenDate;
 /**
  * Auctions Controller
  *
@@ -58,11 +58,24 @@ class AuctionsController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData(); 
+             
+            $last_acution =  $this->Auctions->find()
+            ->select(['auction_date'])
+            ->where(['group_id' => $post['group_id']])
+            ->order(['id' => 'DESC'])
+            ->first();  
+            $last_auction_date='';
+            if(isset($last_acution->auction_date) && !empty($last_acution->auction_date)){
+                $FrozenDateObj = new FrozenDate($last_acution->auction_date); 
+                $last_auction_date = $FrozenDateObj->i18nFormat('yyyy-MM-dd'); 
+            }
+             $post['last_auction_date'] = $last_auction_date;
+
            //convert dates to db field format
             if(strtotime($post['auction_date']) > 0){
                 $post['auction_date'] = date('Y-m-d',strtotime($post['auction_date']));
             }
-           // echo '<pre>';print_r($post);// exit;  
+           // echo '<pre>';print_r($post);exit;  
             $auction = $this->Auctions->patchEntity($auction, $post);
             if ($result = $this->Auctions->save($auction)) { 
                 //check if all auction complete then update groups 
@@ -78,7 +91,12 @@ class AuctionsController extends AppController
                 echo 1;
             }else{
                 $validationErrors = $auction->getErrors();
-                echo 0;
+                // echo 'validationErrors <pre>';print_r($validationErrors);exit();
+                if(isset($validationErrors['auction_date']['wrong_auction_date']) && !empty($validationErrors['auction_date']['wrong_auction_date'])){
+                    echo $validationErrors['auction_date']['wrong_auction_date'];
+                }else{
+                    echo 0;
+                }
             }
             exit;
         }

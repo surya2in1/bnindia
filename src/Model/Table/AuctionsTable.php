@@ -128,8 +128,31 @@ class AuctionsTable extends Table
             ->requirePresence('net_subscription_amount', 'create')
             ->notEmptyString('net_subscription_amount');
 
+        $validator->add('auction_date', 'wrong_auction_date', [
+            'rule' => function ($value, $context) {
+                $auction_date = isset($context['data']['auction_date']) ? $context['data']['auction_date'] : '';
+                $last_auction_date = isset($context['data']['last_auction_date']) && !empty($context['data']['last_auction_date']) ? $context['data']['last_auction_date'] : '';
+
+                if( $last_auction_date){
+                    $last_dt_auction_date = date("Y-m-t", strtotime($last_auction_date)); 
+                    $last_dt_of_next_auctiondt_month = date('Y-m-t', strtotime('+1 month', strtotime($last_auction_date)));
+                    $correct_month=date("F",strtotime($last_dt_of_next_auctiondt_month));
+                    $correct_year=date("Y",strtotime($last_dt_of_next_auctiondt_month));
+                     // echo  '$auction_date = '.$auction_date.' // last_dt_auction_date= '.$last_dt_auction_date.' // last_dt_of_next_auctiondt_month = '.$last_dt_of_next_auctiondt_month;
+                     
+                    if($auction_date > $last_dt_auction_date && $auction_date <= $last_dt_of_next_auctiondt_month){ 
+                        return true;
+                    }else{
+                         return 'Please select "Auction Date" in '.$correct_month.' '.$correct_year; 
+                    } 
+                }else{ 
+                   return true;
+                }  
+            },
+            'message' => 'Wrong auction date',
+        ]);
         return $validator;
-    }
+    } 
 
     /**
      * Returns a rules checker object that will be used for validating
@@ -140,6 +163,8 @@ class AuctionsTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
+        // $rules->add($rules->isUnique(['auction_no', 'group_id']));
+        // $rules->add($rules->isUniqueAuctionDate(['auction_date', 'group_id']));
         $rules->add($rules->existsIn(['group_id'], 'Groups'));
 
         return $rules;

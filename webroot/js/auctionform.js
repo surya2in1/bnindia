@@ -166,7 +166,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 // },
                 success: function(response, status, xhr, $form) {
-                    if(response>0){
+                    if(response>0){ 
                         // similate 2s delay
                         swal.fire({
                             "title": "",
@@ -187,16 +187,27 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
                     }else{
                         var err = 'Some error has been occured. Please try again.';
-                        
-                        // similate 2s delay
-                        setTimeout(function() {
-                            btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                        if(response != ''){ 
+                            err= response;
+                        } 
+
+                         swal.fire({
+                            "title": "",
+                            "text": err,
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function(e) {
+                                  btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
                             showErrorMsg(form, 'danger', err);
-                        }, 2000);                        
+                                 $('html, body').animate({
+                                    scrollTop: $("#kt_content").offset().top
+                                }, 1000); 
+                            }
+                        });                       
                     }
-                    $('html, body').animate({
-                        scrollTop: "0"
-                    }, 2000);
+                    // $('html, body').animate({
+                    //     scrollTop: "0"
+                    // }, 2000);
                 }
             }); 
         });
