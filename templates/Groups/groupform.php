@@ -54,7 +54,7 @@ use Cake\Routing\Router;
                                         <?php $group_type =  isset($group->group_type) ? $group->group_type : 'monthly';?>
                                         <select id="group_type" name="group_type" class="form-control" onchange="calculate_no_of_months();">
                                             <option value="monthly" <?php if($group_type == 'monthly'){ echo 'selected'; } ?>>Monthly</option>
-                                            <option value="forthnight" <?php if($group_type == 'forthnight'){ echo 'selected'; } ?> >Forthnight</option>
+                                            <option value="fortnight" <?php if($group_type == 'fortnight'){ echo 'selected'; } ?> >Fortnight</option>
                                             <option value="weekly" <?php if($group_type == 'weekly'){ echo 'selected'; } ?> >Weekly</option>
                                             <option value="daily" <?php if($group_type == 'daily'){ echo 'selected'; } ?> >Daily</option>
                                         </select> 

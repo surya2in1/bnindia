@@ -100,8 +100,8 @@ class GroupsController extends AppController
                     echo 0;
                 } 
             } 
+            exit;   
         }
-       
      }
 
      function addGroupMembers(){
