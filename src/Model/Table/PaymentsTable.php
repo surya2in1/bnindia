@@ -170,31 +170,31 @@ class PaymentsTable extends Table
     {
         $validator = $this->validationDefault($validator);
 
-        $validator->allowEmpty('cash_received_date', function ($context) {
+        $validator->allowEmptyString('cash_received_date',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('cheque_no', function ($context) {
+        $validator->allowEmptyString('cheque_no',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('cheque_date', function ($context) {
+        $validator->allowEmptyDate('cheque_date',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('cheque_bank_details', function ($context) {
+        $validator->allowEmptyString('cheque_bank_details',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('cheque_drown_on', function ($context) {
+        $validator->allowEmptyString('cheque_drown_on',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('direct_debit_date', function ($context) {
+        $validator->allowEmptyDate('direct_debit_date',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
-        $validator->allowEmpty('direct_debit_transaction_no', function ($context) {
+        $validator->allowEmptyString('direct_debit_transaction_no',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
 
@@ -207,12 +207,12 @@ class PaymentsTable extends Table
         // ]);
 
         //for cash
-        $validator->notEmpty('cash_received_date', 'Received Date is required', function ($context) {
+        $validator->notEmptyDate('cash_received_date', 'Received Date is required', function ($context) {
             return $context['data']['received_by'] === 1;
         }); 
 
         //for cheque
-        $validator->notEmpty('cheque_no', 'Cheque No is required', function ($context) {
+        $validator->notEmptyString('cheque_no', 'Cheque No is required', function ($context) {
             return $context['data']['received_by'] === 2;
         });
 
@@ -223,21 +223,21 @@ class PaymentsTable extends Table
                                 return ($context['data']['received_by'] === 2);
                             }
                         ]);
-        $validator->notEmpty('cheque_date', 'Cheque Date is required', function ($context) {
+        $validator->notEmptyDate('cheque_date', 'Cheque Date is required', function ($context) {
             return $context['data']['received_by'] === 2;
         }); 
-        $validator->notEmpty('cheque_bank_details', 'Cheque Bank Details is required', function ($context) {
+        $validator->notEmptyString('cheque_bank_details', 'Cheque Bank Details is required', function ($context) {
             return $context['data']['received_by'] === 2;
         });
-        $validator->notEmpty('cheque_drown_on', 'Cheque Drown On is required', function ($context) {
+        $validator->notEmptyString('cheque_drown_on', 'Cheque Drown On is required', function ($context) {
             return $context['data']['received_by'] === 2;
         });
 
         //for Direct debit
-        $validator->notEmpty('direct_debit_date', 'Direct Debit Date is required', function ($context) {
+        $validator->notEmptyDate('direct_debit_date', 'Direct Debit Date is required', function ($context) {
             return $context['data']['received_by'] === 3;
         }); 
-        $validator->notEmpty('direct_debit_transaction_no', 'Direct Debit Transaction No. is required', function ($context) {
+        $validator->notEmptyString('direct_debit_transaction_no', 'Direct Debit Transaction No. is required', function ($context) {
             return $context['data']['received_by'] === 3;
         });
 

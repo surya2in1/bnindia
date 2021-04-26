@@ -152,20 +152,22 @@ class PaymentsController extends AppController
     function getPaymentsInfo(){
         $post = $this->request->getData();
         $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
-         
+        $user_id = isset($post['user_id']) && $post['user_id']>0  ? $post['user_id'] : 0;
 
         $payment= TableRegistry::get('Payments');
         $subquery = $payment->find();
 
         $subquery->select([
             'pauction_id' => 'Payments.auction_id',
+            'puser_id' => 'Payments.user_id',
             'premark'=>'Payments.remark',
             'pinstalment_month' => 'Payments.instalment_month',
             'plate_fee' => 'Payments.late_fee',
             'pis_installment_complete' => 'Payments.is_installment_complete',
             'ptotal_amount' => 'Payments.total_amount',
             'ppending_amount' => 'Payments.pending_amount',
-        ])->order(['id desc'])->LIMIT(1);
+        ]) 
+        ->order(['id desc'])->LIMIT(1);
 
         $auctionTable= TableRegistry::get('Auctions'); 
         $query = $auctionTable->find();
@@ -181,13 +183,13 @@ class PaymentsController extends AppController
                   'table' => '('.$subquery.')',
                   'alias' => 'p',
                   'type' => 'LEFT',
-                  'conditions' => 'pauction_id=Auctions.id',
+                  'conditions' => 'pauction_id=Auctions.id AND puser_id='.$user_id,
               ]) 
               ->where(['Auctions.id'=>$auction_id])
               ->where(['OR'=>['p.pis_installment_complete !='=>1,'p.pis_installment_complete is '=> NULL]
-            ])
-              ->first(); 
-    // echo '111<pre>';print_r($payment_info);exit;
+            ]);
+              // ->first(); 
+    echo '111<pre>';print_r($payment_info);exit;
               echo json_encode($payment_info);exit;
     }
 

@@ -273,6 +273,7 @@ function getInstalmentNo(){
 
 function getRemaingPayments(){
 	var auction_id = $('#instalment_no').find(':selected').attr('data-id');
+    var user_id = $('#members').val(); 
     clear_fields();
 	 if(auction_id == ''){ 
         return false;
@@ -281,7 +282,7 @@ function getRemaingPayments(){
 	$.ajax({
 		   "url": $('#router_url').val()+"Payments/getPaymentsInfo",
             "type": "POST",
-            "data": {"auction_id":auction_id}
+            "data": {"auction_id":auction_id,"user_id":user_id}
         			,
             beforeSend: function (xhr) { // Add this line
                 xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
