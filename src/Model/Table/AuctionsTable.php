@@ -8,6 +8,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Datasource\ConnectionManager;
+use Cake\Core\Configure;
 
 /**
  * Auctions Model
@@ -134,16 +135,49 @@ class AuctionsTable extends Table
                 $last_auction_date = isset($context['data']['last_auction_date']) && !empty($context['data']['last_auction_date']) ? $context['data']['last_auction_date'] : '';
 
                 if( $last_auction_date){
-                    $last_dt_auction_date = date("Y-m-t", strtotime($last_auction_date)); 
-                    $last_dt_of_next_auctiondt_month = date('Y-m-t', strtotime('+1 month', strtotime($last_auction_date)));
-                    $correct_month=date("F",strtotime($last_dt_of_next_auctiondt_month));
-                    $correct_year=date("Y",strtotime($last_dt_of_next_auctiondt_month));
-                     // echo  '$auction_date = '.$auction_date.' // last_dt_auction_date= '.$last_dt_auction_date.' // last_dt_of_next_auctiondt_month = '.$last_dt_of_next_auctiondt_month;
+
+                    $group_type = isset($context['data']['group_type']) ? $context['data']['group_type'] : '';
                      
-                    if($auction_date > $last_dt_auction_date && $auction_date <= $last_dt_of_next_auctiondt_month){ 
+                    //generate next auction date as per group type
+                    if($group_type == Configure::read('monthly')){ 
+                        $last_dt_auction_date = date('Y-m-01', strtotime('+1 month', strtotime($last_auction_date))); 
+                        $last_dt_of_next_auctiondt_month = date('Y-m-t', strtotime('+1 month', strtotime($last_auction_date)));
+                    }
+
+                    if($group_type == Configure::read('fortnight')){ 
+                        if($last_auction_date >= date('Y-m-01',strtotime($last_auction_date)) && $last_auction_date <= date('Y-m-15',strtotime($last_auction_date)) ){
+
+                            $last_dt_auction_date = date('Y-m-16',strtotime($last_auction_date));
+                            $last_dt_of_next_auctiondt_month =date('Y-m-t',strtotime($last_auction_date));
+                        } 
+                        if($last_auction_date >= date('Y-m-16',strtotime($last_auction_date)) && $last_auction_date <= date('Y-m-t',strtotime($last_auction_date)) ){
+
+                            $last_dt_auction_date = date('Y-m-01',strtotime('+1 month', strtotime($last_auction_date)));
+                            $last_dt_of_next_auctiondt_month =date('Y-m-15',strtotime('+1 month', strtotime($last_auction_date)));
+                        }
+                    }
+
+                    if($group_type == Configure::read('weekly')){
+                        $last_dt_auction_date = date('Y-m-d', strtotime('next monday', strtotime($last_auction_date)));
+                        $last_dt_of_next_auctiondt_month = date('Y-m-d', strtotime('next sunday', strtotime($last_dt_auction_date)));
+                    }
+
+                    if($group_type == Configure::read('daily')){
+                        $nextday = date('Y-m-d', strtotime($last_auction_date. ' + 1 days'));
+                        $last_dt_auction_date = $nextday;
+                        $last_dt_of_next_auctiondt_month = $nextday;
+                    }
+
+                     // echo  '$auction_date = '.$auction_date.' // last_dt_auction_date= '.$last_dt_auction_date.' // last_dt_of_next_auctiondt_month = '.$last_dt_of_next_auctiondt_month;
+                     // exit;
+                    if($auction_date >= $last_dt_auction_date && $auction_date <= $last_dt_of_next_auctiondt_month){ 
                         return true;
-                    }else{
-                         return 'Please select "Auction Date" in '.$correct_month.' '.$correct_year; 
+                    }else{ 
+                        if($group_type == Configure::read('daily')){
+                            return 'Please select "Auction Date" must be '.$last_dt_auction_date; 
+                        }else{
+                            return 'Please select "Auction Date" in between '.$last_dt_auction_date.' and '.$last_dt_of_next_auctiondt_month; 
+                        } 
                     } 
                 }else{ 
                    return true;

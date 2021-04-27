@@ -236,6 +236,7 @@ $('#groups').change(function(e) {
     $('#auction_no').val(0);
     $('#total_members').val(0);
     $('#premium').val(0);
+    $('#group_type').val('');
     if(group_id == ''){
         $('#auction_winner_member').html(member_options);
         return false;
@@ -262,6 +263,7 @@ $('#groups').change(function(e) {
                             $('#chit_amount').val(result.groups.chit_amount);
                             $('#total_members').val(result.groups.total_number);
                             $('#premium').val(result.groups.premium);
+                            $('#group_type').val(result.groups.group_type);
                         }
                         if(result.auction_count){
                             $('#auction_no').val(result.auction_count);

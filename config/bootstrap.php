@@ -218,3 +218,8 @@ Configure::write('ROLE_ADMIN','admin');
 Configure::write('ROLE_SUPERADMIN','superadmin');
 Configure::write('ROLE_MEMBER','member');
 Configure::write('ROLE_USER','user');
+
+Configure::write('monthly','monthly');
+Configure::write('fortnight','fortnight');
+Configure::write('weekly','weekly');
+Configure::write('daily','daily');

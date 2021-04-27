@@ -77,7 +77,7 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','chit_amount','total_number','premium','date','late_fee'])
+                                    ->select(['id','chit_amount','total_number','premium','date','late_fee','group_type'])
                                     ->contain(['Auctions' => function($q) use ($group_id) {
                                           return $q
                                               ->select(['Auctions.group_id','Auctions.auction_date',
