@@ -330,7 +330,7 @@ function calculate_no_of_months(){
 		var total_months = chit_amount / premium;
 		var group_type = $('#group_type').val();
 		var no_of_months = Math.ceil(total_months);
-		if(group_type == 'forthnight'){
+		if(group_type == 'fortnight'){
 			no_of_months = Math.ceil(total_months / 2);
 		}else if(group_type=='weekly'){
 			no_of_months = Math.ceil(total_months / 4);

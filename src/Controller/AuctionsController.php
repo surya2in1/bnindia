@@ -75,12 +75,22 @@ class AuctionsController extends AppController
             if(strtotime($post['auction_date']) > 0){
                 $post['auction_date'] = date('Y-m-d',strtotime($post['auction_date']));
             }
-           // echo '<pre>';print_r($post);exit;  
+
+            // echo '<pre>';print_r($post);exit; 
             $auction = $this->Auctions->patchEntity($auction, $post);
             if ($result = $this->Auctions->save($auction)) { 
                 //check if all auction complete then update groups 
+                //chit_amount =  premium * auction_count  
+                $groupInfo =  $GroupsTable->find()->select(['chit_amount','premium'])->where(['id' => $post['group_id']])->first();  
                 $groupAuctionCount = $this->Auctions->find('all', array('conditions' => ['group_id' => $post['group_id']]));
-                if($groupAuctionCount->count() == $post['total_members']){
+
+                $chit_amount = ($groupInfo->chit_amount) ? $groupInfo->chit_amount : 0;
+                $premium = ($groupInfo->premium) ? $groupInfo->premium : 0;
+                $auction_count = ($groupAuctionCount->count()) ? $groupAuctionCount->count() : 0;
+                $total_auction_amount = ($premium*$auction_count);
+                // echo $chit_amount.'/ $premium '.$premium.' / auccnt '.$auction_count.'//tt '.$total_auction_amount;exit;
+               
+                if($total_auction_amount >= $chit_amount){
                     $GroupsTable = TableRegistry::get('Groups');
                     $query = $GroupsTable->query();
                             $query->update()
