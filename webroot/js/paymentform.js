@@ -303,8 +303,8 @@ function getRemaingPayments(){
                 var g_due_date = $('#group_due_date').val();
                 var auction_date = (result.auction_date) ? (result.auction_date) :'';
                 var get_group_due_dt = create_date_from_day(g_due_date,auction_date);
-
-                var group_due_date = $('#due_date').val(get_group_due_dt); 
+                $('#due_date').val(get_group_due_dt);
+                var group_due_date = $('#due_date').val(); 
                 var late_fee =0;
 
                 if(group_late_fee > 0 && group_due_date != ''){
