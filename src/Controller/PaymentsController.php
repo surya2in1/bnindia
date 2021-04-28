@@ -187,9 +187,8 @@ class PaymentsController extends AppController
               ]) 
               ->where(['Auctions.id'=>$auction_id])
               ->where(['OR'=>['p.pis_installment_complete !='=>1,'p.pis_installment_complete is '=> NULL]
-            ]);
-              // ->first(); 
-    echo '111<pre>';print_r($payment_info);exit;
+            ])->first(); 
+    // echo '111<pre>';print_r($payment_info);exit;
               echo json_encode($payment_info);exit;
     }
 

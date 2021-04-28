@@ -178,6 +178,7 @@ use Cake\Routing\Router;
                                         <input type="hidden" name="net_subscription_amount" id="net_subscription_amount" />
                                         <input type="hidden" name="pending_amount" id="pending_amount" />
                                         <input type="hidden" name="auction_id" id="auction_id" />
+                                        <input type="hidden" name="group_due_date" id="group_due_date" />
                                     </div>
                                 </div>
 

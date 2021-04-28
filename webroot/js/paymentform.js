@@ -179,6 +179,7 @@ function clear_fields(){
     $('#net_subscription_amount').val('0.00');
     $('#pending_amount').val('0.00');
     $('#auction_id').val('0.00'); 
+    $('#due_date').val('');
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -189,7 +190,7 @@ $('#groups').change(function(e) {
         $('#members').html(member_options);
         return false;
     }
-    $('#due_date').val('');
+    $('#group_due_date').val('');
     $('#subscriber_ticket_no').val('');
     $('#group_late_fee').val('');
     clear_fields();
@@ -214,7 +215,7 @@ $('#groups').change(function(e) {
 						});
             		}
                     var auction_date = (result.groups.auctions) ? result.groups.auctions[0].auction_date : '';
-                    $('#due_date').val(create_date_from_day(result.groups.date,auction_date));
+                    $('#group_due_date').val(result.groups.date);
                     $('#subscriber_ticket_no').val(result.ticket_no);
                     $('#group_late_fee').val(result.groups.late_fee);
             	} 
@@ -299,7 +300,11 @@ function getRemaingPayments(){
 
                 //Calculate late fee
                 var group_late_fee = $('#group_late_fee').val();
-                var group_due_date = $('#due_date').val(); 
+                var g_due_date = $('#group_due_date').val();
+                var auction_date = (result.auction_date) ? (result.auction_date) :'';
+                var get_group_due_dt = create_date_from_day(g_due_date,auction_date);
+
+                var group_due_date = $('#due_date').val(get_group_due_dt); 
                 var late_fee =0;
 
                 if(group_late_fee > 0 && group_due_date != ''){
