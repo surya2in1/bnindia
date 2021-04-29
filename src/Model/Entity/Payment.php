@@ -19,8 +19,7 @@ use Cake\ORM\Entity;
  * @property int $instalment_month
  * @property int $subscription_amount
  * @property int $late_fee
- * @property int $received_by
- * @property \Cake\I18n\FrozenDate $cash_received_date
+ * @property int $received_by 
  * @property string $cheque_no
  * @property \Cake\I18n\FrozenDate $cheque_date
  * @property int $cheque_bank_details
@@ -56,8 +55,7 @@ class Payment extends Entity
         'instalment_month' => true,
         'subscription_amount' => true,
         'late_fee' => true,
-        'received_by' => true,
-        'cash_received_date' => true,
+        'received_by' => true, 
         'cheque_no' => true,
         'cheque_date' => true,
         'cheque_bank_details' => true,

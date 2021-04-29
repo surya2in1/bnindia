@@ -70,12 +70,11 @@ class PaymentsController extends AppController
         $members = [];
         if($id>0){
             $payment = $this->Payments->get($id, [
-                'contain' => ['Groups','Members'],
+                'contain' => ['Groups'],
             ]);
             $payment_member_id =  $payment->user_id;
             $payment_group_id =  $payment->group_id;
-            $groups = $this->Common->getMemberGroups($payment_member_id); 
-            $members = $this->Common->getGroupMember($payment_group_id);
+            $groups = $this->Common->getMemberGroups($payment_member_id);  
         }else{
             $payment_receipt_no = $this->Payments->find()->count();
             $receipt_no = $payment_receipt_no +1;
@@ -96,7 +95,7 @@ class PaymentsController extends AppController
                     ->group(['Auctions.group_id'])->toArray();
         // echo '$groups<pre>';print_r($groups);exit;
        
-        $this->set(compact('payment', 'groups', 'members','payment_member_id','payment_group_id','receipt_no'));
+        $this->set(compact('payment', 'groups', 'payment_member_id','payment_group_id','receipt_no'));
 
         if ($this->request->is('post')) {
           $post = $this->request->getData();
@@ -104,9 +103,7 @@ class PaymentsController extends AppController
           //convert dates to db field format
           $post['due_date'] = (strtotime($post['due_date']) > 0) ? date('Y-m-d',strtotime($post['due_date'])): '';
           $post['date'] = (strtotime($post['date']) > 0) ? date('Y-m-d',strtotime($post['date'])): '';
-          
-          $post['cash_received_date'] = (strtotime($post['cash_received_date']) > 0) ? date('Y-m-d',strtotime($post['cash_received_date'])): '';
-
+        
           $post['cheque_date'] = (strtotime($post['cheque_date']) > 0) ? date('Y-m-d',strtotime($post['cheque_date'])): '';
           
           $post['direct_debit_date'] = (strtotime($post['direct_debit_date']) > 0) ? date('Y-m-d',strtotime($post['direct_debit_date'])): '';

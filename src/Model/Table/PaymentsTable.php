@@ -121,11 +121,6 @@ class PaymentsTable extends Table
             ->notEmptyString('received_by');
 
         // $validator
-        //     ->date('cash_received_date')
-        //     ->requirePresence('cash_received_date', 'create')
-        //     ->notEmptyDate('cash_received_date');
-
-        // $validator
         //     ->scalar('cheque_no')
         //     ->maxLength('cheque_no', 500)
         //     ->requirePresence('cheque_no', 'create')
@@ -169,11 +164,7 @@ class PaymentsTable extends Table
     public function validationReceivedby(Validator $validator)
     {
         $validator = $this->validationDefault($validator);
-
-        $validator->allowEmptyString('cash_received_date',null, function ($context) {
-            return $context['data']['received_by'] === '';
-        });
-
+      
         $validator->allowEmptyString('cheque_no',null, function ($context) {
             return $context['data']['received_by'] === '';
         });
@@ -205,11 +196,6 @@ class PaymentsTable extends Table
         //         return $context['data']['received_by'] === 'credit_card';
         //     }
         // ]);
-
-        //for cash
-        $validator->notEmptyDate('cash_received_date', 'Received Date is required', function ($context) {
-            return $context['data']['received_by'] === 1;
-        }); 
 
         //for cheque
         $validator->notEmptyString('cheque_no', 'Cheque No is required', function ($context) {

@@ -92,15 +92,6 @@ var KTBootstrapDatepicker = function () {
             todayHighlight: true,
             templates: arrows
         });
-
-        $('#cash_received_datepicker').datepicker({
-            rtl: KTUtil.isRTL(),
-            todayBtn: "linked",
-            clearBtn: true,
-            todayHighlight: true,
-            templates: arrows, 
-            autoclose: true,
-        });
         
         $('#cheque_date_datepicker').datepicker({
             rtl: KTUtil.isRTL(),

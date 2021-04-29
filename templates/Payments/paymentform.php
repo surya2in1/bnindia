@@ -50,9 +50,18 @@ use Cake\Routing\Router;
                                 </div> 
 
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->date) && strtotime($payment->date) > 0 ? date('m/d/Y',strtotime($payment->date)) : date('m/d/Y');?>" name="date"  title="You can not change this value."> 
+                                        </div>
+                                    </div>
+                                </div>  
+
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Group:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <?php $payment_group_id =  isset($payment->group_id) ? $group->group_id : 0;?>
+                                        <?php $payment_group_id =  isset($payment->group_id) ? $payment->group_id : 0;?>
                                         <!-- Get groups after select member -->
                                         <select id="groups" name="group_id" class="form-control"  onchange="getInstalmentNo();">
                                             <option value="">Select Group</option>
@@ -71,25 +80,31 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <?php $payment_member_id =  isset($payment->user_id) ? $payment->user_id : 0;
                                         ?>
+                                        <input type="hidden" name="payment_member_id" id="payment_member_id" value="<?= $payment_member_id ?>">
+
                                         <!-- Get member list -->
                                         <select id="members" name="user_id" class="form-control" onchange="getInstalmentNo();">
                                              <option value="">Select Member</option>
-                                            <?php if($members){ 
-                                                foreach ($members as $key => $member) {
-                                                    ?>
-                                                    <option <?php if($key == $payment_member_id){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$member?></option>
-                                               <?php } 
-                                            }  ?> 
+                                             
                                         </select> 
                                     </div>
                                     <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner-member"></div>
                                 </div>
 
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Subscriber Ticket No:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>"  id="subscriber_ticket_no" readonly title="You can not change this value.">
+                                    </div>
+                                </div> 
+
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Instalment No:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $payment_instalment_no =  isset($payment->instalment_no) ? $payment->instalment_no : 0;
                                         ?>
+                                         <input type="hidden" name="payment_instalment_no" id="payment_instalment_no" value="<?= $payment_instalment_no ?>">
+
                                         <!-- Get payment_instalment_no list -->
                                         <select id="instalment_no" name="instalment_no" class="form-control" onchange="getRemaingPayments();">
                                              <option value="">Select Instalment No</option>
@@ -143,27 +158,6 @@ use Cake\Routing\Router;
                                 </div>  
 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->date) && strtotime($payment->date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="payment_date_datepicker" name="date">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="la la-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>  
-
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Subscriber Ticket No:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="subscriber_ticket_no" placeholder="Enter Subscriber Ticket No" value="<?= isset($payment->subscriber_ticket_no) ? $payment->subscriber_ticket_no : '';?>"  id="subscriber_ticket_no" readonly title="You can not change this value.">
-                                    </div>
-                                </div> 
-
-                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Subscription Rs:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" min="1" class="form-control" name="subscription_amount" placeholder="Enter Subscription Rs" value="<?= isset($payment->subscription_amount) ? $payment->subscription_amount : '';?>" id="subscription_amount" onchange="calculate_total_amount()">
@@ -195,21 +189,6 @@ use Cake\Routing\Router;
                                         </select>  
                                     </div>
                                 </div>
-
-                                <!-- If Cash select then show below -->
-                                <div class="form-group row hide-div cash-div rec-by-div">
-                                    <label class="col-lg-3 col-form-label">Received  Date:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">
-                                        <div class="input-group date">
-                                            <input type="text" class="form-control" readonly="" value="<?= isset($payment->cash_received_date) && strtotime($payment->cash_received_date) > 0 ? date('m/d/Y',strtotime($payment->date)) : '';?>" id="cash_received_datepicker" name="cash_received_date">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="la la-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>  
 
                                 <!-- If Cheque select then show below -->
                                 <div class="form-group row hide-div cheque-div rec-by-div">

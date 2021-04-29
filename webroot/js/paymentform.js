@@ -54,10 +54,6 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                received_by:{
 	                	required:true
 	                }, 
-	                cash_received_date: { required: function(element){
-                            return $("#received_by option:selected").val() == 1;
-                            } 
-            		},
             		cheque_no: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
                             }, number:true
@@ -167,7 +163,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();  
-	getInstalmentNo();
+    var group_id = $('#groups').val(); 
+    if(group_id> 0){
+        $('#groups').trigger('change');  
+    }
 });
 
 function clear_fields(){
@@ -180,6 +179,7 @@ function clear_fields(){
     $('#pending_amount').val('0.00');
     $('#auction_id').val('0.00'); 
     $('#due_date').val('');
+    $('#subscriber_ticket_no').val('');
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -191,7 +191,6 @@ $('#groups').change(function(e) {
         return false;
     }
     $('#group_due_date').val('');
-    $('#subscriber_ticket_no').val('');
     $('#group_late_fee').val('');
     clear_fields();
 	$('.bnspinner').removeClass('hide');
@@ -208,18 +207,25 @@ $('#groups').change(function(e) {
             	$('.bnspinner').addClass('hide');
             	var result = JSON.parse(response);
             	// var member_options = '';
+                var payment_member_id = $('#payment_member_id').val();
             	if(result !=''){
             		if((result.group_members)!=''){
 	            		$.each(result.group_members, function( key, value ) { 
-						  member_options += '<option value="'+key+'">'+value+'</option>';
+                            var selected = '';
+                            if(payment_member_id == value.user_id){
+                                selected = 'selected';
+                            }
+						  member_options += '<option value="'+value.user_id+'" '+selected+' data-ticket_no="'+value.ticket_no+'">'+value.name+'</option>';
 						});
             		}
                     var auction_date = (result.groups.auctions) ? result.groups.auctions[0].auction_date : '';
                     $('#group_due_date').val(result.groups.date);
-                    $('#subscriber_ticket_no').val(result.ticket_no);
                     $('#group_late_fee').val(result.groups.late_fee);
             	} 
             	$('#members').html(member_options);
+                 if(payment_member_id>0){
+                    $('#members').trigger('change'); 
+                 }
             }
 		}); 
 });
@@ -230,9 +236,7 @@ $('#received_by').change(function(e) {
     $('.rec-by-div').find(':input').each(function () {
          $(this).val('');
     });
-	if(received_by == 1){ 
-		$('.cash-div').removeClass('hide-div');
-	}else if(received_by == 2){
+	if(received_by == 2){
 		$('.cheque-div').removeClass('hide-div');
 	}else if(received_by == 3){
 		$('.direct-debit-div').removeClass('hide-div');
@@ -261,13 +265,22 @@ function getInstalmentNo(){
             },
             success: function(response, status, xhr, $form) {
             	$('.bnspinner-member').addClass('hide');
+                $('#subscriber_ticket_no').val($('#members').find(':selected').attr('data-ticket_no'));
             	var result = JSON.parse(response); 
+                var payment_instalment_no = $('#payment_instalment_no').val();
             	if(result !=''){ 
 	            		$.each(result, function( key, value ) { 
-						  instalment_nos_options += '<option value="'+value.auction_no+'" data-id="'+value.id+'">'+value.auction_no+'</option>';
+                            var selected = '';
+                            if(payment_instalment_no == value.auction_no){
+                                selected = 'selected';
+                            }
+						   instalment_nos_options += '<option value="'+value.auction_no+'" '+selected+' data-id="'+value.id+'">'+value.auction_no+'</option>';
 						}); 
             	} 
             	$('#instalment_no').html(instalment_nos_options);
+                if(payment_instalment_no>0){
+                    $('#instalment_no').trigger('change'); 
+                }
             }
 		}); 
 }

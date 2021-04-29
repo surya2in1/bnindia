@@ -103,7 +103,7 @@ class CommonComponent extends Component {
                 $selected_group_members[$value->user_id] = $value->name; 
             }
         }
-        $groupmembers['group_members'] = $selected_group_members;
+        $groupmembers['group_members'] = $group_members;
         return $groupmembers;
   }
 
