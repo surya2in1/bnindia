@@ -167,6 +167,9 @@ jQuery(document).ready(function() {
     if(group_id> 0){
         $('#groups').trigger('change');  
     }
+    if($('#received_by').val() >0){
+        $('#received_by').trigger('change');  
+    }
 });
 
 function clear_fields(){

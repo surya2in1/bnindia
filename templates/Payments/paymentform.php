@@ -179,7 +179,9 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Received by:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
+
                                          <?php $received_by =  isset($payment->received_by) ? $payment->received_by : 'monthly';?>
+                                         
                                         <select id="received_by" name="received_by" class="form-control"> 
                                             <option value="">Select</option>
                                             <!--Show months in php list-->
