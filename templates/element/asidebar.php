@@ -193,7 +193,7 @@
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">Add Payment</span>',
+                                                    <span class="kt-menu__link-text">Add Receipt</span>',
                                                     array('controller'=>'Payments','action'=>'paymentform'),
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>

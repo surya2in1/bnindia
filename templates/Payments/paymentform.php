@@ -26,7 +26,7 @@ use Cake\Routing\Router;
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                            <?= ($paymentid > 0 ) ? 'Edit Payment' : 'Add Payment'; ?> 
+                            <?= ($paymentid > 0 ) ? 'Edit Receipt' : 'Add Receipt'; ?> 
                             <lable>(Fields marked with * are mandatory.)</lable>
                         </h3>
                     </div>
