@@ -70,7 +70,6 @@ class CommonComponent extends Component {
 	}
 
   function getGroupMember($group_id){
-        $selected_group_members =[];
         $groupmembers =[];
         $group_members= TableRegistry::get('MembersGroups');
         $group_members = $group_members->find('all', [
@@ -99,10 +98,7 @@ class CommonComponent extends Component {
             $groupmembers['ticket_no'] = isset($group_members[0]['ticket_no']) ? $group_members[0]['ticket_no'] : '';
             $groupmembers['auction_count'] = isset($group_members[0]['group']['auctions'][0]['auction_count']) && ($group_members[0]['group']['auctions'][0]['auction_count'] > 0) ? ($group_members[0]['group']['auctions'][0]['auction_count']+1) : 1;
             $groupmembers['groups'] = isset($group_members[0]['group']) ? $group_members[0]['group'] : '';
-            foreach ($group_members as $key => $value) { 
-                $selected_group_members[$value->user_id] = $value->name; 
-            }
-        }
+         }
         $groupmembers['group_members'] = $group_members;
         return $groupmembers;
   }
@@ -125,7 +121,7 @@ class CommonComponent extends Component {
               'conditions' => 'p.auction_id=Auctions.id',
           ]) 
           ->where(['Auctions.group_id'=>$group_id])
-          ->group('Auctions.auction_no HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = '.$member_id.' and group_id = '.$group_id.' and is_installment_complete = 1 GROUP BY group_id,user_id ASC) or pid is null')
+          ->group('Auctions.auction_no HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = '.$member_id.' and group_id = '.$group_id.' and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id  ASC) or pid is null')
           ->toArray(); 
     // echo '111<pre>';print_r($instalment_nos);exit;
           return $instalment_nos;

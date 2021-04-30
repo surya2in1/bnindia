@@ -181,8 +181,7 @@ function clear_fields(){
     $('#net_subscription_amount').val('0.00');
     $('#pending_amount').val('0.00');
     $('#auction_id').val('0.00'); 
-    $('#due_date').val('');
-    $('#subscriber_ticket_no').val('');
+    $('#due_date').val(''); 
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -195,6 +194,7 @@ $('#groups').change(function(e) {
     }
     $('#group_due_date').val('');
     $('#group_late_fee').val('');
+    $('#subscriber_ticket_no').val('');
     clear_fields();
 	$('.bnspinner').removeClass('hide');
 	$.ajax({
@@ -257,6 +257,7 @@ function getInstalmentNo(){
         $('#instalment_no').html(instalment_nos_options);
         return false;
     } 
+    $('#subscriber_ticket_no').val('');
 	$('.bnspinner-member').removeClass('hide');
 	$.ajax({
 		   "url": $('#router_url').val()+"Payments/getInstalmentNo",

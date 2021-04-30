@@ -63,7 +63,7 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <?php $payment_group_id =  isset($payment->group_id) ? $payment->group_id : 0;?>
                                         <!-- Get groups after select member -->
-                                        <select id="groups" name="group_id" class="form-control"  onchange="getInstalmentNo();">
+                                        <select id="groups" name="group_id" class="form-control">
                                             <option value="">Select Group</option>
                                              <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
