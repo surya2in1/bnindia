@@ -265,6 +265,27 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>
 
+                                 <div class="form-group row kt-portlet__body">
+
+                                    <!--begin: Datatable -->
+                                    <table class="table table-striped- table-bordered table-hover table-checkable" id="due_payment_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Receipt No.</th>
+                                                <th>Group Code</th>
+                                                <th>Member</th>
+                                                <th>Subscription Amount</th>
+                                                <th>Late Fee</th>
+                                                <th>Total Amount</th>
+                                                <th>Received By</th> 
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                    <!--end: Datatable -->
+                                </div>
+
 
                             </div>
                         </div>

@@ -48,3 +48,37 @@ having pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id 
  
 
 
+SELECT (MAX(p.id)) AS pid,p.subscription_amount, Auctions.net_subscription_amount, ( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) AS pending_amt, ( CASE WHEN p.instalment_no > 0 THEN p.instalment_no ELSE Auctions.auction_no END) AS pinstalment_no, MONTHNAME(Auctions.auction_date) , p.late_fee FROM auctions Auctions LEFT JOIN payments p ON p.auction_id=Auctions.id WHERE Auctions.group_id = 13 GROUP BY Auctions.auction_no HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 3 and group_id = 13 and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null
+--------------------------------------------------------------------------------
+
+SELECT (MAX(p.id)) AS pid, Auctions.auction_no AS Auctions__auction_no, Auctions.id AS Auctions__id 
+
+FROM auctions Auctions 
+LEFT JOIN payments p ON p.auction_id=Auctions.id 
+
+WHERE Auctions.group_id = 13
+
+GROUP BY Auctions.auction_no 
+HAVING pid NOT IN 
+	(SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 3 and group_id = 13 and 
+		is_installment_complete = 1 GROUP BY group_id,user_id,auction_id  ASC) or pid is null 
+-----------------------------------------------------------------------------------------------
+-- parameters group_late_fee,group_due_date
+
+SELECT (MAX(p.id)) AS pid,Auctions.auction_no,Auctions.id,MONTHNAME(Auctions.auction_date) as instalment_month,
+Auctions.net_subscription_amount,
+( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) AS 
+due_amount,
+CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date)) as 
+due_late_fee,   
+  p.late_fee 
+
+FROM auctions Auctions 
+LEFT JOIN payments p ON p.auction_id=Auctions.id 
+LEFT JOIN groups g on Auctions.group_id = g.id
+WHERE Auctions.group_id = 13 
+
+GROUP BY Auctions.auction_no 
+
+HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 3 and group_id = 13 
+	and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null
