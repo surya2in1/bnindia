@@ -270,17 +270,17 @@ use Cake\Routing\Router;
                                     <!--begin: Datatable -->
                                     <table class="table table-striped- table-bordered table-hover table-checkable" id="due_payment_table">
                                         <thead>
-                                            <tr>
-                                                <th>Receipt No.</th>
-                                                <th>Group Code</th>
-                                                <th>Member</th>
-                                                <th>Subscription Amount</th>
-                                                <th>Late Fee</th>
-                                                <th>Total Amount</th>
-                                                <th>Received By</th> 
-                                                <th>Action</th>
+                                            <tr> 
+                                                <th>Instalment No.</th>
+                                                <th>Instalment Month</th>
+                                                <th>Subcription Rs</th>
+                                                <th>Due Amount</th>
+                                                <th>Due Late Fee</th>
                                             </tr>
                                         </thead>
+                                        <tfoot align="right">
+                                            <tr><th></th><th></th><th></th><th></th><th></th></tr>
+                                        </tfoot>
                                     </table>
 
                                     <!--end: Datatable -->

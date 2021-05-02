@@ -235,4 +235,9 @@ class PaymentsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    function getDuePayments($group_id=0,$member_id=0){ 
+      $output = $this->Payments->getDuePayments($group_id,$member_id);
+      echo json_encode($output);exit;
+    }
 }

@@ -1,5 +1,5 @@
 "use strict"; 
-var table = $('#payment_table'); 
+var table = $('#due_payment_table'); 
 var KTDatatablesDataSourceAjaxServer = function() {
 
 	var payment_form = function () {
@@ -151,11 +151,132 @@ var KTDatatablesDataSourceAjaxServer = function() {
             });	
 		});
 	}
+    
+     var initTable1 = function() {
+        var i =0;
+        var group_id = $('#groups').val();
+        var member_id = $('#members').val();
 
+        // SUM PLUGIN
+        jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+            return this.flatten().reduce( function ( a, b ) {
+                 if ( typeof a === 'string' ) {
+                    a = a.replace(/[^\d.-]/g, '') * 1;
+                }
+                if ( typeof b === 'string' ) {
+                    b = b.replace(/[^\d.-]/g, '') * 1;
+                } 
+                return a + b;
+            }, 0 );
+        } );
+
+        // begin first group_members_table
+        table.DataTable({
+            "lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
+            responsive: true,
+            searchDelay: 500,
+            processing: true,
+            serverSide: true,
+            "order": [[ 0, 'asc' ]],
+            "ajax": {
+                "url": $('#router_url').val()+"Payments/getDuePayments/"+group_id+"/"+member_id,
+                "type": "POST", 
+                beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+            },
+            columns: [   
+                {data: 'auction_no'},
+                {data: 'instalment_month'},
+                {data: 'net_subscription_amount'}, 
+                {data: 'due_amount'}, 
+                {data: 'due_late_fee'} 
+            ],  
+            "fnDrawCallback": function() {
+                var api = this.api()
+                var json = api.ajax.json();
+                console.log(json);
+                alert(json.iTotalDisplayRecords);
+                $(api.column(4).footer()).html('Total: '+json.iTotalDisplayRecords);
+            }, 
+            "footerCallback": function ( row, data, start, end, display ) {
+                // console.log(row);
+                // var api = this.api(),
+                //         columns = [ 4]; // Add columns here
+                    
+                //     for (var i = 0; i < columns.length; i++) {
+                //     $('tfoot th').eq(columns[i]).html('Total: ' + api.column(columns[i], {filter: 'applied'}).data().sum() + '<br>');
+                //     // $('tfoot th').eq(columns[i]).append('Page: ' + api.column(columns[i], { filter: 'applied', page: 'current' }).data().sum());
+                //   }
+                
+                // var api = this.api(), data;
+     
+                // converting to interger to find total
+                // var intVal = function ( i ) {
+                //     return typeof i === 'string' ?
+                //         i.replace(/[\$,]/g, '')*1 :
+                //         typeof i === 'number' ?
+                //             i : 0;
+                // };
+     
+                // computing column Total of the complete result 
+                // var monTotal = api
+                //     .column( 1 )
+                //     .data()
+                //     .reduce( function (a, b) {
+                //         return intVal(a) + intVal(b);
+                //     }, 0 );
+                    
+                // var tueTotal = api
+                //         .column( 2 )
+                //         .data()
+                //         .reduce( function (a, b) {
+                //             return intVal(a) + intVal(b);
+                //         }, 0 );
+                        
+                //     var wedTotal = api
+                //         .column( 3 )
+                //         .data()
+                //         .reduce( function (a, b) {
+                //             return intVal(a) + intVal(b);
+                //         }, 0 );
+                        
+                //  var thuTotal = api
+                //         .column( 4 )
+                //         .data()
+                //         .reduce( function (a, b) {
+                //             return intVal(a) + intVal(b);
+                //         }, 0 ); 
+
+                // // Total over this page
+                // var pageTotal = api
+                //     .column( 4, { page: 'all'} )
+                //     .data()
+                //     .reduce( function (a, b) {
+                //         return intVal(a) + intVal(b);
+                //     }, 0 );
+                    
+                // // Update footer by showing the total with the reference of the column index 
+                // $( api.column( 0 ).footer() ).html('Total');
+                // $( api.column( 1 ).footer() ).html(monTotal);
+                // $( api.column( 2 ).footer() ).html(tueTotal);
+                // $( api.column( 3 ).footer() ).html(wedTotal);
+                // $( api.column( 4 ).footer() ).html(thuTotal); 
+                
+                //  // Update footer
+                // jQuery( api.column( 4 ).footer() ).html(
+                //    // '$'+pageTotal +' ( $'+ total +' total)'
+                //    pageTotal.toFixed( 2 )
+                // );
+            },
+        }); 
+    } 
+ 
 	return {
 		//main function to initiate the module
 		init: function() {
 			payment_form();
+            initTable1();   
 		},
 
 	};
@@ -287,6 +408,7 @@ function getInstalmentNo(){
                 }
             }
 		}); 
+        table.DataTable().ajax.url($('#router_url').val()+"Payments/getDuePayments/"+group_id+"/"+member_id).load();
 }
 
 function getRemaingPayments(){

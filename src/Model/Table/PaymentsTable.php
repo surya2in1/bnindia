@@ -358,4 +358,134 @@ class PaymentsTable extends Table
          // echo '<pre>';print_r($output);exit;
         return $output;
     }
+
+    //get pending payments 
+     public function getDuePayments($group_id=0,$member_id=0) {
+        $aColumns = [ 
+            'Auctions.auction_no',
+            "MONTHNAME(Auctions.auction_date) as instalment_month",
+            'Auctions.net_subscription_amount',
+            "( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) as due_amount",
+            "CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date)) as due_late_fee" 
+        ]; 
+
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "Auctions.auction_no";
+        /* DB table to use */
+        $sTable = "auctions"; 
+
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */ 
+        $sOrder = "";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                {
+                    //remove 'as' word if exist
+                    $ordercolumns = preg_replace('/ as.*/', '', $aColumns[$_POST['order'][$i]['column']]);
+                    $sOrder .= "".$ordercolumns." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */
+        $sWhere = "WHERE Auctions.group_id = ".$group_id;
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $sWhere .= " AND (";
+
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    //remove 'as' word if exist
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                }
+                //remove last 3 words as 'OR'
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS MAX(p.id) as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))."  
+        FROM   $sTable Auctions
+            LEFT JOIN payments p ON p.auction_id=Auctions.id 
+            LEFT JOIN groups g on Auctions.group_id = g.id
+        $sWhere
+        GROUP BY Auctions.auction_no
+        HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = ".$member_id." and group_id = ".$group_id." 
+    and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null 
+        $sOrder
+        $sLimit
+        ";
+        echo $sQuery;exit;
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+       
+        /* Data set length after filtering */
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        // echo $sQuery;exit;
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+        /* Total data set length */
+        $sQuery = "
+        SELECT MAX(p.id) as pid
+        FROM   $sTable Auctions
+            LEFT JOIN payments p ON p.auction_id=Auctions.id 
+            LEFT JOIN groups g on Auctions.group_id = g.id
+        WHERE Auctions.group_id = ".$group_id."
+        GROUP BY Auctions.auction_no
+        HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = ".$member_id." and group_id = ".$group_id." 
+    and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null ";
+    // echo $sQuery;exit;
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        // echo '$aResultTotal<pre>';print_r($aResultTotal);exit;
+        $iTotal = count($aResultTotal);
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+        return $output;
+    }
 }
