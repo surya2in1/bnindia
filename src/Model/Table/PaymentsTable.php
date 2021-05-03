@@ -365,8 +365,9 @@ class PaymentsTable extends Table
             'Auctions.auction_no',
             "MONTHNAME(Auctions.auction_date) as instalment_month",
             'Auctions.net_subscription_amount',
-            "( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) as due_amount",
-            "CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date)) as due_late_fee" 
+            " @due_amount :=( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) as due_amount",
+            " @due_late_fee :=CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date)) as due_late_fee" ,
+            "(@due_amount + @due_late_fee) as total_amount"
         ]; 
 
         /* Indexed column (used for fast and accurate table cardinality) */
@@ -426,7 +427,11 @@ class PaymentsTable extends Table
                 {
                     //remove 'as' word if exist
                     $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
-                    $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                    if($i ==1){
+                        $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                    }else{
+                        $sWhere .= "".$columns." = ".( $_POST['search']['value'] )." OR ";
+                    }
                 }
                 //remove last 3 words as 'OR'
                 $sWhere = substr_replace( $sWhere, "", -3 );
@@ -439,7 +444,7 @@ class PaymentsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS MAX(p.id) as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))."  
+        SELECT SQL_CALC_FOUND_ROWS MAX(p.id) as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
         FROM   $sTable Auctions
             LEFT JOIN payments p ON p.auction_id=Auctions.id 
             LEFT JOIN groups g on Auctions.group_id = g.id
@@ -450,15 +455,23 @@ class PaymentsTable extends Table
         $sOrder
         $sLimit
         ";
-        echo $sQuery;exit;
+        // echo $sQuery;exit;
+        $modifiedQuery =str_replace('SQL_CALC_FOUND_ROWS',' ',$sQuery);
+        $modifiedQuery =   substr($modifiedQuery, 0, strpos($modifiedQuery, "LIMIT"));
+        $get_total_query = "SELECT SUM(total_amount) total_amount from (".$modifiedQuery.") t";
+        
+        $get_totalst = $conn->execute($get_total_query);
+        $get_totalResult = $get_totalst ->fetch('assoc');
+        // echo $get_total_query.'<pre>'; print_r($get_totalResult);exit;
+
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
-       
+       // echo '<pre>';print_r($rResult);exit;
+
         /* Data set length after filtering */
         $sQuery = "
         SELECT FOUND_ROWS() as cnt
         ";
-        // echo $sQuery;exit;
         $rResultFilterTotal = $conn->execute($sQuery);
         $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
         $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
@@ -472,7 +485,6 @@ class PaymentsTable extends Table
         GROUP BY Auctions.auction_no
         HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = ".$member_id." and group_id = ".$group_id." 
     and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null ";
-    // echo $sQuery;exit;
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         // echo '$aResultTotal<pre>';print_r($aResultTotal);exit;
@@ -484,7 +496,8 @@ class PaymentsTable extends Table
         "draw" => intval($_POST['draw']),
         "iTotalRecords" => $iTotal,
         "iTotalDisplayRecords" => $iFilteredTotal,
-        "aaData" =>  $rResult
+        "aaData" =>  $rResult,
+        "total_due_amount" => isset($get_totalResult['total_amount']) && ($get_totalResult['total_amount'] > 0) ? $get_totalResult['total_amount'] : '0.00'
         );
         return $output;
     }

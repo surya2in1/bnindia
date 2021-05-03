@@ -276,10 +276,11 @@ use Cake\Routing\Router;
                                                 <th>Subcription Rs</th>
                                                 <th>Due Amount</th>
                                                 <th>Due Late Fee</th>
+                                                <th>Total Due Amount</th>
                                             </tr>
                                         </thead>
-                                        <tfoot align="right">
-                                            <tr><th></th><th></th><th></th><th></th><th></th></tr>
+                                        <tfoot align="right" class="due_payment_tfoot hide-div">
+                                            <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
                                         </tfoot>
                                     </table>
 

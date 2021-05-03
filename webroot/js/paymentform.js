@@ -172,7 +172,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
         // begin first group_members_table
         table.DataTable({
-            "lengthMenu": [[1, 25, 50, -1], [1, 25, 50, "All"]],
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             responsive: true,
             searchDelay: 500,
             processing: true,
@@ -190,14 +190,16 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 {data: 'instalment_month'},
                 {data: 'net_subscription_amount'}, 
                 {data: 'due_amount'}, 
-                {data: 'due_late_fee'} 
+                {data: 'due_late_fee'},
+                {data: 'total_amount'}
             ],  
             "fnDrawCallback": function() {
                 var api = this.api()
-                var json = api.ajax.json();
-                console.log(json);
-                alert(json.iTotalDisplayRecords);
-                $(api.column(4).footer()).html('Total: '+json.iTotalDisplayRecords);
+                var json = api.ajax.json(); 
+                if(json.iTotalRecords > 0){
+                    $('.due_payment_tfoot').removeClass('hide-div');
+                    $(api.column(5).footer()).html('Total = '+json.total_due_amount);
+                }
             }, 
             "footerCallback": function ( row, data, start, end, display ) {
                 // console.log(row);

@@ -82,3 +82,5 @@ GROUP BY Auctions.auction_no
 
 HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 3 and group_id = 13 
 	and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null
+
+
