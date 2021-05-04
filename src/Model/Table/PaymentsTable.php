@@ -462,10 +462,17 @@ class PaymentsTable extends Table
         $sLimit
         ";
 
-        // echo $sQuery."<br/>";//exit;
+        // echo $sQuery."<br/>";exit;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
     
+        /* Data set length after filtering */ 
+        $rResultFilterTotal = $conn->execute("SELECT FOUND_ROWS() as cnt");
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+
+        // echo  ' $iFilteredTotal<pre>';print_r($iFilteredTotal);exit;
+
         //if search value then need to search on total
         $text = $sQuery; 
         if($_POST['search']['value'] > 0){
@@ -491,6 +498,7 @@ class PaymentsTable extends Table
 
         $get_totalst = $conn->execute($get_total_query);
         $get_totalResult = $get_totalst ->fetch('assoc');
+        //refresh the result with total filter
         if($get_totalResult['total_amount'] > 0 && $get_totalResult['auction_no'] !='' && $_POST['search']['value'] > 0){
             $sQueryR = substr_replace($text, "WHERE Auctions.group_id = ".$group_id." AND Auctions.auction_no IN (".$get_totalResult['auction_no'].") ", 
                 $startTagPos, $tagLength);
@@ -500,15 +508,7 @@ class PaymentsTable extends Table
         }
         // echo '<pre>';print_r($rResult);//exit;
         // echo $get_total_query.'<pre>';print_r($get_totalResult);exit;
-
-
-        /* Data set length after filtering */
-        $sQuery = "
-        SELECT FOUND_ROWS() as cnt
-        ";
-        $rResultFilterTotal = $conn->execute($sQuery);
-        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
-        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+      
         /* Total data set length */
         $sQuery = "
         SELECT MAX(p.id) as pid

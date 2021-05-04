@@ -195,10 +195,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
             ],  
             "fnDrawCallback": function() {
                 var api = this.api()
-                var json = api.ajax.json(); 
+                var json = api.ajax.json();  
                 if(json.iTotalRecords > 0){
                     $('.due_payment_tfoot').removeClass('hide-div');
                     $(api.column(5).footer()).html('Total = '+json.total_due_amount);
+                }else{
+                    $('.due_payment_tfoot').addClass('hide-div');
                 }
             }, 
             "footerCallback": function ( row, data, start, end, display ) {
@@ -311,14 +313,17 @@ $('#groups').change(function(e) {
 	//get selected member id
 	var group_id = $(this).val(); 
 	var member_options = '<option value="">Select Member</option>';
-	if(group_id == ''){
-        $('#members').html(member_options);
-        return false;
-    }
+    var instalment_nos_options = '<option value="">Select Instalment No</option>';
+    table.DataTable().ajax.url($('#router_url').val()+"Payments/getDuePayments/0/0").load();
     $('#group_due_date').val('');
     $('#group_late_fee').val('');
     $('#subscriber_ticket_no').val('');
     clear_fields();
+	if(group_id == ''){
+        $('#members').html(member_options);
+        $('#instalment_no').html(instalment_nos_options);
+        return false;
+    }
 	$('.bnspinner').removeClass('hide');
 	$.ajax({
 		   "url": $('#router_url').val()+"Payments/getMembersByGroupId",
@@ -376,11 +381,12 @@ function getInstalmentNo(){
 	var group_id = $('#groups').val(); 
 	var member_id = $('#members').val(); 
 	var instalment_nos_options = '<option value="">Select Instalment No</option>';
+    $('#subscriber_ticket_no').val('');
 	if(group_id == '' || member_id == ''){
         $('#instalment_no').html(instalment_nos_options);
+        table.DataTable().ajax.url($('#router_url').val()+"Payments/getDuePayments/0/0").load();
         return false;
     } 
-    $('#subscriber_ticket_no').val('');
 	$('.bnspinner-member').removeClass('hide');
 	$.ajax({
 		   "url": $('#router_url').val()+"Payments/getInstalmentNo",
