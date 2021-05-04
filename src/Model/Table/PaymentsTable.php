@@ -422,7 +422,10 @@ class PaymentsTable extends Table
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
             $sWhere .= " AND (";
-
+                $serachValueString = true;
+                if($_POST['search']['value'] > 0){
+                    $serachValueString = false;
+                } 
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
                     //remove 'as' word if exist
@@ -430,12 +433,15 @@ class PaymentsTable extends Table
                     if($i ==1){
                         $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
                     }else{
-                        $sWhere .= "".$columns." = ".( $_POST['search']['value'] )." OR ";
+                        if(!$serachValueString){
+                            $sWhere .= "".$columns." = '".( $_POST['search']['value'] )."' OR ";
+                        }
                     }
                 }
                 //remove last 3 words as 'OR'
                 $sWhere = substr_replace( $sWhere, "", -3 );
                 $sWhere .= ')';
+                // echo $serachValueString.' // '.$sWhere;exit();
         }
 
         /* Individual column filtering */
@@ -455,18 +461,46 @@ class PaymentsTable extends Table
         $sOrder
         $sLimit
         ";
-        // echo $sQuery;exit;
-        $modifiedQuery =str_replace('SQL_CALC_FOUND_ROWS',' ',$sQuery);
-        $modifiedQuery =   substr($modifiedQuery, 0, strpos($modifiedQuery, "LIMIT"));
-        $get_total_query = "SELECT SUM(total_amount) total_amount from (".$modifiedQuery.") t";
-        
-        $get_totalst = $conn->execute($get_total_query);
-        $get_totalResult = $get_totalst ->fetch('assoc');
-        // echo $get_total_query.'<pre>'; print_r($get_totalResult);exit;
 
+        // echo $sQuery."<br/>";//exit;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
-       // echo '<pre>';print_r($rResult);exit;
+    
+        //if search value then need to search on total
+        $text = $sQuery; 
+        if($_POST['search']['value'] > 0){
+            $startTagPos = strrpos($text, "WHERE Auctions.group_id");
+            $endTagPos = strrpos($text, " GROUP BY Auctions.auction_no");
+            $tagLength = $endTagPos - $startTagPos + 1;
+            $totalQuery = substr_replace($text, "WHERE Auctions.group_id = ".$group_id." ", 
+                $startTagPos, $tagLength); 
+        }else{
+            $totalQuery = $sQuery;
+        }
+
+
+        $modifiedQuery =str_replace('SQL_CALC_FOUND_ROWS',' ',$totalQuery);
+        $modifiedQuery =   substr($modifiedQuery, 0, strpos($modifiedQuery, "LIMIT"));
+        $total_query_where = "";
+         if($_POST['search']['value'] > 0){
+            $total_query_where .= " WHERE total_amount = ".$_POST['search']['value'];
+         }
+        $get_total_query = "SELECT SUM(total_amount) total_amount,GROUP_CONCAT(auction_no) auction_no  from (".$modifiedQuery.") t $total_query_where";
+        // echo $get_total_query;exit;
+        // echo $sQuery."<br/>"."<br/>".$totalQuery;exit;
+
+        $get_totalst = $conn->execute($get_total_query);
+        $get_totalResult = $get_totalst ->fetch('assoc');
+        if($get_totalResult['total_amount'] > 0 && $get_totalResult['auction_no'] !='' && $_POST['search']['value'] > 0){
+            $sQueryR = substr_replace($text, "WHERE Auctions.group_id = ".$group_id." AND Auctions.auction_no IN (".$get_totalResult['auction_no'].") ", 
+                $startTagPos, $tagLength);
+            $stmt = $conn->execute($sQueryR);
+            $rResult = $stmt ->fetchAll('assoc'); 
+
+        }
+        // echo '<pre>';print_r($rResult);//exit;
+        // echo $get_total_query.'<pre>';print_r($get_totalResult);exit;
+
 
         /* Data set length after filtering */
         $sQuery = "
