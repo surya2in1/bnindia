@@ -264,7 +264,11 @@ use Cake\Routing\Router;
                                         <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?= isset($payment->remark) ? $payment->remark : '';?>" readonly>
                                     </div>
                                 </div>
-
+                                <div class="form-group row marg-bot-0">
+                                    <label class="col-lg-4 col-form-label" id="list_label"><b>Due Payments:</b></label>
+                                    <div class="col-lg-6"> 
+                                    </div>
+                                 </div>
                                  <div class="form-group row kt-portlet__body">
 
                                     <!--begin: Datatable -->
