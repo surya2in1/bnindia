@@ -225,6 +225,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
     KTDatatablesDataSourceAjaxServer.init();  
+    $("#auction_date").datepicker().datepicker("setDate", new Date());
 });
 
 //Show members after select group
