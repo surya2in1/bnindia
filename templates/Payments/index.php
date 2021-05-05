@@ -49,12 +49,18 @@
                 <thead>
                     <tr>
                         <th>Receipt No.</th>
+                        <th>Date</th>
                         <th>Group Code</th>
                         <th>Member</th>
-                        <th>Subscription Amount</th>
+                        <th>Subscriber Ticket No.</th>
+                        <th>Instalment No.</th>
+                        <th>Instalment Month</th>
+                        <th>Due date of payment</th>
+                        <th>Subscription Rs.</th>
                         <th>Late Fee</th>
                         <th>Total Amount</th>
                         <th>Received By</th> 
+                        <th>Remark</th> 
                         <th>Action</th>
                     </tr>
                 </thead>

@@ -247,13 +247,20 @@ class PaymentsTable extends Table
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'p.receipt_no','g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",'p.subscription_amount','p.late_fee','p.total_amount',"(
+        $aColumns = array( 'p.receipt_no','p.date','g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",
+            'p.subscriber_ticket_no',
+            'p.instalment_no',
+            'p.instalment_month',
+            'p.due_date',
+            'p.subscription_amount','p.late_fee','p.total_amount',"(
             CASE 
                 WHEN received_by =1 THEN 'Cash'
                 WHEN received_by =2 THEN 'Cheque'
                 WHEN received_by =3 THEN 'Direct Debit' 
                 ELSE '--'
-            END) as received_by");
+            END) as received_by",
+            'p.remark'
+        );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "p.receipt_no";
         /* DB table to use */

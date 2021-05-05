@@ -22,12 +22,18 @@ var KTDatatablesDataSourceAjaxServer = function() {
             },
             columns: [  
                 {data: 'receipt_no'},
+                {data: 'date'},
                 {data: 'group_code'},
                 {data: 'member'}, 
+                {data: 'subscriber_ticket_no'},
+                {data: 'instalment_no'},
+                {data: 'instalment_month'},
+                {data: 'due_date'},
                 {data: 'subscription_amount'}, 
                 {data: 'late_fee'}, 
                 {data: 'total_amount'}, 
                 {data: 'received_by'},
+                {data: 'remark'},
                 {data: 'action', responsivePriority: -1},
             ], 
             columnDefs: [{
