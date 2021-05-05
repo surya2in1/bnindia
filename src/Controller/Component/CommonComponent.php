@@ -117,7 +117,8 @@ class CommonComponent extends Component {
       'due_amount' => '( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) ',
       'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))',
       'auction_no'=>'Auctions.auction_no','id'=>'Auctions.id',
-      'plate_fee'=>'p.late_fee '
+      'plate_fee'=>'p.late_fee ',
+      'due_date' => 'CreateDateFromDay(g.date,Auctions.auction_date)'
     ])
            ->join([
               'table' => 'payments',

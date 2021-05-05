@@ -407,7 +407,7 @@ function getInstalmentNo(){
                             if(payment_instalment_no == value.auction_no){
                                 selected = 'selected';
                             }
-						   instalment_nos_options += '<option value="'+value.auction_no+'" '+selected+' data-id="'+value.id+'" data-instalment_month="'+value.instalment_month+'"  data-due_late_fee="'+value.due_late_fee+'">'+value.auction_no+'</option>';
+						   instalment_nos_options += '<option value="'+value.auction_no+'" '+selected+' data-id="'+value.id+'" data-instalment_month="'+value.instalment_month+'"  data-due_late_fee="'+value.due_late_fee+'" data-due_date="'+value.due_date+'">'+value.auction_no+'</option>';
 						}); 
             	} 
             	$('#instalment_no').html(instalment_nos_options);
@@ -449,7 +449,8 @@ function getRemaingPayments(){
                 var group_late_fee = $('#group_late_fee').val();
                 var g_due_date = $('#group_due_date').val();
                 var auction_date = (result.auction_date) ? (result.auction_date) :'';
-                var get_group_due_dt = create_date_from_day(g_due_date,auction_date);
+                //var get_group_due_dt = create_date_from_day(g_due_date,auction_date);
+                var get_group_due_dt = $('#instalment_no').find(':selected').data('due_date');
                 $('#due_date').val(get_group_due_dt);
                 var group_due_date = $('#due_date').val(); 
                 var late_fee =$('#instalment_no').find(':selected').data('due_late_fee'); 
