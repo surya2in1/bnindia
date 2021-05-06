@@ -130,7 +130,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                	required:true,
 	                	max : 31,
 	                    min:1
-	                }
+	                },
+	                 group_code: {
+	                        required: true,
+	                },
 	            },
 	            errorPlacement: function(error, element) {
 	                var group = element.closest('.input-group');
@@ -522,4 +525,23 @@ function refresh_member_table(){
 		$('#list_label').html('<b>List of group members:</b>');
 	}
 	$('#group_members_table').DataTable().ajax.url($('#router_url').val()+"Groups/getGroupMembers/"+group_id).load();
+}
+
+function get_group_code(){
+	var total_number = $('#total_number').val();
+	var chit_amount = $('#chit_amount').val();
+	var created_by = $('#created_by').val();
+	$.ajax({
+			   "url": $('#router_url').val()+"Groups/getGroupCode/"+total_number+"/"+created_by+"/"+chit_amount,
+	            "type": "POST",
+	            "data": {'user_id':$('#customer_id_typeahead').attr('cust_id'),
+	            			"group_id":group_id}
+	        			,
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) {
+                		 $('#group_code').val(response);
+                }
+			}); 
 }

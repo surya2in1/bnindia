@@ -81,12 +81,13 @@ class GroupsController extends AppController
         if($auction_count >0){
             return $this->redirect(['action' => 'index']);
         }
+        $user_id = $this->Auth->user('id');
          // echo '<pre>';print_r($group);exit();
-        $this->set(compact('group'));
+        $this->set(compact('group','user_id'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
-            $post['created_by'] = $this->Auth->user('id');
+            $post['created_by'] = $user_id;
            // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
@@ -153,6 +154,13 @@ class GroupsController extends AppController
             $output = $this->Groups->getGroupMembersData($group_id);
             // echo $group_id.'<pre>';print_r($output);exit;
             echo json_encode($output);exit;
+    }
+
+    function getGroupCode($total_number,$created_by,$chit_amount){
+        $group_code = $this->Groups->get_group_code($total_number,$created_by,$chit_amount);
+        echo $group_code;exit;
+        // $this->Groups->get_group_code($_POST['total_number'],$_POST['created_by'],$_POST['chit_amount']);
+
     }
 }
 

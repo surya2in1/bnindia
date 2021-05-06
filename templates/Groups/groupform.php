@@ -32,6 +32,7 @@ use Cake\Routing\Router;
                     </div>
                 </div>
                 <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
+                <input type="hidden" name="created_by" id="created_by" value="<?= $user_id; ?>" />
                 <!--begin::Form-->
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form',
@@ -63,13 +64,13 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Chit Amount:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="chit_amount" id="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>" onchange="calculate_premium(),calculate_no_of_months();">
+                                        <input type="number" class="form-control" name="chit_amount" id="chit_amount" placeholder="Enter Chit Amount" value="<?= isset($group->chit_amount) ? $group->chit_amount : '';?>" onchange="calculate_premium(),calculate_no_of_months(),get_group_code();">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Total Member:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : 0;?>" id="total_number"  onchange="calculate_premium(),calculate_no_of_months();" step="5">
+                                        <input type="number" class="form-control" name="total_number" placeholder="Enter Total Member" value="<?= isset($group->total_number) ? $group->total_number : 0;?>" id="total_number"  onchange="calculate_premium(),calculate_no_of_months(),get_group_code();" step="5">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -127,7 +128,13 @@ use Cake\Routing\Router;
                                         </select>
 
                                     </div>
-                                </div>    
+                                </div>  
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Group Code:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="group_code" id="group_code" value="<?= isset($group->group_code) ? $group->group_code : '';?>" readonly  title="You can not change this value."/>
+                                    </div>
+                                </div>  
                             </div>
                         </div>
                     </div>
