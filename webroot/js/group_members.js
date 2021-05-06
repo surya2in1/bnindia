@@ -208,7 +208,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
     	//Bloodhound typeahead
     	$('#customer_id_typeahead').typeahead(null, {
 		  //name: 'best-pictures',
-		  display: 'customer_id',
+		  // display: 'customer_id',
+		  display: function(data){ 
+		  	 return data.customer_id+' – '+ucfirst(data.name);
+		  	},
 		  source: function show(q, cb, cba) {
 		  	var values = $("input[name='members_ids[]']")
               .map(function(){return $(this).val();}).get();
@@ -238,8 +241,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		    ].join('\n'),
 		     //suggestion: '<p><strong>{{value}}</strong> –</p>'
 		    suggestion: function(data) { 
-		    // console.log (data);
-		      return '<p><strong>' + data.customer_id + '</strong> - ' ;
+		    // console.log (data); 
+			   var searchVal = data.customer_id+' – '+ucfirst(data.name); 
+		       return '<p><strong>' + searchVal + '</strong> - ' ;
 		    }
 		  }
 		}).bind('typeahead:selected', function(obj, selected, name) {  
@@ -293,6 +297,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	};
 
 }();
+function ucfirst(str){
+	var str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+	    return letter.toUpperCase();
+	}); 
+	return str;
+}
 
 jQuery(document).ready(function() {
 	KTDatatablesDataSourceAjaxServer.init();  

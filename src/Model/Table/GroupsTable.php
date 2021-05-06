@@ -247,8 +247,12 @@ class GroupsTable extends Table
     * Get group members list
     */
     public function getGroupMembersData($group_id) {
-        $aColumns = array('customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address','mg.ticket_no'); 
-
+        $ucase_first_name = "CONCAT(UCASE(LEFT(u.first_name, 1)),SUBSTRING(u.first_name, 2)) "; 
+        $ucase_middle_name = "CONCAT(UCASE(LEFT(u.middle_name, 1)),SUBSTRING(u.middle_name, 2)) "; 
+        $ucase_last_name = "CONCAT(UCASE(LEFT(u.last_name, 1)),SUBSTRING(u.last_name, 2)) "; 
+        // $aColumns = array('customer_id' , "concat(u.first_name,' ', u.middle_name,' ',u.last_name) as name", 'u.address','mg.ticket_no'); 
+         $aColumns = array('customer_id' , "concat($ucase_first_name,' ', $ucase_middle_name,' ',$ucase_last_name) as name", 'u.address','mg.ticket_no'); 
+// echo '<pre>';print_r($aColumns);exit;
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";
         /* DB table to use */
@@ -327,7 +331,7 @@ class GroupsTable extends Table
         $sOrder
         $sLimit
         ";
-        //echo $sQuery;
+        // echo $sQuery;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
        

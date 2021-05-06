@@ -58,10 +58,10 @@ use Cake\Routing\Router;
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-form-label col-lg-3 col-sm-12">Search member by customer id:<span class="required" aria-required="true"> * </span></label>
+                                    <label class="col-form-label col-lg-3 col-sm-12">Search member by customer id or customer name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="typeahead">
-                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Name" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
+                                            <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Customer Id or Customer Name" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
                                         </div> 
                                         <span class="kt-margin-l-10"> <a href="member_form" target="_blank" class="kt-link kt-font-bold">If member not create then create a member using this link</a></span>
                                     </div> 

@@ -595,8 +595,11 @@ class UsersController extends AppController
              $config_member_role=Configure::read('ROLE_MEMBER');
              //Excapt admin search all member
              $where_Conditions['r.name']  = $config_member_role; 
-             $where_Conditions['Users.customer_id'] = $query_string;
-             // $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
+             if($query_string > 0){
+                $where_Conditions['Users.customer_id'] = $query_string;
+             }else{
+                 $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
+             }
 
              if($selected_member_ids > 0){
                 $where_Conditions['Users.id NOT IN'] = explode(',', $selected_member_ids);
