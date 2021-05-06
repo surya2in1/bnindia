@@ -95,11 +95,11 @@ class GroupsController extends AppController
             }else{
                  $validationErrors = $group->getErrors();
                 //echo '<pre>';print_r($group->getErrors());exit();
-                // if(isset($validationErrors['group_number']['unique']) && !empty($validationErrors['group_number']['unique'])){
-                //     echo 'group_number_unique';
-                // }else{
+                if(isset($validationErrors['group_code']['unique']) && !empty($validationErrors['group_code']['unique'])){
+                    echo 'group_code_unique';
+                }else{
                     echo 0;
-                // } 
+                } 
             } 
             exit;   
         }

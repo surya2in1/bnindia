@@ -122,12 +122,12 @@ class GroupsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    // public function buildRules(RulesChecker $rules): RulesChecker
-    // {
-    //     $rules->add($rules->isUnique(['group_number']));
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['group_code']));
 
-    //     return $rules;
-    // }
+        return $rules;
+    }
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {

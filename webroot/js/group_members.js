@@ -79,6 +79,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             var btn = $(this);
             var form = $(this).closest('form');
 	        form.validate({
+	        	 ignoreTitle: true,
 	     		// define validation rules
 	            rules: {
 	                group_type: {
@@ -186,8 +187,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
                         }, 2000); 
                     }else{
                     	var err = 'Some error has been occured. Please try again.';
-                    	if(response == 'group_number_unique'){
-                    		err= "Group number is duplicate, please change group number."
+                    	if(response == 'group_code_unique'){
+                    		err= "Group code is duplicate."
                     	}
                     	// similate 2s delay
                     	setTimeout(function() {
