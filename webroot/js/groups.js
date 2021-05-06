@@ -20,7 +20,6 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 },
 	        },
 			columns: [
-				{data: 'group_number'},
 				{data: 'group_code'},
 				{data: 'chit_amount'},
 				{data: 'total_number'},

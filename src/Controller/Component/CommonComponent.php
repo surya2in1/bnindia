@@ -56,14 +56,14 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($user_id) {
                                 return $q
-                                    ->select(['id','group_number'])
+                                    ->select(['id','group_code'])
                                     ->where(['user_id'=>$user_id]);
                             },      
                          ],
         ])->toArray(); 
         if(!empty($member_groups)){
             foreach ($member_groups as $key => $value) { 
-                $selected_member_groups[$value->group_id] = $value->group->group_number; 
+                $selected_member_groups[$value->group_id] = $value->group->group_code; 
             }
         }
         return $selected_member_groups;

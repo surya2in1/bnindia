@@ -62,13 +62,6 @@ class GroupsTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->scalar('group_number')
-            ->maxLength('group_number', 500)
-            ->requirePresence('group_number', 'create')
-            ->notEmptyString('group_number')
-            ->add('group_number', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
-
-        $validator
             ->decimal('chit_amount')
             ->requirePresence('chit_amount', 'create')
             ->notEmptyString('chit_amount');
@@ -129,16 +122,16 @@ class GroupsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): RulesChecker
-    {
-        $rules->add($rules->isUnique(['group_number']));
+    // public function buildRules(RulesChecker $rules): RulesChecker
+    // {
+    //     $rules->add($rules->isUnique(['group_number']));
 
-        return $rules;
-    }
+    //     return $rules;
+    // }
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'g.group_number','g.group_code','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
+        $aColumns = array('g.group_code','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "g.id";
         /* DB table to use */

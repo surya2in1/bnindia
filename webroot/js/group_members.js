@@ -81,10 +81,6 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        form.validate({
 	     		// define validation rules
 	            rules: {
-	                group_number: {
-	                        required: true,
-	                        maxlength : 100
-	                },
 	                group_type: {
 	                        required: true,
 	                },

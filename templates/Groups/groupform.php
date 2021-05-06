@@ -42,13 +42,7 @@ use Cake\Routing\Router;
                       <input type="hidden" name="id" id="id" value="<?= $groupid; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
-                            <div class="kt-section__body">
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Group Number:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="group_number" placeholder="Enter Group Number" value="<?= isset($group->group_number) ? $group->group_number : '';?>" autofocus="true">
-                                    </div>
-                                </div>
+                            <div class="kt-section__body"> 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Group Type:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
