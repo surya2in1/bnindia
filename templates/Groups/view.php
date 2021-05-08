@@ -30,6 +30,12 @@
                     <div class="kt-section kt-section--first">
                         <div class="kt-section__body">
                             <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Group Code:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->group_code) ? $group->group_code : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-lg-3 col-form-label">Chit Amount:</label>
                                 <div class="col-lg-6">
                                     <label class="col-lg-3 col-form-label"><?= isset($group->chit_amount) ? $group->chit_amount : '';?></label>

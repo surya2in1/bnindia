@@ -113,7 +113,7 @@ class CommonComponent extends Component {
   function getInstalmentNoList($group_id,$member_id){
     $auctionTable= TableRegistry::get('Auctions'); 
     $query = $auctionTable->find();
-    $instalment_nos = $query->select(['pid' => $query->func()->max('p.id'),'instalment_month'=>'MONTHNAME(Auctions.auction_date)','Auctions.net_subscription_amount',
+    $instalment_nos = $query->select(['pid' =>'p.id','instalment_month'=>'MONTHNAME(Auctions.auction_date)','Auctions.net_subscription_amount',
       'due_amount' => '( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) ',
       'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))',
       'auction_no'=>'Auctions.auction_no','id'=>'Auctions.id',
@@ -124,7 +124,8 @@ class CommonComponent extends Component {
               'table' => 'payments',
               'alias' => 'p',
               'type' => 'LEFT',
-              'conditions' => 'p.auction_id=Auctions.id',
+              'conditions' => 'p.auction_id=Auctions.id AND
+            p.id = (SELECT MAX(id) pid FROM payments WHERE user_id = '.$member_id.' and group_id = '.$group_id.'  and auction_id =Auctions.id    GROUP BY auction_id )',
           ]) 
            ->join([
               'table' => 'groups',

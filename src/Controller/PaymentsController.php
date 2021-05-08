@@ -164,6 +164,7 @@ class PaymentsController extends AppController
             'ptotal_amount' => 'Payments.total_amount',
             'ppending_amount' => 'Payments.pending_amount',
         ]) 
+        ->where(['Payments.auction_id'=>$auction_id])
         ->order(['id desc'])->LIMIT(1);
 
         $auctionTable= TableRegistry::get('Auctions'); 

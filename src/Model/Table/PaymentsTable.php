@@ -457,9 +457,11 @@ class PaymentsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS MAX(p.id) as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
+        SELECT SQL_CALC_FOUND_ROWS p.id as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
         FROM   $sTable Auctions
-            LEFT JOIN payments p ON p.auction_id=Auctions.id 
+            LEFT JOIN payments p ON p.auction_id=Auctions.id AND
+            p.id = (SELECT MAX(id) pid FROM payments WHERE user_id = ".$member_id." and group_id = ".$group_id."  and auction_id =Auctions.id    GROUP BY auction_id )
+
             LEFT JOIN groups g on Auctions.group_id = g.id
         $sWhere
         GROUP BY Auctions.auction_no
@@ -518,14 +520,17 @@ class PaymentsTable extends Table
       
         /* Total data set length */
         $sQuery = "
-        SELECT MAX(p.id) as pid
+        SELECT p.id as pid
         FROM   $sTable Auctions
-            LEFT JOIN payments p ON p.auction_id=Auctions.id 
+            LEFT JOIN payments p ON p.auction_id=Auctions.id AND 
+                 p.id = (SELECT MAX(id) pid FROM payments WHERE user_id = ".$member_id." and group_id = ".$group_id."  and auction_id =Auctions.id    GROUP BY auction_id )
+
             LEFT JOIN groups g on Auctions.group_id = g.id
         WHERE Auctions.group_id = ".$group_id."
         GROUP BY Auctions.auction_no
         HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = ".$member_id." and group_id = ".$group_id." 
     and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null ";
+        // echo $sQuery;exit;
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         // echo '$aResultTotal<pre>';print_r($aResultTotal);exit;

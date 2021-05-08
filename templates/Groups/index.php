@@ -47,8 +47,7 @@
             <!--begin: Datatable -->
             <table class="table table-striped- table-bordered table-hover table-checkable" id="group_table">
                 <thead>
-                    <tr>
-                        <th>Group No.</th>
+                    <tr> 
                         <th>Group Code</th>
                         <th>Chit Amount</th>
                         <th>Total No</th>
