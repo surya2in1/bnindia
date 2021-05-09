@@ -355,9 +355,9 @@ class GroupsTable extends Table
         return $output;
     }
 
-    function get_group_code($total_number,$created_by,$chit_amount){ 
+    function get_group_code($total_number,$created_by,$chit_amount,$group_id){ 
         $conn = ConnectionManager::get('default');
-        $stmt = $conn->execute("call CreateGroupCode($total_number,$created_by,$chit_amount,@p3)");
+        $stmt = $conn->execute("call CreateGroupCode($total_number,$created_by,$chit_amount,$group_id,@p3)");
         $stmt = $conn->execute("SELECT @p3 AS group_code");
         
         $result = $stmt ->fetchAll('assoc');

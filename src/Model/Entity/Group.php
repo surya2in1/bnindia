@@ -32,6 +32,7 @@ class Group extends Entity
      * @var array
      */
     protected $_accessible = [ 
+        'group_code' =>true,
         'chit_amount' => true,
         'total_number' => true,
         'premium' => true,

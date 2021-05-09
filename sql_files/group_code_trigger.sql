@@ -87,3 +87,13 @@ SELECT JSON_VALUE(@total_member_arr,'$[0]') result;  => J
 SELECT JSON_ARRAY(1,2,3) AS 'Result'=>[1, 2, 3] 
 **/
 --==========================================================================
+
+CREATE TRIGGER `CreateGroupCode` BEFORE INSERT ON `groups`
+ FOR EACH ROW BEGIN   
+   DECLARE group_code varchar(500);
+
+   CALL CreateGroupCode (New.total_number,New.created_by,New.chit_amount,0, group_code);
+
+SET NEW.group_code = group_code;
+
+END

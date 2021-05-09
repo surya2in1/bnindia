@@ -528,8 +528,9 @@ function get_group_code(){
 	var total_number = $('#total_number').val();
 	var chit_amount = $('#chit_amount').val();
 	var created_by = $('#created_by').val();
+	var group_id = $('#id').val();
 	$.ajax({
-			   "url": $('#router_url').val()+"Groups/getGroupCode/"+total_number+"/"+created_by+"/"+chit_amount,
+			   "url": $('#router_url').val()+"Groups/getGroupCode/"+total_number+"/"+created_by+"/"+chit_amount+"/"+group_id,
 	            "type": "POST",
 	            "data": {'user_id':$('#customer_id_typeahead').attr('cust_id'),
 	            			"group_id":group_id}

@@ -156,8 +156,8 @@ class GroupsController extends AppController
             echo json_encode($output);exit;
     }
 
-    function getGroupCode($total_number,$created_by,$chit_amount){
-        $group_code = $this->Groups->get_group_code($total_number,$created_by,$chit_amount);
+    function getGroupCode($total_number,$created_by,$chit_amount,$group_id){
+        $group_code = $this->Groups->get_group_code($total_number,$created_by,$chit_amount,$group_id);
         echo $group_code;exit;
         // $this->Groups->get_group_code($_POST['total_number'],$_POST['created_by'],$_POST['chit_amount']);
 
