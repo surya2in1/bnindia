@@ -241,4 +241,9 @@ class PaymentsController extends AppController
       $output = $this->Payments->getDuePayments($group_id,$member_id);
       echo json_encode($output);exit;
     }
+
+     public function receipt()
+    {  
+        $this->viewBuilder()->setLayout('admin');     
+    }
 }

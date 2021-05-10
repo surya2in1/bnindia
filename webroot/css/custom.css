@@ -85,3 +85,20 @@
   opacity: 0.5;
   text-decoration: none;
 }
+
+.border-red{
+  border: 1px solid blue;
+}
+.border-blue{
+  border: 1px solid blue;
+}
+.txt-center{
+  text-align:center;
+}
+
+table tr{
+   border: 1px solid red;
+}
+table td{
+   border: 1px solid blue;
+}
