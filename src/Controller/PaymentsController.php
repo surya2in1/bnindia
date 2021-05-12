@@ -244,6 +244,6 @@ class PaymentsController extends AppController
 
      public function receipt()
     {  
-        $this->viewBuilder()->setLayout('admin');     
+        $this->viewBuilder()->setLayout('print');     
     }
 }
