@@ -83,5 +83,42 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
     KTDatatablesDataSourceAjaxServer.init();   
+}); 
+
+function print(url) {
+    var printWindow = window.open( url, 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+
+    printWindow.addEventListener('load', function() {
+        if (Boolean(printWindow.chrome)) {
+            printWindow.print();
+            setTimeout(function(){
+                printWindow.close();
+            }, 500);
+        } else {
+            printWindow.print();
+            printWindow.close();
+        }
+    }, true);
+}  
+
+$('.printButton').click(function(evt) {
+    evt.preventDefault();
+    $('body').append('<iframe width="0" height="0"  src="http://localhost/bnindia/payments/receipt" id="printIFrame" name="printIFrame" width="100%"></iframe>');
+    $('#printIFrame').bind('load', 
+        // function() { 
+        //      setTimeout(function(){
+        //         window.frames['printIFrame'].focus(); 
+        //         window.frames['printIFrame'].print(); 
+        //     }, 500);
+        // }
+    );
 });
-  
+
+function loadOtherPage(url) {
+
+    $("<iframe width='0' height='0'>")                             // create a new iframe element
+        .hide()                               // make it invisible
+        .attr("src", url) // point the iframe to the page you want to print
+        .appendTo("body");                    // add iframe to the DOM to cause it to load the page
+
+}

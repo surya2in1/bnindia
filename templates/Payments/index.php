@@ -37,7 +37,12 @@
                         <a href="payment_form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
-                        </a>                       
+                        </a>         
+                        <input type="button" value="Print this page" onClick="print('http://localhost/bnindia/payments/receipt')">
+                        <input type="button" class="printButton" value="Print "  >
+
+                          <p><span onclick="loadOtherPage('http://localhost/bnindia/payments/receipt');" >Print external page!</span></p>
+
                     </div>
                 </div>
             </div>

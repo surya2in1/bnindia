@@ -150,10 +150,11 @@
 
 .logo1-back2 {
     background: url(logos/logo2.png) no-repeat right center;
-    background-size: 96px 153px;
+    background-size: 191px 153px;
     height: 100px;
-    background-position: left;
+    background-position: center;
     margin-left: 0px;
+    top: 11px;
     -webkit-print-color-adjust: exact;
 }
 
