@@ -121,6 +121,7 @@
   height: 41px;
   width: 145px;
   padding-top: 3px;
+  -webkit-print-color-adjust: exact;
 }
 
 .p-header{
@@ -149,26 +150,21 @@
 
 .logo1-back2 {
     background: url(logos/logo2.png) no-repeat right center;
-    background-size: 135px 153px;
+    background-size: 96px 153px;
     height: 100px;
     background-position: left;
     margin-left: 0px;
     -webkit-print-color-adjust: exact;
 }
 
+.kt_wrapper-receipt{
+  padding-top: 0px !important;
+  padding-left: 0px !important;
+}
+
 @media print {
-    .no-print {
+    .no-print, #kt_header_mobile{
         display: none;
     }
-
-
-  .logo1-back2 {
-      background: url(/logos/logo2.png) no-repeat right center;
-      background-size: 135px 153px;
-      height: 100px;
-      background-position: left;
-      margin-left: 0px;
-      content:url(/logos/logo2.png);
-      -webkit-print-color-adjust: exact;
-  }
+ 
 }

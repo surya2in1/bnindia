@@ -10,41 +10,41 @@
                         <div class="kt-section__body">
                             <!-- First row start -->
                             <div class="row">
-                                <div class="col-lg-3 logo1-back"> 
+                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back"> 
                                 </div>
-                                <div class="col-lg-7 ">
+                                <div class="col-lg-7 col-md-7 col-sm-7">
                                     <label class="col-lg-12 col-form-label txt-center">
                                         <h3 class="p-header">BNINDIA KURIES PVT. LTD.</h3>
                                         <h5>(Goverment Registered Chit Fund Company)</h5> 
                                     </label> 
                                 </div>
-                                <div class="col-lg-2 logo1-back2"> 
+                                <div class="col-lg-2 col-md-2 col-sm-2 logo1-back2"> 
                                 </div>
                             </div> 
                             <!-- First row end -->
 
                             <!-- Second row start -->
                             <div class="row">
-                                <div class="col-lg-3 "> 
+                                <div class="col-lg-3 col-md-3 col-sm-3 "> 
                                      <div class="row">
-                                        <label class="col-lg-2 col-form-label">No.:</label>
-                                        <div class="col-lg-10">
-                                            <label class="col-lg-3 col-form-label">5618</label>
+                                        <label class="col-lg-2 col-lg-2 col-sm-2 col-form-label">No.:</label>
+                                        <div class="col-lg-10  col-md-10 col-sm-10">
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">5618</label>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-lg-2 col-form-label">Date:</label>
-                                        <div class="col-lg-10">
-                                            <label class="col-lg-3 col-form-label">-</label>
+                                        <label class="col-lg-2 col-lg-2 col-sm-2  col-form-label">Date:</label>
+                                        <div class="col-lg-10 col-md-10 col-sm-10">
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">-</label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 txt-center">
-                                    <label class="col-lg-5 col-form-label p-rec-lbl">RECEIPT</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6 txt-center">
+                                    <label class="col-lg-5 col-md-5 col-sm-5 col-form-label p-rec-lbl">RECEIPT</label>
                                 </div>
 
-                                <div class="col-lg-3 ">
+                                <div class="col-lg-3 col-md-3 col-sm-3">
                                     <label class="col-lg-12 col-form-label border-lbl1">Area Code</label>
                                     <label class="col-lg-12 col-form-label border-lbl2">Cust Code</label>
                                 </div>
@@ -185,7 +185,7 @@
         \<link rel="stylesheet" href="/bnindia/css/assets/css/skins/header/menu/light.css"/><link rel="stylesheet" href="/bnindia/css/assets/css/skins/brand/dark.css"/>\ <link rel="stylesheet" href="/bnindia/css/assets/css/skins/aside/dark.css"/><link rel="stylesheet" href="/bnindia/css/assets/plugins/custom/datatables/datatables.bundle.css"/>\</head>'); 
 
         WinPrint.document.write(printContent.innerHTML);
-        
+
             WinPrint.document.write('');
         WinPrint.document.close();
         WinPrint.focus();
