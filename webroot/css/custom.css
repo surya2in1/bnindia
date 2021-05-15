@@ -163,9 +163,21 @@
   padding-left: 0px !important;
 }
 
+.max-width-25{
+  max-width: 25%;
+}
+.max-width-50{
+ max-width: 50%; 
+}
+.max-width-20{
+ max-width: 20%; 
+}
+.padding-top-50{
+  padding-top:50px;
+}
 @media print {
     .no-print, #kt_header_mobile{
         display: none;
     }
- 
+  
 }

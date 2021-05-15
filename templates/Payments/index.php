@@ -1,3 +1,6 @@
+<?php
+use Cake\Routing\Router;
+?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -33,14 +36,19 @@
             <div class="kt-portlet__head-toolbar">
                 <div class="kt-portlet__head-wrapper">
                     <div class="kt-portlet__head-actions">
-                        
+                        <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
                         <a href="payment_form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
                         </a>         
                         <input type="button" value="Print this page" onClick="print('http://localhost/bnindia/payments/receipt')">
-                        <input type="button" class="printButton" value="Print "  >
+                        <button type="button" class="kt-nav__link printButton" ref_url="http://localhost/bnindia/payments/receipt"> <i class="kt-nav__link-icon fa fa-print"></i>
+                            <span class="kt-nav__link-text">Print Receipt</span></button>  
 
+                        <!-- <a href="javascript:void(0);" class="kt-nav__link printButton" ref_url="http://localhost/bnindia/payments/receipt">
+                            <i class="kt-nav__link-icon flaticon2-expand"></i>
+                            <span class="kt-nav__link-text">Print Receipt</span>
+                        </a> -->
                           <p><span onclick="loadOtherPage('http://localhost/bnindia/payments/receipt');" >Print external page!</span></p>
 
                     </div>

@@ -1,7 +1,7 @@
  
 <!-- end:: Content Head -->
 <!-- begin:: Content -->
-<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid payment-receipt" id="printableArea">
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid payment-receipt padding-top-50" id="printableArea">
     <div class="row">
         <div class="col-lg-12">
             <div class="kt-portlet p-border">
@@ -10,41 +10,41 @@
                         <div class="kt-section__body">
                             <!-- First row start -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back" style="max-width: 25%;"> 
+                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back max-width-25" > 
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6" style="max-width: 46%;">
+                                <div class="col-lg-6 col-md-6 col-sm-6 max-width-50" >
                                     <label class="col-lg-12 col-form-label txt-center">
                                         <h3 class="p-header">BNINDIA KURIES PVT. LTD.</h3>
                                         <h5>(Goverment Registered Chit Fund Company)</h5> 
                                     </label> 
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back2" style="max-width: 25%;"> 
+                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back2 max-width-25" > 
                                 </div>
                             </div> 
                             <!-- First row end -->
 
                             <!-- Second row start -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-3 "> 
+                                <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" > 
                                      <div class="row">
-                                        <label class="col-lg-2 col-lg-2 col-sm-2 col-form-label">No.:</label>
-                                        <div class="col-lg-10  col-md-10 col-sm-10">
+                                        <label class="col-lg-2 col-lg-2 col-sm-2 col-form-label max-width-50">No.:</label>
+                                        <div class="col-lg-10  col-md-10 col-sm-10 max-width-50">
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">5618</label>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-lg-2 col-lg-2 col-sm-2  col-form-label">Date:</label>
-                                        <div class="col-lg-10 col-md-10 col-sm-10">
+                                        <label class="col-lg-2 col-lg-2 col-sm-2  col-form-label max-width-50">Date:</label>
+                                        <div class="col-lg-10 col-md-10 col-sm-10 max-width-50">
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">-</label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-6 txt-center">
+                                <div class="col-lg-6 col-md-6 col-sm-6 txt-center max-width-50" >
                                     <label class="col-lg-5 col-md-5 col-sm-5 col-form-label p-rec-lbl">RECEIPT</label>
                                 </div>
 
-                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" >
                                     <label class="col-lg-12 col-form-label border-lbl1">Area Code</label>
                                     <label class="col-lg-12 col-form-label border-lbl2">Cust Code</label>
                                 </div>
@@ -64,15 +64,15 @@
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-6 col-form-label">by Cash/Cheque/D.D. No. - -------</label>  
-                                        <label class="col-lg-3 col-form-label">dated- -------</label> 
-                                        <label class="col-lg-3 col-form-label">Transaction No. - -------</label> 
+                                        <label class="col-lg-6 col-form-label max-width-50">by Cash/Cheque/D.D. No. - -------</label>  
+                                        <label class="col-lg-3 col-form-label max-width-25">dated- -------</label> 
+                                        <label class="col-lg-3 col-form-label max-width-25">Transaction No. - -------</label> 
                                     </div>
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-4 col-form-label">Drown on- -------</label>  
-                                        <label class="col-lg-8 col-form-label">being subscription due as follows</label>  
+                                        <label class="col-lg-4 col-form-label max-width-50">Drown on- -------</label>  
+                                        <label class="col-lg-8 col-form-label max-width-50">being subscription due as follows</label>  
                                     </div>
                                 </div>
                             </div> 
@@ -132,7 +132,8 @@
                     </div>
                 </div> 
             </div>
-            <a href="javascript:void(0);" onclick="window.print()">Print Page</a>
+            
+            <a href="javascript:void(0);" class="hide-div" onclick="window.print()" id="printbtn">Print Page</a>
         </div>
     </div>
 </div>

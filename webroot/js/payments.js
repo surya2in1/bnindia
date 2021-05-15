@@ -51,15 +51,15 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     render: function(data, type, full, meta) { 
                          return '\
                             <div class="dropdown">\
-                                <a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
+                                <a href="javascript:void(0);" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
                                     <i class="flaticon-more-1"></i>\
                                 </a>\
                                 <div class="dropdown-menu dropdown-menu-right">\
                                     <ul class="kt-nav">\
                                         <li class="kt-nav__item">\
-                                            <a href="#" class="kt-nav__link">\
-                                                <i class="kt-nav__link-icon flaticon2-expand"></i>\
-                                                <span class="kt-nav__link-text">Create Receipt</span>\
+                                            <a href="javascript:void(0);" onclick=print_receipt(event,"'+$('#router_url').val()+'payments/receipt"); class="kt-nav__link printButton"  ref_url="http://localhost/bnindia/payments/receipt">\
+                                                <i class="kt-nav__link-icon fa fa-print"></i>\
+                                                <span class="kt-nav__link-text">Print Receipt</span>\
                                             </a>\
                                         </li>\
                                     </ul>\
@@ -101,9 +101,23 @@ function print(url) {
     }, true);
 }  
 
-$('.printButton').click(function(evt) {
+function print_receipt(evt,url){ 
+    evt.preventDefault();  
+    var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
+    loading.show();
+    $('body').append('<iframe width="0" height="0"  src="'+url+'" id="printIFrame" name="printIFrame" width="100%"></iframe>');
+    $('#printIFrame').bind('load', 
+        function() {  
+            $('.kt-dialog--shown').remove(); 
+        }
+    ); 
+}
+// $('.printButton').click(function(evt) {
+$( "div" ).delegate( ".printButton", "click", function(evt) {
     evt.preventDefault();
-    $('body').append('<iframe width="0" height="0"  src="http://localhost/bnindia/payments/receipt" id="printIFrame" name="printIFrame" width="100%"></iframe>');
+    var url = $(this).attr('ref_url');
+    alert(url);
+    $('body').append('<iframe width="0" height="0"  src="'+url+'" id="printIFrame" name="printIFrame" width="100%"></iframe>');
     $('#printIFrame').bind('load', 
         // function() { 
         //      setTimeout(function(){
