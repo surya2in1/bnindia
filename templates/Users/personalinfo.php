@@ -182,6 +182,18 @@
 												<input class="form-control" name="state" type="text" value="<?= $user->state; ?>">
 											</div>
 										</div>
+										 <div class="form-group row">
+		                                    <label class="col-xl-3 col-lg-3 col-form-label">Area Code</label>
+		                                    <div class="col-lg-6 col-xl-6">
+		                                        <input class="form-control" type="number" value="<?= $user->area_code; ?>" name="area_code">
+		                                    </div>
+		                                </div>
+		                                <div class="form-group row">
+		                                    <label class="col-xl-3 col-lg-3 col-form-label">Pin Code</label>
+		                                    <div class="col-lg-6 col-xl-6">
+		                                        <input class="form-control" type="number"  value="<?= $user->pin_code; ?>" name="pin_code">
+		                                    </div>
+		                                </div>
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Occupation</label>
 											<div class="col-lg-9 col-xl-6">

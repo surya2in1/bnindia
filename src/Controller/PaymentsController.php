@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
+use Cake\I18n\FrozenDate;
 
 /**
  * Payments Controller
@@ -242,8 +243,95 @@ class PaymentsController extends AppController
       echo json_encode($output);exit;
     }
 
-     public function receipt()
-    {  
-        $this->viewBuilder()->setLayout('print');     
+    //Get print receipt data
+    /*
+      * receipt_no
+      * payment_date
+      * area_code,cust_code
+      * member_name
+      * sub_rs
+      * cash/cheque/dd
+      * date 
+      * transaction_no
+      * drown_on
+
+      * group_code
+      * ticket_no
+      * instalment_no
+      * instalment_month
+      * subsciption_rs
+      * late_fee
+      * remark
+      * total
+      * group register no
+      * profile address, city, state,branch    
+      */
+    public function receipt($payment_id)
+    { 
+      $this->viewBuilder()->setLayout('print');   
+       $receipt_data = $this->Payments->get($payment_id, [
+                'contain' => [ 
+                                'Groups' => function($q) use ($payment_id) {
+                                  return $q->select(['Groups.group_code','Groups.gov_reg_no'])
+                                        ->contain(['Users' => function($q) {
+                                          return $q->select(['Users.address','Users.city','Users.state','Users.branch_name','Users.area_code','Users.pin_code']);
+                                        }, 
+                                  ]);
+                                }, 
+                                'MembersGroups' => function($q) use ($payment_id) {
+                                  return $q->select(['MembersGroups.id','MembersGroups.group_id','MembersGroups.user_id','MembersGroups.temp_customer_id','MembersGroups.ticket_no']);
+                                } 
+                            ]
+            ]);       
+      // echo '<pre>';print_r($receipt_data);exit;
+
+      $UsersTable = TableRegistry::get('Users');
+      $member =  $UsersTable->find();
+      $memberInfo = $member->select(['name' => $member->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier']),
+        'Users.area_code'  
+        ])->where(['id' => $receipt_data->user_id])->first();  
+
+       // echo '<pre>';print_r($memberInfo);exit;   
+
+      //Reg.Off.H.No.1727/2, Shivajinager, Tal.Karmala, Dist.Solapur Pin- 413 203
+      $branch_address = isset($receipt_data->group->user->address) ? $receipt_data->group->user->address : '';
+      $branch_address .= isset($receipt_data->group->user->branch_name) ? ', '.$receipt_data->group->user->branch_name : '';
+      // $branch_address .= isset($receipt_data->group->user->city) ? ', '.$receipt_data->group->user->city : '';
+      $branch_address .= isset($receipt_data->group->user->state) ? ', '.$receipt_data->group->user->state : '';
+      $branch_address .= isset($receipt_data->group->user->pin_code) ? ' Pin- '.$receipt_data->group->user->pin_code: '';
+      $branch_address = trim($branch_address,",");
+
+
+      $receipt_date=''; 
+      if(isset($receipt_data->date) && !empty($receipt_data->date)){
+          $FrozenDateObj = new FrozenDate($receipt_data->date); 
+          $receipt_date = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+      }
+      
+      $received_by = '';
+      $received_by_dt = '';  
+      $received_by_tran_no = '';
+      $received_by_drown_on = '';
+      if(isset($receipt_data->received_by) && ($receipt_data->received_by== 1)){
+          $received_by = 'Cash';
+          $received_by_dt = $receipt_date;
+      }
+      if(isset($receipt_data->received_by) && ($receipt_data->received_by== 2)){
+          $received_by = $receipt_data->cheque_no;
+          if(isset($receipt_data->cheque_date) && !empty($receipt_data->cheque_date)){
+            $FrozenDateObj = new FrozenDate($receipt_data->cheque_date); 
+            $received_by_dt = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+          } 
+          $received_by_drown_on =  $receipt_data->cheque_drown_on;
+      }
+      if(isset($receipt_data->received_by) && ($receipt_data->received_by== 3)){
+          $received_by = 'DD';
+          if(isset($receipt_data->direct_debit_date) && !empty($receipt_data->direct_debit_date)){
+            $FrozenDateObj = new FrozenDate($receipt_data->direct_debit_date); 
+            $received_by_dt = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+          } 
+          $received_by_tran_no = $receipt_data->direct_debit_transaction_no;
+      }
+      $this->set(compact('receipt_data','receipt_date','received_by','received_by_dt','received_by_tran_no','received_by_drown_on','memberInfo','branch_address'));
     }
 }

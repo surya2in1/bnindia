@@ -57,7 +57,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                                 <div class="dropdown-menu dropdown-menu-right">\
                                     <ul class="kt-nav">\
                                         <li class="kt-nav__item">\
-                                            <a href="javascript:void(0);" onclick=print_receipt(event,"'+$('#router_url').val()+'payments/receipt"); class="kt-nav__link printButton"  ref_url="http://localhost/bnindia/payments/receipt">\
+                                            <a href="javascript:void(0);" onclick=print_receipt(event,"'+$('#router_url').val()+'payments/receipt/'+data+'"); class="kt-nav__link printButton">\
                                                 <i class="kt-nav__link-icon fa fa-print"></i>\
                                                 <span class="kt-nav__link-text">Print Receipt</span>\
                                             </a>\
@@ -84,23 +84,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 jQuery(document).ready(function() {
     KTDatatablesDataSourceAjaxServer.init();   
 }); 
-
-function print(url) {
-    var printWindow = window.open( url, 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
-
-    printWindow.addEventListener('load', function() {
-        if (Boolean(printWindow.chrome)) {
-            printWindow.print();
-            setTimeout(function(){
-                printWindow.close();
-            }, 500);
-        } else {
-            printWindow.print();
-            printWindow.close();
-        }
-    }, true);
-}  
-
+  
 function print_receipt(evt,url){ 
     evt.preventDefault();  
     var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});
@@ -111,28 +95,4 @@ function print_receipt(evt,url){
             $('.kt-dialog--shown').remove(); 
         }
     ); 
-}
-// $('.printButton').click(function(evt) {
-$( "div" ).delegate( ".printButton", "click", function(evt) {
-    evt.preventDefault();
-    var url = $(this).attr('ref_url');
-    alert(url);
-    $('body').append('<iframe width="0" height="0"  src="'+url+'" id="printIFrame" name="printIFrame" width="100%"></iframe>');
-    $('#printIFrame').bind('load', 
-        // function() { 
-        //      setTimeout(function(){
-        //         window.frames['printIFrame'].focus(); 
-        //         window.frames['printIFrame'].print(); 
-        //     }, 500);
-        // }
-    );
-});
-
-function loadOtherPage(url) {
-
-    $("<iframe width='0' height='0'>")                             // create a new iframe element
-        .hide()                               // make it invisible
-        .attr("src", url) // point the iframe to the page you want to print
-        .appendTo("body");                    // add iframe to the DOM to cause it to load the page
-
 }

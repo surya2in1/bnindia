@@ -84,3 +84,10 @@ HAVING pid NOT IN (SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id 
 	and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC) or pid is null
 
 
+-------------------------------------------------------------------------------------------------------------
+
+-- print_receipt changes
+ALTER TABLE `users` ADD `area_code` INT(6) NOT NULL AFTER `state`;
+ALTER TABLE `users` ADD `pin_code` INT(7) NOT NULL AFTER `area_code`;
+ALTER TABLE `payments` CHANGE `subscription_amount` `subscription_amount` DECIMAL(10,2) NOT NULL, CHANGE `late_fee` `late_fee` DECIMAL(10,2) NOT NULL;
+ALTER TABLE `payments` CHANGE `remark` `remark` DECIMAL(10,2) NOT NULL;

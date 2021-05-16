@@ -40,17 +40,7 @@ use Cake\Routing\Router;
                         <a href="payment_form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
-                        </a>         
-                        <input type="button" value="Print this page" onClick="print('http://localhost/bnindia/payments/receipt')">
-                        <button type="button" class="kt-nav__link printButton" ref_url="http://localhost/bnindia/payments/receipt"> <i class="kt-nav__link-icon fa fa-print"></i>
-                            <span class="kt-nav__link-text">Print Receipt</span></button>  
-
-                        <!-- <a href="javascript:void(0);" class="kt-nav__link printButton" ref_url="http://localhost/bnindia/payments/receipt">
-                            <i class="kt-nav__link-icon flaticon2-expand"></i>
-                            <span class="kt-nav__link-text">Print Receipt</span>
-                        </a> -->
-                          <p><span onclick="loadOtherPage('http://localhost/bnindia/payments/receipt');" >Print external page!</span></p>
-
+                        </a>  
                     </div>
                 </div>
             </div>

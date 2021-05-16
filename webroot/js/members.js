@@ -225,6 +225,16 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                other_document: { extension: "png|jpe?g|pdf" },
 	                date_of_birth:{
 	                	minAge: 18
+	                },
+	                area_code:{
+	                    number: true,
+	                    maxlength: 5,
+	                    minlength: 2
+	                },
+	                pin_code:{
+	                    number: true,
+	                    maxlength: 6,
+	                    minlength:6
 	                }
 	            }, 
 	            errorPlacement: function(error, element) {

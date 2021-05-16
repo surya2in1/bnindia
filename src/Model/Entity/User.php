@@ -71,6 +71,8 @@ class User extends Entity
         'status' => true,
         'role_id' => true, 
         'branch_name' => true,
+        'area_code' => true,
+        'pin_code' => true,
         'created' => true,
         'modified' => true,
     ];

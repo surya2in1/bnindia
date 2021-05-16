@@ -27,15 +27,15 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" > 
                                      <div class="row">
-                                        <label class="col-lg-2 col-lg-2 col-sm-2 col-form-label max-width-50">No.:</label>
+                                        <label class="col-lg-2 col-lg-2 col-sm-2 col-form-label max-width-50">No.: </label>
                                         <div class="col-lg-10  col-md-10 col-sm-10 max-width-50">
-                                            <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">5618</label>
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-form-label"><?= isset($receipt_data->receipt_no) ? $receipt_data->receipt_no : ''; ?></label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <label class="col-lg-2 col-lg-2 col-sm-2  col-form-label max-width-50">Date:</label>
                                         <div class="col-lg-10 col-md-10 col-sm-10 max-width-50">
-                                            <label class="col-lg-3 col-md-3 col-sm-3 col-form-label">-</label>
+                                            <label class="col-lg-12 col-md-12 col-sm-12 col-form-label"><?=$receipt_date; ?></label>
                                         </div>
                                     </div>
                                 </div>
@@ -45,8 +45,8 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" >
-                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code</label>
-                                    <label class="col-lg-12 col-form-label border-lbl2">Cust Code</label>
+                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code: <?= isset($memberInfo->area_code) ? $memberInfo->area_code : ''; ?></label>
+                                    <label class="col-lg-12 col-form-label border-lbl2">Cust Code: <?= isset($receipt_data->members_group->temp_customer_id) ? $receipt_data->members_group->temp_customer_id : ''; ?></label>
                                 </div>
                             </div> 
                             <!-- Second row end -->
@@ -57,21 +57,21 @@
                                     <label class="col-form-label">Received with thanks from</label> 
                                 </div>
                                 <div class="col-lg-12  "> 
-                                    <label class="col-form-label">Mr./Ms./M/s -------</label>  
+                                    <label class="col-form-label">Mr./Ms./M/s <?= isset($memberInfo->name) ? ucwords($memberInfo->name) : '-------'; ?><label>  
                                 </div>
                                 <div class="col-lg-12  "> 
-                                    <label class="col-form-label">the sum of Rs -------</label>  
+                                    <label class="col-form-label">the sum of Rs <?= isset($receipt_data->total_amount) ? $receipt_data->total_amount : '-------'; ?></label>  
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-6 col-form-label max-width-50">by Cash/Cheque/D.D. No. - -------</label>  
-                                        <label class="col-lg-3 col-form-label max-width-25">dated- -------</label> 
-                                        <label class="col-lg-3 col-form-label max-width-25">Transaction No. - -------</label> 
+                                        <label class="col-lg-6 col-form-label max-width-50">by Cash/Cheque/D.D. No. - <?= isset($received_by) ? $received_by : '-------'; ?></label>  
+                                        <label class="col-lg-3 col-form-label max-width-25">dated- <?= isset($received_by_dt) ? $received_by_dt : '-------'; ?></label> 
+                                        <label class="col-lg-3 col-form-label max-width-25">Transaction No. - <?= isset($received_by_tran_no) ? $received_by_tran_no : '-------'; ?></label> 
                                     </div>
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-4 col-form-label max-width-50">Drown on- -------</label>  
+                                        <label class="col-lg-4 col-form-label max-width-50">Drown on- <?= isset($received_by_drown_on) ? $received_by_drown_on : '-------'; ?></label>  
                                         <label class="col-lg-8 col-form-label max-width-50">being subscription due as follows</label>  
                                     </div>
                                 </div>
@@ -82,9 +82,9 @@
                             <div class="row">  
                                  <table class="table table-striped- table-bordered table-hover table-checkable ptable-bordered" id="receipt_table">
                                     <caption>
-                                        Reg.Off.H.No.1727/2, Shivajinager Karmala, Tal.Karmala, Dist.Solapur Pin- 413 203
+                                        <?= isset($branch_address) ? $branch_address : ''; ?>
                                         <br/>
-                                        Rarg. No.U74999PN2014PTC152679 <br/><br/><br/>
+                                        Reg. No.<?= isset($receipt_data->group->gov_reg_no) ? $receipt_data->group->gov_reg_no : '-'; ?> <br/><br/><br/>
                                      
                                     </caption>
                                    
@@ -104,20 +104,20 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>1</td> 
-                                            <td>1</td> 
-                                            <td>1</td> 
-                                            <td>1</td>
-                                             <td>1</td> 
-                                             <td>1</td> 
-                                             <td>1</td>
+                                            <td><?= isset($receipt_data->group->group_code) ? $receipt_data->group->group_code : '-';  ?></td> 
+                                            <td><?= isset($receipt_data->members_group->ticket_no) ? $receipt_data->members_group->ticket_no : '-';  ?></td> 
+                                            <td><?= isset($receipt_data->instalment_no) ? $receipt_data->instalment_no : '-';  ?></td> 
+                                            <td><?= isset($receipt_data->instalment_month) ? $receipt_data->instalment_month : '-';  ?></td>
+                                             <td><?= isset($receipt_data->subscription_amount) ? $receipt_data->subscription_amount : '-';  ?></td> 
+                                             <td><?= isset($receipt_data->late_fee) ? $receipt_data->late_fee : '-';  ?></td> 
+                                             <td><?= isset($receipt_data->remark) ? $receipt_data->remark : '-';  ?></td>
                                         </tr>
                                          <tr>
                                             <td></td> 
                                             <td></td> 
                                             <td></td> 
-                                            <td>Total</td>
-                                             <td colspan="2">1</td> 
+                                            <td><b>Total</b></td>
+                                             <td colspan="2"><b><?= isset($receipt_data->total_amount) ? $receipt_data->total_amount : '-';  ?></b></td> 
                                              <td></td> 
                                         </tr>
                                     </tbody>
@@ -132,7 +132,6 @@
                     </div>
                 </div> 
             </div>
-            
             <a href="javascript:void(0);" class="hide-div" onclick="window.print()" id="printbtn">Print Page</a>
         </div>
     </div>

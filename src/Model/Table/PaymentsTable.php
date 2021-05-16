@@ -60,6 +60,11 @@ class PaymentsTable extends Table
         $this->belongsTo('Auctions', [
             'foreignKey' => 'auction_id' 
         ]);
+        $this->belongsTo('MembersGroups', [ 
+            'bindingKey' => ['group_id', 'user_id'],
+            'foreignKey' => ['group_id', 'user_id'],
+            'joinType' => 'INNER',
+        ]);
     }
 
     /**
@@ -153,8 +158,7 @@ class PaymentsTable extends Table
         //     ->notEmptyString('direct_debit_transaction_no');
 
         $validator
-            ->scalar('remark')
-            ->maxLength('remark', 500)
+            ->decimal('remark') 
             ->requirePresence('remark', 'create')
             ->notEmptyString('remark');
 
@@ -247,11 +251,11 @@ class PaymentsTable extends Table
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'p.receipt_no','p.date','g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",
+        $aColumns = array( 'p.receipt_no',"DATE_FORMAT(p.date,'%m/%d/%Y') as date",'g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",
             'p.subscriber_ticket_no',
             'p.instalment_no',
             'p.instalment_month',
-            'p.due_date',
+            "DATE_FORMAT(p.due_date,'%m/%d/%Y') as due_date",
             'p.subscription_amount','p.late_fee','p.total_amount',"(
             CASE 
                 WHEN received_by =1 THEN 'Cash'

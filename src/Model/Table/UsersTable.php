@@ -188,10 +188,18 @@ class UsersTable extends Table
             ->allowEmptyFile('profile_picture');
 
         $validator
+            ->integer('area_code')
+            ->allowEmptyString('area_code');
+
+        $validator
+            ->integer('pin_code')
+            ->allowEmptyString('pin_code');
+
+        $validator
             ->integer('status')
             ->allowEmptyString('status');
-
-         $validator
+            
+        $validator
             ->scalar('branch_name')
             ->maxLength('branch_name', 200);    
 

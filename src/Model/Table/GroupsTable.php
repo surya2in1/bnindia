@@ -47,6 +47,9 @@ class GroupsTable extends Table
         $this->hasMany('Auctions', [
             'foreignKey' => 'group_id',
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'created_by' 
+        ]);
     }
 
     /**
