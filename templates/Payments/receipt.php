@@ -10,15 +10,15 @@
                         <div class="kt-section__body">
                             <!-- First row start -->
                             <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back max-width-25" > 
+                                <div class="col-lg-2 col-md-2 col-sm-2 logo1-back max-width-20" > 
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 max-width-50" >
+                                <div class="col-lg-8 col-md-8 col-sm-8 max-width-60" >
                                     <label class="col-lg-12 col-form-label txt-center">
                                         <h3 class="p-header">BNINDIA KURIES PVT. LTD.</h3>
                                         <h5>(Goverment Registered Chit Fund Company)</h5> 
                                     </label> 
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3 logo1-back2 max-width-25" > 
+                                <div class="col-lg-2 col-md-2 col-sm-2 logo1-back2 max-width-20" > 
                                 </div>
                             </div> 
                             <!-- First row end -->
@@ -45,7 +45,7 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" >
-                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code: <?= isset($memberInfo->area_code) ? $memberInfo->area_code : ''; ?></label>
+                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code: <?= isset($memberInfo->area_code) && ($memberInfo->area_code>0) ? $memberInfo->area_code : '----'; ?></label>
                                     <label class="col-lg-12 col-form-label border-lbl2">Cust Code: <?= isset($receipt_data->members_group->temp_customer_id) ? $receipt_data->members_group->temp_customer_id : ''; ?></label>
                                 </div>
                             </div> 

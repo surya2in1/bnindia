@@ -298,7 +298,7 @@ class PaymentsController extends AppController
       $branch_address .= isset($receipt_data->group->user->branch_name) ? ', '.$receipt_data->group->user->branch_name : '';
       // $branch_address .= isset($receipt_data->group->user->city) ? ', '.$receipt_data->group->user->city : '';
       $branch_address .= isset($receipt_data->group->user->state) ? ', '.$receipt_data->group->user->state : '';
-      $branch_address .= isset($receipt_data->group->user->pin_code) ? ' Pin- '.$receipt_data->group->user->pin_code: '';
+      $branch_address .= isset($receipt_data->group->user->pin_code) && ($receipt_data->group->user->pin_code > 0) ? ' Pin- '.$receipt_data->group->user->pin_code: '';
       $branch_address = trim($branch_address,",");
 
 
