@@ -1,0 +1,10 @@
+For tyoeahead members for group form add/edit
+
+
+SELECT mg.group_id,(CONCAT(first_name, ' ', middle_name, ' ', last_name)) AS name, Users.customer_id AS Users__customer_id, Users.id AS Users__id, Users.address AS Users__address 
+FROM users Users LEFT JOIN members_groups mg ON mg.user_id = Users.id 
+WHERE ( Users.customer_id like'%a%'
+ AND (mg.group_id != 7 OR (mg.group_id) IS NULL) )
+ and NOT EXISTS (SELECT 1 FROM members_groups mg2 WHERE mg2.user_id = Users.id and mg2.group_id = 7 ) 
+GROUP BY Users.id
+=========================================================================================================== 

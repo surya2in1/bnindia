@@ -59,21 +59,10 @@ var KTFormControls = function () {
                 photo_proof: { extension: "png|jpe?g|pdf" },
                 other_document: { extension: "png|jpe?g|pdf" },
                 branch_name: {
-                    required: true,
-                    lettersonly: true,
-                    maxlength: 50
-                },
-                area_code:{
-                    number: true,
-                    maxlength: 5,
-                    minlength: 2
-                },
-                pin_code:{
-                    number: true,
-                    maxlength: 6,
-                    minlength:6
-                }
-
+                        required: true,
+                        lettersonly: true,
+                        maxlength: 50
+                    },
             },
             // errorPlacement: function(error, element) {
                     // if (element.attr("name") == "profile_picture" ) {

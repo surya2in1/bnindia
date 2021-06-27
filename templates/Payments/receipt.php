@@ -64,14 +64,14 @@
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-6 col-form-label max-width-50">by Cash/Cheque/D.D. No. - <?= isset($received_by) ? $received_by : '-------'; ?></label>  
+                                        <label class="col-lg-6 col-form-label max-width-50">by <?= isset($received_by) ? $received_by : '-------'; ?></label>  
                                         <label class="col-lg-3 col-form-label max-width-25">dated- <?= isset($received_by_dt) ? $received_by_dt : '-------'; ?></label> 
-                                        <label class="col-lg-3 col-form-label max-width-25">Transaction No. - <?= isset($received_by_tran_no) ? $received_by_tran_no : '-------'; ?></label> 
+                                        <label class="col-lg-3 col-form-label max-width-25">Transaction No. - <?= isset($received_by_tran_no) && !empty($received_by_tran_no) ? $received_by_tran_no : '-------'; ?></label> 
                                     </div>
                                 </div>
                                 <div class="col-lg-12  "> 
                                     <div class="row">
-                                        <label class="col-lg-4 col-form-label max-width-50">Drown on- <?= isset($received_by_drown_on) ? $received_by_drown_on : '-------'; ?></label>  
+                                        <label class="col-lg-4 col-form-label max-width-50">Drown on- <?= isset($received_by_drown_on) && !empty($received_by_drown_on) ? $received_by_drown_on : '-------'; ?></label>  
                                         <label class="col-lg-8 col-form-label max-width-50">being subscription due as follows</label>  
                                     </div>
                                 </div>

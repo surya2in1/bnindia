@@ -1,0 +1,136 @@
+On group form
+
+Group type          Collection  date/due dt                Auction Day
+--------------------------------------------------------------------------
+ Monthly               1-31 => single dropdown			1-31 => single dropdown
+
+ Forthnight			 1-15 & 16-31 => 2 dropdown		  1-15 & 16-31 => 2 dropdown	
+
+ Weekly				   Monday - Sunday					Monday - Sunday
+
+ Daily						Daily                        	Daily
+
+Db Changes: in groups table data field data type must varchar 
+
+
+validation for group form submit for acution day and collection date
+forthnight date 1 must be between 1-15
+		   date 2 must be between 16-31	
+
+ ==================================================================================================
+
+ On Auction Form
+
+ auctiontable.php
+
+ validation for correct auction_date:
+
+==================================================================================================
+ 1. add group_type parm in CreateDateFromDay function
+ 2. Calculate day in CreateDateFromDay 
+
+ Group type      Change
+ ===========================
+ 1.Monthly		No change
+ ----------------------------
+
+ 2.Forthnight   g.date explode with comma
+ 				Declare day VARCHAR(20);
+ 				day = explode(',',paramday);
+ 				Declare auction_date_day;
+ 				auction_date_day = DAY(auction_date);
+ 				if(auction_date_day <= 15){
+ 				   day = g_date_explode[0]
+ 				}else{
+ 				   day = g_date_explode[1]
+ 				}
+
+3.Weekly 
+   - get first and last day of week
+   		//SELECT SUBDATE('2021-06-25', weekday('2021-06-25'))
+   		SELECT DATE("2021-06-25" + INTERVAL ( - WEEKDAY("2021-06-25")) DAY) as start_date, DATE("2021-06-25" + INTERVAL (6 - WEEKDAY("2021-06-25")) DAY) as end_date
+   		o/p start_date 2021-06-21
+			end_date 2021-06-27
+		week_start_date=select day('2021-06-21');21
+		week_end_date=select day('2021-06-27');	27
+		day ='';
+		if(paramday >=week_start_date and paramday<=week_end_date){
+			$j =0;
+			for($i=week_start_date;$i<=week_end_date;$i++;){
+				if(paramday ==$i){
+					day =$i;
+					exit;
+				}
+				$j++;
+			}
+		}
+		
+   - get date from day in week
+
+4.Daily 
+   due date same as auction date
+--------------------------------------------------------------------       
+
+Late fee = CreateDateFromDay(g.date,Auctions.auction_date))
+day,auction_date
+
+BEGIN
+DECLARE month VARCHAR(20); 
+DECLARE group_due_date VARCHAR(20); 
+DECLARE auction_last_day INT DEFAULT 0; 
+
+SET month = MONTH(auction_date);
+
+IF month<10 
+ THEN SET month = CONCAT('0',month); 
+END IF;
+
+IF day<10 
+THEN SET day = CONCAT('0',day); 
+END IF; 
+
+SET auction_last_day = DAY(LAST_DAY(auction_date));
+ 
+IF day>auction_last_day
+	THEN SET day = auction_last_day;
+END IF;
+
+SET group_due_date = CONCAT(YEAR(auction_date),'-',month,'-',day);
+
+RETURN group_due_date;
+END
+
+--------------------------------------------------
+	
+CalculateLateFee
+BEGIN 
+ DECLARE late_fee DECIMAL(10,2) DEFAULT 0;
+ DECLARE total_due_months INT DEFAULT 0; 
+ DECLARE inc INT DEFAULT 0;
+ DECLARE total_late_fee DECIMAL(10,2) DEFAULT 0;
+ 
+ IF group_due_date < CURDATE()
+ 	THEN 
+    
+    SET total_due_months = (SELECT TIMESTAMPDIFF(month, group_due_date, CURDATE()));
+ 
+  label: 
+ WHILE inc <= total_due_months DO
+    
+    IF (inc=0) THEN
+       SET late_fee =(net_subscription_amount*group_late_fee)/100;
+    ELSE
+    	SET late_fee = late_fee+((late_fee*group_late_fee)/100);
+    END IF;
+    
+    SET total_late_fee = total_late_fee+late_fee;
+    SET inc = inc + 1;
+    
+  END 
+ WHILE label;
+
+ END IF;
+
+  RETURN total_late_fee;
+  -- RETURN total_due_months; 
+END

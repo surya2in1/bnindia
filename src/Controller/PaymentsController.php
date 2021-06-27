@@ -317,7 +317,7 @@ class PaymentsController extends AppController
           $received_by_dt = $receipt_date;
       }
       if(isset($receipt_data->received_by) && ($receipt_data->received_by== 2)){
-          $received_by = $receipt_data->cheque_no;
+          $received_by = 'Cheque No. - '.$receipt_data->cheque_no;
           if(isset($receipt_data->cheque_date) && !empty($receipt_data->cheque_date)){
             $FrozenDateObj = new FrozenDate($receipt_data->cheque_date); 
             $received_by_dt = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
@@ -325,7 +325,7 @@ class PaymentsController extends AppController
           $received_by_drown_on =  $receipt_data->cheque_drown_on;
       }
       if(isset($receipt_data->received_by) && ($receipt_data->received_by== 3)){
-          $received_by = 'DD';
+          $received_by = 'D.D.';
           if(isset($receipt_data->direct_debit_date) && !empty($receipt_data->direct_debit_date)){
             $FrozenDateObj = new FrozenDate($receipt_data->direct_debit_date); 
             $received_by_dt = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
