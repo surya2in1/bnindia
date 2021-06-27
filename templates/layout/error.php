@@ -1,6 +1,6 @@
 <?php
 $cakeDescription = 'Bnindia';
- ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 

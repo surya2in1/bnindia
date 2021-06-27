@@ -28,7 +28,7 @@
                 </div>
                 <div class="kt-portlet__body">
                     <div class="kt-section kt-section--first">
-                        <div class="kt-section__body">
+                        <div class="kt-section__body"> 
                             <div class="form-group row">
                                 <label class="col-lg-3 col-form-label">Group Code:</label>
                                 <div class="col-lg-6">
@@ -60,9 +60,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-lg-3 col-form-label">Date:</label>
+                                <label class="col-lg-3 col-form-label">Collection Date:</label>
                                 <div class="col-lg-6">
-                                    <label class="col-lg-3 col-form-label"><?= isset($group->date) ? $group->date : '';?></label>
+                                     <label class="col-lg-3 col-form-label"><?= isset($group->date) ? $group->date : '';?></label>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -70,7 +70,7 @@
                                 <div class="col-lg-6">
                                     <label class="col-lg-3 col-form-label"><?= isset($group->no_of_months) ? $group->no_of_months : '';?></label>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group row">
                                 <label  class="col-xl-3 col-lg-3 col-form-label" for="group_ids">Group Members:</label>
                                 <div class="col-lg-6 col-xl-6">
@@ -82,6 +82,54 @@
                                         echo 'No members available';
                                     } ?>
                                 </div>  
+                            </div>
+                            
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label"><b>Bank deposit details:</b></label>
+                                <div class="col-lg-6"> 
+                                </div>
+                             </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Bank Deposite Amount:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->bank_deposite_amount) ? $group->bank_deposite_amount : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Bank Deposite Number:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->bank_deposite_number) ? $group->bank_deposite_number : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Bank Name:</label>
+                                <div class="col-lg-6">
+                                    <label class="col-lg-3 col-form-label"><?= isset($group->bank_name) ? $group->bank_name : '';?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Bank Deposite Date:</label>
+                                <div class="col-lg-6">
+                                    <?php 
+                                        $bank_deposite_date = '';
+                                        if(strtotime($group->bank_deposite_date) > 0){
+                                            $bank_deposite_date = date('m/d/Y',strtotime($group->bank_deposite_date));
+                                        }
+                                    ?>
+                                    <label class="col-lg-3 col-form-label"><?= $bank_deposite_date; ?></label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Deposit Maturity Date:</label>
+                                <div class="col-lg-6">
+                                    <?php 
+                                        $deposite_maturity_date = '';
+                                        if(strtotime($group->deposite_maturity_date) > 0){
+                                            $deposite_maturity_date = date('m/d/Y',strtotime($group->deposite_maturity_date));
+                                        }
+                                    ?>
+                                    <label class="col-lg-3 col-form-label"><?= $deposite_maturity_date; ?></label>
+                                </div>
                             </div>
                         </div>
                     </div>

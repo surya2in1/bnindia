@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
 use Cake\I18n\FrozenDate;
+use Cake\Core\Configure;
+
+
 /**
  * Auctions Controller
  *
@@ -34,6 +37,21 @@ class AuctionsController extends AppController
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
         } 
+        $UsersTable = TableRegistry::get('Users'); 
+        
+        $user = $UsersTable->find('all', [ 
+            'contain' => ['Roles' => function ($q) {
+                                return $q
+                                    ->select(['name'])
+                                    ->where(['Roles.name' => Configure::read('ROLE_SUPERADMIN') ]);
+                            },     
+                         ],
+        ])->first();
+        $foreman_commission_in_percent = ($user->foreman_commission_in_percent) ? $user->foreman_commission_in_percent : 5;
+        // echo '<pre>';print_r($user);exit();
+        $role = isset($user->role->name) ? $user->role->name : ''; 
+        
+        
         $selected_group_members = [];  
         $auction = [];
         if($id>0){
@@ -45,20 +63,20 @@ class AuctionsController extends AppController
             $auction = $this->Auctions->newEmptyEntity();
         }
          
-        //Get all fulle member groups  
+        //Get all groups except disable
         $GroupsTable = TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
                                         'keyField' => 'id',
                                         'valueField' => 'group_code' 
                                     ])
-                    ->where(['status'=>0,'is_all_auction_completed' => 0])->toArray();
+                    ->where(['status '=>0,'is_all_auction_completed' => 0])->toArray();
 
         //echo '<pre>';print_r($auction);exit();
-        $this->set(compact('auction','groups','selected_group_members'));
+        $this->set(compact('auction','groups','selected_group_members','foreman_commission_in_percent'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData(); 
-             
+            
             $last_acution =  $this->Auctions->find()
             ->select(['auction_date'])
             ->where(['group_id' => $post['group_id']])
@@ -69,14 +87,13 @@ class AuctionsController extends AppController
                 $FrozenDateObj = new FrozenDate($last_acution->auction_date); 
                 $last_auction_date = $FrozenDateObj->i18nFormat('yyyy-MM-dd'); 
             }
-             $post['last_auction_date'] = $last_auction_date;
-
+            $post['last_auction_date'] = $last_auction_date;
+             
            //convert dates to db field format
             if(strtotime($post['auction_date']) > 0){
                 $post['auction_date'] = date('Y-m-d',strtotime($post['auction_date']));
             }
-
-            // echo '<pre>';print_r($post);exit; 
+           // echo '<pre>';print_r($post);// exit;  
             $auction = $this->Auctions->patchEntity($auction, $post);
             if ($result = $this->Auctions->save($auction)) { 
                 //check if all auction complete then update groups 
@@ -88,7 +105,6 @@ class AuctionsController extends AppController
                 $premium = ($groupInfo->premium) ? $groupInfo->premium : 0;
                 $auction_count = ($groupAuctionCount->count()) ? $groupAuctionCount->count() : 0;
                 $total_auction_amount = ($premium*$auction_count);
-                // echo $chit_amount.'/ $premium '.$premium.' / auccnt '.$auction_count.'//tt '.$total_auction_amount;exit;
                
                 if($total_auction_amount >= $chit_amount){
                     $GroupsTable = TableRegistry::get('Groups');
@@ -101,7 +117,6 @@ class AuctionsController extends AppController
                 echo 1;
             }else{
                 $validationErrors = $auction->getErrors();
-                // echo 'validationErrors <pre>';print_r($validationErrors);exit();
                 if(isset($validationErrors['auction_date']['wrong_auction_date']) && !empty($validationErrors['auction_date']['wrong_auction_date'])){
                     echo $validationErrors['auction_date']['wrong_auction_date'];
                 }else{

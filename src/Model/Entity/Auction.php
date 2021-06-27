@@ -50,6 +50,7 @@ class Auction extends Entity
         'total_subscriber_dividend' => true,
         'subscriber_dividend' => true,
         'net_subscription_amount' => true,
+        'ticket_no' =>true,
         'created' => true,
         'modified' => true,
         'group' => true,

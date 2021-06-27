@@ -85,12 +85,17 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/add_group_members', ['controller' => 'Groups', 'action' => 'addGroupMembers']);
 
     $builder->connect('/member_form/*', ['controller' => 'Users', 'action' => 'memberform']);
-
-    $builder->connect('/auction_form/*', ['controller' => 'Auctions', 'action' => 'auctionform']);
-
-    $builder->connect('/payment_form/*', ['controller' => 'Payments', 'action' => 'paymentform']);
-
+    
     $builder->connect('/error404', ['controller' => 'Error', 'action' => 'error404']);
+    
+    $builder->connect('/auction_form/*', ['controller' => 'Auctions', 'action' => 'auctionform']);
+    
+    $builder->connect('/payment_form/*', ['controller' => 'Payments', 'action' => 'paymentform']);
+    
+    $builder->connect('/payment_voucher_form/*', ['controller' => 'PaymentVouchers', 'action' => 'paymentvoucherform']);
+
+    $builder->connect('/other_payment_form/*', ['controller' => 'OtherPayments', 'action' => 'otherpaymentform']);
+    
     /*
      * Connect catchall routes for all controllers.
      *

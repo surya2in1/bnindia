@@ -59,6 +59,10 @@ class UsersTable extends Table
             'foreignKey' => 'user_id', 
              'joinType' => 'INNER',
         ]);
+        $this->hasMany('PaymentVouchers', [
+            'foreignKey' => 'user_id', 
+             'joinType' => 'INNER',
+        ]);
     }
 
     /**
@@ -222,7 +226,7 @@ class UsersTable extends Table
     }
 
     public function GetData() {
-        $aColumns = array( 'u.email','u.first_name','u.last_name','u.gender','u.status' );
+        $aColumns = array('u.customer_id', 'u.email','u.first_name','u.last_name','u.gender','u.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";
         /* DB table to use */

@@ -1,0 +1,68 @@
+Payments and receipts:
+1. first clear late fee per month then calculate Total amount 
+   
+2. Total amount move up to Received by  
+
+3. Add Received amount text box, editable only for cheque and dd 
+
+4. Subcription amount and late fee is remaing amount after submit and before submit its received  amount - late fee and late fee is remaining late fee
+
+5. Received amount must be change on after changing notes
+
+6. Received amount text box editable when not cash type, this will be filled when enter amount in notes
+
+7. Disable future installments in installment no dropdown, only editable recently installment
+
+8. Rename List of Payments to List of Payments and Receipts
+
+9. print receipt => add total due amount
+
+Payment Voucher:
+1. Add Payment Voucher List as List of payment
+
+Voucher 
+1. Show auction no after group select
+
+Group:
+1. Remove Received Amount
+
+Add member
+1. Replace Area code to Agent code  
+2. Move to last
+3. Pin Code manditory
+----------------------------------------------------------------
+Remaining
+
+Move resaon from payment voucher to other payment
+
+Add member
+1. Replace Area code to Agent code db field
+
+Dashboard:
+Add Daily repots:
+1. How may notes
+2. How many cheque : Cheque no and cheque
+3. DD no, amount
+Total amount
+
+Group:
+2. Changes on Calulation of late fee as per group type collection date overall
+
+Role Access:
+1. Super Admin List of moudules of All Branch 
+2. Admin: only self branch All tabs
+3. Users:
+Add receipt
+Add member
+4.Customer:
+Profile
+List,View
+
+Reports
+
+-----------------------------------------------------------------------------------------------------------
+
+
+Add remaining_late_fee and remaining_late_fee fields in page
+
+

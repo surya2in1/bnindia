@@ -80,19 +80,19 @@
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">First Name</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">First Name<span class="required" aria-required="true"> * </span></label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" name="first_name" type="text" value="<?= $user->first_name; ?>">
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">Middle Name</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">Middle Name<span class="required" aria-required="true"> * </span></label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" type="text" name="middle_name" value="<?= $user->middle_name; ?>">
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">Last Name</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">Last Name<span class="required" aria-required="true"> * </span></label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" type="text" name="last_name" value="<?= $user->last_name; ?>">
 											</div>
@@ -182,18 +182,18 @@
 												<input class="form-control" name="state" type="text" value="<?= $user->state; ?>">
 											</div>
 										</div>
-										 <div class="form-group row">
-		                                    <label class="col-xl-3 col-lg-3 col-form-label">Area Code</label>
-		                                    <div class="col-lg-6 col-xl-6">
-		                                        <input class="form-control" type="number" value="<?= $user->area_code; ?>" name="area_code">
-		                                    </div>
-		                                </div>
-		                                <div class="form-group row">
-		                                    <label class="col-xl-3 col-lg-3 col-form-label">Pin Code</label>
-		                                    <div class="col-lg-6 col-xl-6">
-		                                        <input class="form-control" type="number"  value="<?= $user->pin_code; ?>" name="pin_code">
-		                                    </div>
-		                                </div>
+										<div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label">Agent Code</label>
+                                            <div class="col-lg-6 col-xl-6">
+                                                <input class="form-control" type="number" value="<?= ($user->area_code>0) ? $user->area_code : ''; ?>" name="area_code">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label">Pin Code<span class="required" aria-required="true"> * </span></label>
+                                            <div class="col-lg-6 col-xl-6">
+                                                <input class="form-control" type="number"  value="<?= ($user->pin_code>0) ? $user->pin_code : ''; ?>" name="pin_code">
+                                            </div>
+                                        </div>
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Occupation</label>
 											<div class="col-lg-9 col-xl-6">
@@ -207,7 +207,7 @@
 											</div>
 										</div>
 										<div class="form-group row">
-											<label class="col-xl-3 col-lg-3 col-form-label">Branch Name</label>
+											<label class="col-xl-3 col-lg-3 col-form-label">Branch Name<span class="required" aria-required="true"> * </span></label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" name="branch_name" type="text" value="<?= $user->branch_name; ?>">
 											</div>

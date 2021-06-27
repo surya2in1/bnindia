@@ -32,7 +32,7 @@ class Group extends Entity
      * @var array
      */
     protected $_accessible = [ 
-        'group_code' =>true,
+        'group_code' => true,
         'chit_amount' => true,
         'total_number' => true,
         'premium' => true,
@@ -45,6 +45,11 @@ class Group extends Entity
         'group_type' => true,
         'auction_day' => true,
         'late_fee'=> true,
-        'created_by' => true
+        'created_by' => true,
+        'bank_name'=>true,
+        'bank_deposite_amount'=>true,
+        'bank_deposite_number'=>true,
+        'bank_deposite_date'=>true, 
+        'deposite_maturity_date' => true,
     ];
 }

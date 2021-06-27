@@ -48,6 +48,7 @@
             <table class="table table-striped- table-bordered table-hover table-checkable" id="kt_table_1">
                 <thead>
                     <tr>
+                        <th>Customer Id</th>
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>

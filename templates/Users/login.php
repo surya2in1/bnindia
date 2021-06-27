@@ -78,7 +78,7 @@
 												</div>
 												<div class="kt-login__extra">
 													<label class="kt-checkbox">
-														<input type="checkbox" name="agree"> I Agree the <a href="#">terms and conditions</a>.
+														<input type="checkbox" name="agree"> I Agree the <a href="/">terms and conditions</a>.
 														<span></span>
 													</label>
 												</div>

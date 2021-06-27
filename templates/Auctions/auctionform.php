@@ -39,6 +39,7 @@ use Cake\Routing\Router;
                        'method'=> 'Post'
                      )); ?>
                       <input type="hidden" name="id" id="id" value="<?= $auctionid; ?>">
+                      <input type="hidden" name="foreman_commission_in_percent" id="foreman_commission_in_percent" value="<?= $foreman_commission_in_percent; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
@@ -68,7 +69,7 @@ use Cake\Routing\Router;
                                         <?php $auction_member_id =  isset($auction->auction_winner_member) ? $auction->auction_winner_member : 0;
                                         ?>
                                         <!-- Get member list -->
-                                        <select id="auction_winner_member" name="auction_winner_member" class="form-control">
+                                        <select id="auction_winner_member" name="auction_winner_member" class="form-control" onchange="member_change(this);">
                                              <option value="">Select Member</option>
                                             <?php if($selected_group_members){ 
                                                 foreach ($selected_group_members as $key => $member) {
@@ -80,6 +81,13 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>
 
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Ticket no:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" readonly name="ticket_no"  id="ticket_no" placeholder="Enter Ticket No" value="<?= isset($auction->ticket_no) ? $auction->ticket_no : 0;?>" >
+                                    </div>
+                                </div> 
+                                
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Auction no:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
@@ -104,7 +112,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Auction Highest Percent:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="auction_highest_percent" placeholder="Enter Auction Highest Percent" value="<?= isset($auction->auction_highest_percent) ? $auction->auction_highest_percent : '';?>" id="auction_highest_percent" onchange="calculate_subscription_amount();">
+                                        <input type="number" min=5 class="form-control border-black" name="auction_highest_percent" placeholder="Enter Auction Highest Percent" value="<?= isset($auction->auction_highest_percent) ? $auction->auction_highest_percent : '';?>" id="auction_highest_percent" onchange="calculate_subscription_amount();">
                                     </div>
                                     <label class="col-lg-3 col-form-label">%</label>
                                 </div> 
@@ -133,7 +141,7 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Foreman Commission:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="foreman_commission" placeholder="Enter Foreman Commission" value="<?= isset($auction->foreman_commission) ? $auction->foreman_commission : '5000';?>" id="foreman_commission" id="foreman_commission"  onchange="calculate_subscription_amount();">
+                                        <input type="text" class="form-control border-black" name="foreman_commission" placeholder="Enter Foreman Commission" value="<?= isset($auction->foreman_commission) ? $auction->foreman_commission : '0';?>" id="foreman_commission" id="foreman_commission"  onchange="calculate_subscription_amount();">
                                     </div>
                                 </div> 
 

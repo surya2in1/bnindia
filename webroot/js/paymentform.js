@@ -54,6 +54,16 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                received_by:{
 	                	required:true
 	                }, 
+	                received_amount:{
+	                    required:true,
+	                    number:true,
+	                    min:function() {
+                            return parseFloat(1);
+                        },
+	                    max: function() {
+                            return parseFloat($('#total_due_amount').val());
+                        }
+	                },
             		cheque_no: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
                             }, number:true
@@ -306,7 +316,13 @@ function clear_fields(){
     $('#net_subscription_amount').val('0.00');
     $('#pending_amount').val('0.00');
     $('#auction_id').val('0.00'); 
+    $('#is_late_fee_clear').val('0'); 
+    $('#remaining_late_fee').val('0.00'); 
     $('#due_date').val(''); 
+    $('#due_late_fee').val('0.00'); 
+    $('#total_due_amount').val('0.00'); 
+    $('#remaining_subscription_amount').val('0.00');
+    $('#fixed_remaining_subscription_amount').val('0.00'); 
 }
 //Show groups after select member
 $('#groups').change(function(e) {
@@ -362,7 +378,7 @@ $('#groups').change(function(e) {
 });
 
 $('#received_by').change(function(e) {
-	var received_by = $(this).val();
+    var received_by = $(this).val();
 	$('.rec-by-div').addClass('hide-div');
     $('.rec-by-div').find(':input').each(function () {
          $(this).val('');
@@ -372,6 +388,18 @@ $('#received_by').change(function(e) {
 	}else if(received_by == 3){
 		$('.direct-debit-div').removeClass('hide-div');
 	}
+	
+	if(received_by == 1){
+	    $('#payment_received_amount_div').removeClass('hide');   
+	    $('#received_amount').attr('readonly',true);   
+	    $('#received_amount').removeClass('border-black');
+	}else{
+	    $('#payment_received_amount_div').addClass('hide');
+	    $('#received_amount').attr('readonly',false);
+	    $('#received_amount').addClass('border-black');
+	}
+	$('#received_amount').val('0.00');  
+	
 });
 
 //Show installment no.s after select group and member
@@ -407,7 +435,11 @@ function getInstalmentNo(){
                             if(payment_instalment_no == value.auction_no){
                                 selected = 'selected';
                             }
-						   instalment_nos_options += '<option value="'+value.auction_no+'" '+selected+' data-id="'+value.id+'" data-instalment_month="'+value.instalment_month+'"  data-due_late_fee="'+value.due_late_fee+'" data-due_date="'+value.due_date+'">'+value.auction_no+'</option>';
+                            var disabled = '';
+                            if(key > 0){
+                                disabled = 'disabled';
+                            }
+						   instalment_nos_options += '<option value="'+value.auction_no+'" '+selected+' '+disabled+' data-id="'+value.id+'" data-instalment_month="'+value.instalment_month+'"  data-due_late_fee="'+value.due_late_fee+'" data-due_date="'+value.due_date+'">'+value.auction_no+'</option>';
 						}); 
             	} 
             	$('#instalment_no').html(instalment_nos_options);
@@ -439,11 +471,12 @@ function getRemaingPayments(){
             	$('.bnspinner-instalment').addClass('hide');
             	var result = JSON.parse(response); 
                 var pending_amount = result.pending_amount;
-            	var subscription_amount = result.net_subscription_amount;
+                var subscription_amount = result.premaining_subscription_amount;
+            	//var subscription_amount = result.net_subscription_amount;
                 //If pending amount is remainging for selected instalment then set pending amount for subscription rs
-                if(pending_amount > 0 ){
-                     subscription_amount = pending_amount;
-                }
+                // if(pending_amount > 0 ){
+                //      subscription_amount = subscription_amount;
+                // }
 
                 //Calculate late fee
                 var group_late_fee = $('#group_late_fee').val();
@@ -453,7 +486,7 @@ function getRemaingPayments(){
                 var get_group_due_dt = $('#instalment_no').find(':selected').data('due_date');
                 $('#due_date').val(get_group_due_dt);
                 var group_due_date = $('#due_date').val(); 
-                var late_fee =$('#instalment_no').find(':selected').data('due_late_fee'); 
+                var late_fee =parseFloat($('#instalment_no').find(':selected').data('due_late_fee')); 
              	var remark = result.remark;
                 var instalment_month = $('#instalment_no').find(':selected').data('instalment_month'); 
                 var total_amount = parseFloat(subscription_amount) + late_fee;
@@ -462,10 +495,16 @@ function getRemaingPayments(){
             	$('#remark').val((remark > 0) ? remark : '0.00');
             	$('#subscription_amount').val(subscription_amount); 
             	$('#late_fee').val(late_fee.toFixed(2)); 
+                $('#due_late_fee').val(late_fee.toFixed(2)); 
                 $('#total_amount').val(total_amount.toFixed(2));
                 $('#net_subscription_amount').val(result.net_subscription_amount); 
                 $('#pending_amount').val(pending_amount); 
                 $('#auction_id').val(result.id); 
+                $('#is_late_fee_clear').val(result.pis_late_fee_clear); 
+                $('#remaining_late_fee').val(result.premaining_late_fee); 
+                $('#remaining_subscription_amount').val(result.premaining_subscription_amount); 
+                $('#fixed_remaining_subscription_amount').val(result.premaining_subscription_amount); 
+                $('#total_due_amount').val(parseFloat(total_amount).toFixed(2));
                 calculate_total_amount();
             }
 		}); 
@@ -487,12 +526,103 @@ function calculate_total_amount(){
     var net_subscription_amount = $('#net_subscription_amount').val();
     var pending_amount = $('#pending_amount').val();
     var late_fee = $('#late_fee').val();
+    var received_amount = parseFloat($('#received_amount').val());
     var total_amount = parseFloat(subscription_amount) + parseFloat(late_fee);
     $('#total_amount').val(total_amount.toFixed(2));
     if(pending_amount > 0){ 
-        var pending_amount = (parseFloat(pending_amount) - parseFloat(subscription_amount)).toFixed(2);
+        var pending_amount = (parseFloat(pending_amount) - received_amount).toFixed(2);
     }else{
-        var pending_amount = (parseFloat(net_subscription_amount) - parseFloat(subscription_amount)).toFixed(2);
+        var total_pending_amount = parseFloat(net_subscription_amount) + parseFloat($('#due_late_fee').val());
+        var pending_amount = ( total_pending_amount - received_amount).toFixed(2);
     }
     $('#remark').val(pending_amount);
 }
+
+$(document).ready(function() {
+        $(".received_amount_div").attr("style", "display:none");
+
+        $('#received_amount_btn').click(function() {
+                $('.received_amount_div').slideToggle("fast");
+        });
+});
+
+//$(".received_amount_div > div > input").each(function() {
+$('#money_notes_table').find('input').each(function(){    
+    $(this).change(function() {
+        if (($(this).attr("id")).indexOf('_total') == -1) {
+             var lbl_val = parseInt($(this).attr("lbl-val"));
+             var id = $(this).attr("id"); 
+             if($(this).attr("id") == "reverse_notes"){
+                  lbl_val = parseInt($('#no_of_reverse_notes').val()) * -1;
+                  id= 'no_of_reverse_notes';
+             }
+             if($(this).attr("id") =="no_of_reverse_notes"){
+               lbl_val = lbl_val*-1;
+             }
+             $('#'+id+'_total').val(parseInt($(this).val()) * lbl_val);
+        }
+        var sum = 0;
+        $('.total').each(function() {
+            sum += Number($(this).val());
+        });    
+       
+        
+        $('#money_notes_total').val(sum);
+        $('#total').val(sum);
+        $('#received_amount').val(sum);
+        $('#received_amount').trigger('change');
+    });
+});
+
+
+$('#reverse_notes').change(function() { 
+    $("#no_of_reverse_notes").attr('name', 'money_notes['+$(this).val()+'r][val]');
+    $("#no_of_reverse_notes").attr('lbl-val', $(this).val());
+    $("#no_of_reverse_notes_total").attr('name', 'money_notes['+$(this).val()+'r][total]');
+   // $("#no_of_reverse_notes").trigger('change');
+    //$('#no_of_reverse_notes_total').val(parseInt($('#no_of_reverse_notes').val()) * parseInt($(this).val()));
+});
+
+
+ $('#received_amount').change(function() {
+    if(parseFloat($(this).val()) > parseFloat($('#total_due_amount').val()).toFixed(2)){
+        $('#money_notes_table').find('input').val('');
+        swal.fire({
+                "title": "",
+                "text": "Received amount must be less than or equal to "+parseFloat($('#total_due_amount').val()).toFixed(2),
+                "type": "error",
+                "confirmButtonClass": "btn btn-secondary",
+                "onClose": function(e) { 
+                    
+                }
+            });
+            $(this).val(0.00);
+        return;
+    }
+    var subcription_rs = 0; 
+    var remaining_late_fee = 0; 
+    var remaining_subscription_amount = parseFloat($('#remaining_subscription_amount').val()); 
+    var receive_amount = parseFloat($('#received_amount').val());
+    var late_fee = parseFloat($('#due_late_fee').val());
+    var fixed_remaining_subscription_amount = parseFloat($('#fixed_remaining_subscription_amount').val());
+    var is_late_fee_clear = 0;
+    if(receive_amount > late_fee){
+        subcription_rs = parseFloat($('#received_amount').val()) - late_fee;
+        $('#late_fee').val(late_fee);
+        is_late_fee_clear =1;
+    }else{
+        remaining_late_fee = late_fee - parseFloat($('#received_amount').val());
+        $('#late_fee').val(receive_amount);
+    }
+    
+    $('#subscription_amount').val(parseFloat(subcription_rs).toFixed(2));
+    $('#remaining_late_fee').val(parseFloat(remaining_late_fee).toFixed(2));
+    
+     if(subcription_rs>0){
+     	remaining_subscription_amount = fixed_remaining_subscription_amount - subcription_rs;
+     }
+    $('#remaining_subscription_amount').val(remaining_subscription_amount); 
+    
+    $('#is_late_fee_clear').val(is_late_fee_clear); 
+     calculate_total_amount();
+ });

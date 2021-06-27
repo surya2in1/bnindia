@@ -86,6 +86,10 @@
   text-decoration: none;
 }
 
+.border-black{
+  border: 1px solid black;
+}
+
 .border-red{
   border: 1px solid red;
 }
@@ -144,10 +148,11 @@
 }
 /*https://editor.freelogodesign.org/*/
 .logo1-back {
-    background: url(logos/logo1.png) no-repeat right center;
-    background-size: 245px 178px;
+    background: url(logos/logo11.png) no-repeat right center;
+    background-size: 158px 99px;
+    /*background-size: 245px 178px;*/
     height: 100px;
-    background-position: left;
+    background-position: center;
     margin-left: 0px;
     -webkit-print-color-adjust: exact;
 }
@@ -178,6 +183,10 @@
 }
 .padding-top-50{
   padding-top:50px;
+}
+
+.border-bottom-9px{
+    border-bottom:1px solid #ebedf2;
 }
 @media print {
     .no-print, #kt_header_mobile{

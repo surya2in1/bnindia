@@ -598,7 +598,7 @@ class UsersController extends AppController
              if($query_string > 0){
                 $where_Conditions['Users.customer_id'] = $query_string;
              }else{
-                 $where_Conditions['CONCAT(Users.first_name," ",Users.middle_name," ",Users.last_name) LIKE '] = '%'.$query_string.'%';
+                 $where_Conditions['CONCAT(first_name," ",middle_name," ",last_name) LIKE '] = '%'.$query_string.'%';
              }
 
              if($selected_member_ids > 0){
@@ -632,7 +632,7 @@ class UsersController extends AppController
             ->where($where_Conditions)
             ->group('Users.id')
             ->toArray(); 
-             // echo '<pre>';print_r($members);exit();
+            //   echo '<pre>';print_r($members);exit();
         }
 
         echo json_encode($members);exit;

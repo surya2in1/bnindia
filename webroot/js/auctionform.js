@@ -64,6 +64,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
                   var $otherElement = $(param);
                   return parseInt(value, 10) < parseInt($otherElement.val(), 10);
         }, "Commission must be less than Chit Amount:."); 
+        
+         $.validator.addMethod("minCommission",
+            function (value, element, param) {
+                  var $otherElement = $(param);
+                  return parseInt(value) >= parseFloat($otherElement.val()*(5/100));
+        }, "Commission must be minimum 5% of Chit Amount:."); 
+        
         $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -77,6 +84,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     },
                     auction_winner_member: {
                             required: true, 
+                    },
+                    ticket_no: {
+                            required: true, 
+                             number:true,
                     },
                     auction_no: {
                             required: true,
@@ -111,18 +122,15 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     foreman_commission: {
                             required: true,
                             number:true,
-                            min:5000,
-                            lessThan: "#chit_amount"
+                            //min:1000,
+                            lessThan: "#chit_amount",
+                            minCommission:"#chit_amount"
                     },
                     total_subscriber_dividend: {
-                            required: true,
                             number:true,
-                            min:1
                     },
                     subscriber_dividend: {
-                            required: true,
                             number:true,
-                            min:1
                     },
                     net_subscription_amount: {
                             required: true,
@@ -166,7 +174,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 // },
                 success: function(response, status, xhr, $form) {
-                    if(response>0){ 
+                    if(response>0){
                         // similate 2s delay
                         swal.fire({
                             "title": "",
@@ -186,7 +194,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                         }, 1000); 
 
                     }else{
-                        var err = 'Some error has been occured. Please try again.';
+                         var err = 'Some error has been occured. Please try again.';
                         if(response != ''){ 
                             err= response;
                         } 
@@ -203,7 +211,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                                     scrollTop: $("#kt_content").offset().top
                                 }, 1000); 
                             }
-                        });                       
+                        });                         
                     }
                     // $('html, body').animate({
                     //     scrollTop: "0"
@@ -238,6 +246,8 @@ $('#groups').change(function(e) {
     $('#total_members').val(0);
     $('#premium').val(0);
     $('#group_type').val('');
+    $('#ticket_no').val(0);
+    $('#auction_highest_percent').val(0);
     if(group_id == ''){
         $('#auction_winner_member').html(member_options);
         return false;
@@ -258,7 +268,7 @@ $('#groups').change(function(e) {
                 if(result != ''){
                 	if((result.group_members)!=''){
                 		$.each((result.group_members), function( key, value ) { 
-    					  member_options += '<option value="'+key+'">'+value+'</option>';
+    					  member_options += '<option value="'+value.user_id+'" ticket_no='+value.ticket_no+'>'+value.name+'</option>';
     					});
                         if((result.groups)!=''){
                             $('#chit_amount').val(result.groups.chit_amount);
@@ -286,15 +296,26 @@ function calculate_subscription_amount(){
     $('#total_subscriber_dividend').val('');
     $('#subscriber_dividend').val('');
     $('#net_subscription_amount').val('');
-    if(auction_highest_percent > 0 && chit_amount > 0){
+    $('#foreman_commission').val(0);
+    
+    if(auction_highest_percent >= 0 && chit_amount > 0){
+        var admin_foreman_commission_in_percent = ($('#foreman_commission_in_percent').val() > 0) ? $('#foreman_commission_in_percent').val() : 5; 
+        var foreman_commission = parseFloat(chit_amount * (admin_foreman_commission_in_percent/100));
+        $('#foreman_commission').val(foreman_commission);
         var discount_amount = parseFloat(chit_amount * (auction_highest_percent/100));
         $('#discount_amount').val(discount_amount);
 
         var priced_amount = parseFloat(chit_amount - discount_amount);
         $('#priced_amount').val(priced_amount);
 
-        var foreman_commission = $('#foreman_commission').val();
-        var total_subscriber_dividend = parseFloat(discount_amount - foreman_commission);
+        var foreman_commission = parseFloat($('#foreman_commission').val());
+        //alert('discount_amount '+discount_amount+' // foreman_commission = '+foreman_commission);
+        if(discount_amount > foreman_commission){
+            var total_subscriber_dividend = parseFloat(discount_amount - foreman_commission);    
+        }else{
+            var total_subscriber_dividend = parseFloat(foreman_commission-discount_amount);
+        }
+        
         $('#total_subscriber_dividend').val(total_subscriber_dividend);
 
         var total_members = $('#total_members').val();
@@ -306,3 +327,7 @@ function calculate_subscription_amount(){
         $('#net_subscription_amount').val(net_subscription_amount);
     } 
 } 
+
+function member_change(thisval){
+    $('#ticket_no').val($(thisval).find(':selected').attr('ticket_no'));
+}

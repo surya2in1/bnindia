@@ -50,6 +50,9 @@ class GroupsTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'created_by' 
         ]);
+        $this->hasMany('PaymentVouchers', [
+            'foreignKey' => 'group_id'
+        ]);
     }
 
     /**

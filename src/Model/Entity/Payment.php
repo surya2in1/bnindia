@@ -67,6 +67,11 @@ class Payment extends Entity
         'total_amount' => true,
         'pending_amount' => true,
         'is_installment_complete' => true,
+        'received_amount' =>true,
+        'remaining_late_fee' => true,
+        'is_late_fee_clear' => true,
+        'remaining_subscription_amount' =>true,
+        'money_notes' =>true,
         'created' => true,
         'modified' => true,
     ];

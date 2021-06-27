@@ -123,6 +123,24 @@ class MembersGroupsController extends AppController
         $membersGroup = $this->MembersGroups->get($id);
         if ($this->MembersGroups->delete($membersGroup)) {
             echo 1;
+            
+            //Check group is full and change the group status as available i.e 1
+            //Get the member groups count
+            $group_id = $membersGroup->group_id; 
+            $GroupsTable = TableRegistry::get('Groups');
+            $MembersGroupsTable = TableRegistry::get('MembersGroups');
+            $query = $MembersGroupsTable->find()->where(['group_id'=>$group_id]);
+            $member_group_count = $query->count();
+            $group_total_no = $GroupsTable->find('all')->where(['id'=>$group_id])->first()->toArray();
+
+            if($member_group_count < $group_total_no['total_number']){
+                //update group status as full i.e 0
+                $query = $GroupsTable->query();
+                $query->update()
+                    ->set(['status' =>1])
+                    ->where(['id' => $group_id])
+                    ->execute();   
+            }
         } else {
             echo 0;
         } 

@@ -1,0 +1,65 @@
+खालील Changes करा 
+Create group मध्ये 
+1) auction day मध्ये, जर ग्रुप महिन्याचा असेल तर महिन्यातील कितव्या दिवशी auction आहे ते  1st, किंवा 5th असे enter करता यावे 
+जर 15 दिवसाचा ग्रुप असेल तर महिन्यात दोनदा auction day आसेल
+
+Collection day दोन येतील 
+
+Comments:
+[11:28 AM, 6/6/2021] Jayshri Suryawanshi: Group type 15 days cha asel tar :
+First Collection day: 1-15
+Second Collection day: 16-31
+asa asel na?
+[11:28 AM, 6/6/2021] Jayshri Suryawanshi: same for auction day
+[11:33 AM, 6/6/2021] Jayshri Suryawanshi: Group Type daily sathi ji auction date asel tich collection or due date
+[11:34 AM, 6/6/2021] Jayshri Suryawanshi: Group Type weekly sathi, auction date jya week chi asel tyach week chi shevatchi date
+[11:34 AM, 6/6/2021] Jayshri Suryawanshi: barobar na
+[11:34 AM, 6/6/2021] Jayshri Suryawanshi: due date generation sathi?
+-----------------------------------------------------------------------------------------------------
+
+2)bank deposit ही enter होत नाही  => no issue
+3) bank deposit no टाकला तरी view मध्ये वेगळाच save होतो किंवा  दाखवत आहे => Done  0716656110000887
+4) date च्या तिथे collection date असे टाकावे => Done
+5) deposit date च्या खाली Deposit maturity date असा option नवीन टाका => Done
+
+2) bank deposit date असे वाचा=> no issue
+=======================================================================================================
+
+Add member मध्ये => Not understand
+एका ग्रुप मध्ये एकच सभासद दोन नंबर टाकू शकतो
+Duplicate not allowed
+=======================================================================================================
+
+Add auction मध्ये 
+ग्रुप 50000 चा केल्यास forman commission 5% म्हनजे 2500 येते, ते accept करत नाही => Dones
+
+List of auction मध्ये ,  group प्रमाणे एका ग्रुप च्या झालेल्या सर्व auctions पाहता यावे / ग्रुप प्रमाणे sorting करता यावे
+=> Auction list madhe group pramanech auction show kele ahet
+=======================================================================================================
+
+payment money notes
+येथे 20500 amount recived केली आहे , पण रु 50 reverse केली म्हणजे total 20450 यायला पाहिजे
+नोटांचा table हा received by  हे फक्त cash केले तरच यावा   => Done
+=======================================================================================================
+
+payment print receipt
+Month च्या ऐवजी Received Amount असे पाहिजे => Done
+
+=======================================================================================================
+
+payment
+Customer कडे 1ला हप्ता 21500 आणि 2 रा हप्ता 20000 असे रु 41500 येणे बाकी आहे ,, येथे आपण instalment no 2 select केले परंतु कस्टमर ने रु 30000 हे चेक दिले तर
+
+Add receipt मध्ये 1 आणि 2 नंबर चा हप्ता pending असेल तर सध्या direct 2 रा हप्ता ची recipt तयार होत आहे 
+
+मात्र इथे पहिला हप्ता ची रक्कम adjust होऊन किंवा नंतर दुसरा हप्ता स्वीकारला जावा
+
+एखाद्या कस्टमर 3 महिने थकीत असेल , 3 महिन्यानंतर त्याने 4 हप्त कसा घेणार ,त्याची थकीत रक्कम टप्प्या टप्प्या ने Clear करावी लागेल 
+
+म्हणजे 
+पहिल्यांदा त्याची late fee
+दुसरे म्हणजे त्याचा थकीत मूळ हप्त
+शेवटी चालू हप्ता
+जर त्याने एकदम रक्कम भरली तरीही 
+आणि थोडी थोडी भरली तरीही
+=======================================================================================================

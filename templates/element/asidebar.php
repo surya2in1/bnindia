@@ -4,7 +4,11 @@
                             <a href="<?php echo Router::url('/dashboard', true); ?>">
                                 <!-- <img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/logo-light.png" /> -->
                                 
-                                <img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/bn2.png" />
+                                <!--<img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/bn2.png" />-->
+                                <img alt="Logo" src="http://staging.bnindia.co.in/css/logos/logo11.png" style="
+                                    width: 101px;
+                                    height: 63px;
+                                ">
                             </a>
                         </div>
                         <div class="kt-aside__brand-tools">
@@ -174,7 +178,7 @@
                                 </li>
                                 <?php }?>
                                  <?php if($payments_side_menu == '1111'){?>
-                                <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Payments') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Payments'  || $this->request->getParam('controller') == 'PaymentVouchers'  || $this->request->getParam('controller') == 'OtherPayments') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon"> 
                                             <i class="fas fa-receipt" aria-hidden="true"></i>
 
@@ -203,8 +207,80 @@
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">List Payments</span>',
+                                                    <span class="kt-menu__link-text">List of Receipts</span>',
                                                     array('controller'=>'Payments','action'=>'index'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
+                                            <!--<li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'paymentvoucher') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">-->
+                                                <?php 
+                                                // echo  $this->Html->link(
+                                                //      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                //         <span></span>
+                                                //     </i>
+                                                //     <span class="kt-menu__link-text">Add Payment</span>',
+                                                //     array('controller'=>'Payments','action'=>'paymentvoucher'),
+                                                //     ['class' => 'kt-menu__link','escape'=>false]
+                                                // ); 
+                                                ?>
+                                            <!--</li>-->
+                                            
+                                            
+                                            <!----------------------------------------------------------------------------------------->
+                                            
+                                            <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'PaymentVouchers' || $this->request->getParam('controller') == 'OtherPayments') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                                <a href="javascript:;" class="kt-menu__link kt-menu__toggle">
+                                                    <i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">Add Payment</span><i class="kt-menu__ver-arrow la la-angle-right"></i>
+                                                </a>
+                                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                                    <ul class="kt-menu__subnav kt-menu__item--active">
+                                                        <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
+                                                        <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'PaymentVouchers' && $this->request->getParam('action') == 'paymentvoucherform') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                            <?php echo  $this->Html->link(
+                                                                 '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="kt-menu__link-text">Subscriber Payment</span>',
+                                                                array('controller'=>'PaymentVouchers','action'=>'paymentvoucherform'),
+                                                                ['class' => 'kt-menu__link','escape'=>false]
+                                                            ); ?>
+                                                        </li>
+                                                        
+                                                        <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'OtherPayments' && $this->request->getParam('action') == 'otherpaymentform') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                            <?php echo  $this->Html->link(
+                                                                 '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="kt-menu__link-text">Other Payment</span>',
+                                                                array('controller'=>'OtherPayments','action'=>'otherpaymentform'),
+                                                                ['class' => 'kt-menu__link','escape'=>false]
+                                                            ); ?>
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <!------------------------------------------------------------------------------------------>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'PaymentVouchers' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">List of Payments</span>',
+                                                    array('controller'=>'PaymentVouchers','action'=>'index'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'OtherPayments' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">List of Other Payments</span>',
+                                                    array('controller'=>'OtherPayments','action'=>'index'),
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>

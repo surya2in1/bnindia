@@ -18,6 +18,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 },
 	        },
 			columns: [ 
+			    {data:'customer_id'},
 				{data: 'email'},
 				{data: 'first_name'},
 				{data: 'last_name'},
@@ -45,11 +46,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 											</a>\
 										</li>\
 										<li class="kt-nav__item">\
-											<a href="users/view/'+data+'" class="kt-nav__link">\
-												<i class="kt-nav__link-icon flaticon2-expand"></i>\
-												<span class="kt-nav__link-text">View</span>\
-											</a>\
-										</li>\
+                							<a href="users/view/'+data+'" class="kt-nav__link">\
+                								<i class="kt-nav__link-icon flaticon2-expand"></i>\
+                								<span class="kt-nav__link-text">View</span>\
+                							</a>\
+                						</li>\
 									</ul>\
 								</div>\
 							</div>\
@@ -68,7 +69,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					render: function(data, type, full, meta) {
 						var status = {
 							'female': {'title': 'Female', 'class': 'kt-badge--brand'},
-							'male': {'title': 'male', 'class': ' kt-badge--info'},
+							'male': {'title': 'Male', 'class': ' kt-badge--info'},
+							'other': {'title': 'Other', 'class': ' kt-badge--brand'},
 							// 3: {'title': 'Canceled', 'class': ' kt-badge--primary'},
 							// 4: {'title': 'Success', 'class': ' kt-badge--success'},
 							// 5: {'title': 'Info', 'class': ' kt-badge--danger'},
@@ -127,36 +129,34 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        alert.find('span').html(msg);
 	    }
 	    $.validator.addMethod("validateGroups", function(value, element) {
-	    	  $('#group_ids').children().each(function(i, opt){
-            			// alert($(opt).attr('disabled'));
+	    	  $('#group_ids').children().each(function(i, opt){ 
             		if($(opt).attr('disabled')){ 
             			$(opt).removeAttr('disabled');
             			$(opt).prop('selected',true);
-            			value.push($(opt).val());
-		                // $(opt).remove();
+            			value.push($(opt).val()); 
 		            }
-		      });
-		      console.log(value);
+		      }); 
             return value != '' ;
            }, "This field is required.");
-
-	    $.validator.addMethod("minAge", function(value, element, min) {
+           
+         $.validator.addMethod("minAge", function(value, element, min) {
 		    var today = new Date();
 		    var birthDate = new Date(value);
 		    var age = today.getFullYear() - birthDate.getFullYear();
-		 
+
 		    if (age > min+1) {
 		        return true;
 		    }
-		 
+
 		    var m = today.getMonth() - birthDate.getMonth();
-		 
+
 		    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
 		        age--;
 		    }
-		 
+
 		    return age >= min;
 		}, "You must be at least 18 years of age!");
+		
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -184,9 +184,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                    lettersonly: true,
 	                    maxlength: 100
 	                },
-	                // 'group_ids[]':{ 
-	                // 	validateGroups : true
-	                // },
+	                //'group_ids[]':{
+	                	//required: true,
+	                	//validateGroups : true
+	                //},
 	                address:{
 	                    maxlength: 300
 	                },
@@ -225,8 +226,19 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                other_document: { extension: "png|jpe?g|pdf" },
 	                date_of_birth:{
 	                	minAge: 18
-	                }
-	            }, 
+	                },
+	                area_code:{
+                        number: true,
+                        maxlength: 5,
+                        minlength: 2
+                    },
+                    pin_code:{
+                        required: true,
+                        number: true,
+                        maxlength: 6,
+                        minlength:6
+                    }
+	            },
 	            errorPlacement: function(error, element) {
 	                var group = element.closest('.input-group');
 	                if (group.length) {
@@ -248,10 +260,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                photo_proof: "File must be JPG, JPEG or PNG",
 	                other_document: "File must be JPG, JPEG or PNG"
 	            }, 
-	        }); 
-	  //       var selected = $("#group_ids :selected").map((_,e) => e.value).get();
-			// form.append( 'group_ids',  selected);
-			// alert('selected '+selected);
+	        });
+		//	var selected = $("#group_ids :selected").map((_,e) => e.value).get();
+		//	form.append( 'group_ids',  selected);
 			if (!form.valid()) {
                swal.fire({
                     "title": "",

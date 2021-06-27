@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
 use Cake\I18n\FrozenDate;
+use Cake\Core\Configure;
 
 /**
  * Payments Controller
@@ -113,7 +114,9 @@ class PaymentsController extends AppController
           if($post['remark'] < 1){
             $post['is_installment_complete'] = 1;
           }
-          // echo '<pre>';print_r($post);exit;
+          //SELECT money_notes->'$."2000".val' as code4 FROM payments
+    
+          //=echo '<pre>';print_r($post);exit;
           $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
           if ($this->Payments->save($payment)) {
                echo 1;exit;
@@ -151,10 +154,9 @@ class PaymentsController extends AppController
         $post = $this->request->getData();
         $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
         $user_id = isset($post['user_id']) && $post['user_id']>0  ? $post['user_id'] : 0;
-
+        
         $payment= TableRegistry::get('Payments');
         $subquery = $payment->find();
-
         $subquery->select([
             'pauction_id' => 'Payments.auction_id',
             'puser_id' => 'Payments.user_id',
@@ -164,12 +166,34 @@ class PaymentsController extends AppController
             'pis_installment_complete' => 'Payments.is_installment_complete',
             'ptotal_amount' => 'Payments.total_amount',
             'ppending_amount' => 'Payments.pending_amount',
+            'premaining_late_fee'=> 'Payments.remaining_late_fee',
+            'pis_late_fee_clear' => 'Payments.is_late_fee_clear',
+            'psubscription_amount' => 'Payments.subscription_amount',
+            'premaining_subscription_amount' => 'Payments.remaining_subscription_amount'
         ]) 
-        ->where(['Payments.auction_id'=>$auction_id])
+        ->where(['Payments.auction_id'=>$auction_id, 'Payments.user_id' => $user_id])
         ->order(['id desc'])->LIMIT(1);
 
         $auctionTable= TableRegistry::get('Auctions'); 
         $query = $auctionTable->find();
+        $conditions = array(
+               'AND' => array(
+                   ['Auctions.id'=>$auction_id],
+                   array(
+                     'OR'=>array(
+                        ['p.puser_id'=>$user_id],
+                        ['p.puser_id is '=> NULL]
+                     )
+                   ),
+                   array(
+                     'OR'=>array(
+                        ['p.pis_installment_complete !='=>1],
+                        ['p.pis_installment_complete is '=> NULL]
+                     )
+                  ),
+               )
+            );
+        
         $payment_info = $query->select(['Auctions.id','Auctions.net_subscription_amount',
                             'Auctions.auction_date',
                             'remark'=>'p.premark',
@@ -177,6 +201,11 @@ class PaymentsController extends AppController
                             'late_fee'=>'p.plate_fee',
                             'total_amount'=>'p.ptotal_amount',
                             'pending_amount'=>'p.ppending_amount',
+                            'premaining_late_fee' => 'premaining_late_fee',
+                            'pis_late_fee_clear' => 'pis_late_fee_clear',
+                            'psubscription_amount' => 'psubscription_amount',
+                            //'premaining_subscription_amount' => 'premaining_subscription_amount',
+                            'premaining_subscription_amount' => "(CASE WHEN premaining_subscription_amount > 0 THEN premaining_subscription_amount ELSE Auctions.net_subscription_amount END)"
                           ])
                ->join([
                   'table' => '('.$subquery.')',
@@ -184,10 +213,8 @@ class PaymentsController extends AppController
                   'type' => 'LEFT',
                   'conditions' => 'pauction_id=Auctions.id AND puser_id='.$user_id,
               ]) 
-              ->where(['Auctions.id'=>$auction_id])
-              ->where(['OR'=>['p.pis_installment_complete !='=>1,'p.pis_installment_complete is '=> NULL]
-            ])->first(); 
-    // echo '111<pre>';print_r($payment_info);exit;
+               ->where($conditions)->first();
+     //echo '111<pre>';print_r($payment_info);exit;
               echo json_encode($payment_info);exit;
     }
 
@@ -283,8 +310,13 @@ class PaymentsController extends AppController
                                 } 
                             ]
             ]);       
-      // echo '<pre>';print_r($receipt_data);exit;
-
+       //echo '<pre>';print_r($receipt_data);exit;
+      $payment_user_id = ($receipt_data->user_id && $receipt_data->user_id > 0 ) ? $receipt_data->user_id : 0;
+      $payment_group_id = ($receipt_data->group_id && $receipt_data->group_id > 0) ? $receipt_data->group_id : 0;
+      
+      //Get all months due amount 
+      $all_months_due_amount = $this->Payments->getAllMonthsDueAmount($payment_user_id,$payment_group_id);
+      
       $UsersTable = TableRegistry::get('Users');
       $member =  $UsersTable->find();
       $memberInfo = $member->select(['name' => $member->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier']),
@@ -298,7 +330,7 @@ class PaymentsController extends AppController
       $branch_address .= isset($receipt_data->group->user->branch_name) ? ', '.$receipt_data->group->user->branch_name : '';
       // $branch_address .= isset($receipt_data->group->user->city) ? ', '.$receipt_data->group->user->city : '';
       $branch_address .= isset($receipt_data->group->user->state) ? ', '.$receipt_data->group->user->state : '';
-      $branch_address .= isset($receipt_data->group->user->pin_code) && ($receipt_data->group->user->pin_code > 0) ? ' Pin- '.$receipt_data->group->user->pin_code: '';
+      $branch_address .= isset($receipt_data->group->user->pin_code) && ($receipt_data->group->user->pin_code > 0)  ? ' Pin- '.$receipt_data->group->user->pin_code: '';
       $branch_address = trim($branch_address,",");
 
 
@@ -332,6 +364,79 @@ class PaymentsController extends AppController
           } 
           $received_by_tran_no = $receipt_data->direct_debit_transaction_no;
       }
-      $this->set(compact('receipt_data','receipt_date','received_by','received_by_dt','received_by_tran_no','received_by_drown_on','memberInfo','branch_address'));
+      $this->set(compact('receipt_data','receipt_date','received_by','received_by_dt','received_by_tran_no','received_by_drown_on','memberInfo','branch_address','all_months_due_amount'));
+    }
+    
+    // function paymentvoucher($id=null){
+    //      $this->viewBuilder()->setLayout('admin');
+       
+    //     if(isset($_POST['id']) && ($_POST['id'] > 0)){
+    //         $id =  $_POST['id'];
+    //     }
+        
+    //     $UsersTable = TableRegistry::get('Users'); 
+    //     $user = $UsersTable->find('all', [ 
+    //         'contain' => ['Roles' => function ($q) {
+    //                             return $q
+    //                                 ->select(['name'])
+    //                                 ->where(['Roles.name' => Configure::read('ROLE_SUPERADMIN') ]);
+    //                         },     
+    //                      ],
+    //     ])->first();
+    //     $foreman_commission_in_percent = ($user->foreman_commission_in_percent) ? $user->foreman_commission_in_percent : 5;
+        
+    //     $selected_member_groups = []; 
+    //     $payment_member_id =  0;
+    //     $payment_group_id = 0;
+    //     $groups = [];
+    //     $receipt_no = 1;
+    //     $members = [];
+    //     if($id>0){
+    //         $payment = $this->Payments->get($id, [
+    //             'contain' => ['Groups'],
+    //         ]);
+    //         $payment_member_id =  $payment->user_id;
+    //         $payment_group_id =  $payment->group_id;
+    //         $groups = $this->Common->getMemberGroups($payment_member_id);  
+    //     }else{
+    //         $payment_receipt_no = $this->Payments->find()->count();
+    //         $receipt_no = $payment_receipt_no +1;
+    //         $payment = $this->Payments->newEmptyEntity();
+    //     }
+
+    //     //Get available Users
+    //     $AuctionsTable = TableRegistry::get('Auctions');
+    //     $groups = $AuctionsTable->find('list', [
+    //                                     'keyField' => 'group_id',
+    //                                     'valueField' => function ($row) {
+    //                                         return $row->group->group_code;
+    //                                     }          
+    //                                 ])
+    //                  ->contain([
+    //                         'Groups'  
+    //                     ])
+    //                 ->group(['Auctions.group_id'])->toArray();
+    //     // echo '$groups<pre>';print_r($groups);exit;
+       
+    //     $this->set(compact('payment', 'groups', 'payment_member_id','payment_group_id','receipt_no','foreman_commission_in_percent'));
+    // }
+    
+     // Get selected group auctions list
+    function getAuctionsByGroupId(){
+        $post = $this->request->getData();
+        $group_id = isset($post['group_id']) && $post['group_id']>0  ? $post['group_id'] : 0;
+        $payment_voucher_id = isset($post['payment_voucher_id']) && $post['payment_voucher_id']>0  ? $post['payment_voucher_id'] : 0;
+        $selected_group_members = []; 
+        if($group_id>0){ 
+            $selected_group_members = $this->Common->getPaymentVoucherGroupAuctions($group_id,$payment_voucher_id);
+        }
+        echo json_encode($selected_group_members);exit;
+    }
+    
+    function getAuctionDetails(){
+        $post = $this->request->getData();
+        $auction_id = isset($post['auction_id']) && $post['auction_id']>0  ? $post['auction_id'] : 0;
+        $auction_details = $this->Common->getAuctionDetails($auction_id);
+        echo json_encode($auction_details);exit;
     }
 }

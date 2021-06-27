@@ -5,6 +5,7 @@ use Cake\Controller\Component;
 use Cake\Mailer\TransportFactory;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\FrozenDate;
 
 class CommonComponent extends Component {
 	function searchUserPermission($id, $array) {
@@ -56,14 +57,14 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($user_id) {
                                 return $q
-                                    ->select(['id','group_code'])
+                                    ->select(['id','group_number'])
                                     ->where(['user_id'=>$user_id]);
                             },      
                          ],
         ])->toArray(); 
         if(!empty($member_groups)){
             foreach ($member_groups as $key => $value) { 
-                $selected_member_groups[$value->group_id] = $value->group->group_code; 
+                $selected_member_groups[$value->group_id] = $value->group->group_number; 
             }
         }
         return $selected_member_groups;
@@ -88,7 +89,7 @@ class CommonComponent extends Component {
                               }, 
                              'Users' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','name' => $q->func()->concat(['Users.first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier'])])
+                                    ->select(['id','name' => $q->func()->concat(['UPPER(SUBSTRING(Users.first_name, 1, 1)), LOWER(SUBSTRING(Users.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(middle_name, 1, 1)), LOWER(SUBSTRING(middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name, 2))' => 'identifier'])])
                                     ->where(['group_id'=>$group_id,'Users.status' => 1]);
                             },    
                          ],
@@ -113,12 +114,18 @@ class CommonComponent extends Component {
   function getInstalmentNoList($group_id,$member_id){
     $auctionTable= TableRegistry::get('Auctions'); 
     $query = $auctionTable->find();
-    $instalment_nos = $query->select(['pid' =>'p.id','instalment_month'=>'MONTHNAME(Auctions.auction_date)','Auctions.net_subscription_amount',
+    $instalment_nos = $query->select(['pid' => 'p.id','instalment_month'=>'MONTHNAME(Auctions.auction_date)','Auctions.net_subscription_amount',
       'due_amount' => '( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) ',
-      'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))',
+      //'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))',
+      'due_late_fee' => '( CASE WHEN (p.is_late_fee_clear <1 and p.remaining_late_fee  < 1) or (remaining_late_fee  IS NULL and is_late_fee_clear  IS NULL ) THEN 
+                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))   
+                                      WHEN p.is_late_fee_clear <1 and p.remaining_late_fee  > 1 THEN 
+                                         p.remaining_late_fee
+                                      ELSE  0.00
+                                END)',
       'auction_no'=>'Auctions.auction_no','id'=>'Auctions.id',
       'plate_fee'=>'p.late_fee ',
-      'due_date' => 'CreateDateFromDay(g.date,Auctions.auction_date)'
+      'due_date' => 'CreateDateFromDay(g.date,Auctions.auction_date)' 
     ])
            ->join([
               'table' => 'payments',
@@ -140,6 +147,76 @@ class CommonComponent extends Component {
           return $instalment_nos;
   }
 
+   function getGroupAuctions($group_id){
+        $AuctionsTable = TableRegistry::get('Auctions');
+        $auctions = $AuctionsTable->find('list', [
+                                        'keyField' => 'id',
+                                        'valueField' => 'auction_no'
+                                    ])
+                    ->where(['Auctions.group_id'=> $group_id,'Auctions.is_payment_done' => 0])->toArray(); 
+        //echo '$auctions<pre>';print_r($auctions);exit;
+        return $auctions;
+  }
   
+  function getAuctionDetails($auction_id){
+        $auctionTable= TableRegistry::get('Auctions'); 
+        $auction_details = $auctionTable->find('all', [
+            'contain' => [
+                             'Groups' => function($q) {
+                                return $q
+                                    ->select(['group_code','total_number']);
+                              }, 
+                             'Users' => function($q) {
+                                return $q
+                                    ->select(['id','auction_winner' => $q->func()->concat(['UPPER(SUBSTRING(Users.first_name, 1, 1)), LOWER(SUBSTRING(Users.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(middle_name, 1, 1)), LOWER(SUBSTRING(middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name, 2))' => 'identifier'])]);
+                            },    
+                         ],
+        ])->where(['Auctions.id'=>$auction_id])->first();
+        $auction_details->auction_dt=''; 
+        if(isset($auction_details->auction_date) && !empty($auction_details->auction_date)){
+          $FrozenDateObj = new FrozenDate($auction_details->auction_date); 
+          $auction_details->auction_dt = $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+        }
+        //echo 'group_members<pre>';print_r($auction_details);exit;
+        return $auction_details;      
+  }
+   function getPaymentVoucherGroupAuctions($group_id,$payment_voucher_id=0){
+       $where_Conditions[]= ['Auctions.group_id'=>$group_id];
+        if($payment_voucher_id>0){ 
+            $where_Conditions['OR'] = [
+                                    'Auctions.is_payment_done' => 0,
+                                    'p.id' => $payment_voucher_id
+                                ];
+        }else{ 
+            $where_Conditions[]= ['Auctions.is_payment_done'=>0];
+        }
+        //echo '$where_Conditions<pre>';print_r($where_Conditions);
+        $AuctionsTable = TableRegistry::get('Auctions');
+        // $auctions = $AuctionsTable->find('list', [
+        //                                 'keyField' => 'id',
+        //                                 'valueField' => 'auction_no'
+        //                             ])
+        //             ->where(['Auctions.group_id'=> $group_id,'Auctions.is_payment_done' => 0])->toArray(); 
+                     
+        $query = $AuctionsTable->find();     
+        $aauctions = $query->select(['Auctions.id','Auctions.auction_no'])
+             ->join([
+                'table' => 'payment_vouchers',
+                'alias' => 'p',
+                'type' => 'LEFT',
+                'conditions' =>'p.auction_id = Auctions.id',
+            ]) 
+            ->where($where_Conditions) 
+            ->toArray();  
+        //echo '$auctions<pre>';print_r($aauctions);  exit;
+        $auctions = [];
+        if(!empty($aauctions)){
+            foreach($aauctions as $auction){
+                $auctions[$auction->id]  = $auction->auction_no;
+            }
+        }    
+        // echo '$auctions<pre>';print_r($auctions);exit;
+        return $auctions;
+  }
 }
 ?>

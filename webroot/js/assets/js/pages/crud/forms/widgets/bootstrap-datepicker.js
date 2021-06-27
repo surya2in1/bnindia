@@ -84,7 +84,7 @@ var KTBootstrapDatepicker = function () {
             templates: arrows, 
             autoclose: true,
         });
-
+        
         $('#payment_date_datepicker').datepicker({
             rtl: KTUtil.isRTL(),
             todayBtn: "linked",
@@ -92,7 +92,7 @@ var KTBootstrapDatepicker = function () {
             todayHighlight: true,
             templates: arrows
         });
-        
+
         $('#cheque_date_datepicker').datepicker({
             rtl: KTUtil.isRTL(),
             todayBtn: "linked",
@@ -161,6 +161,33 @@ var KTBootstrapDatepicker = function () {
             rtl: KTUtil.isRTL(),
             todayHighlight: true,
             templates: arrows
+        });
+        
+        $('#bank_deposite_date').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
+        
+         $('#deposite_maturity_date').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
+        
+        $('#date').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
         });
     }
 

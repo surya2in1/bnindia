@@ -1,4 +1,4 @@
-<?php use Cake\Routing\Router; ?>
+a<?php use Cake\Routing\Router; ?>
 
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
@@ -115,6 +115,14 @@
                                                 > Female
                                                 <span></span>
                                             </label>
+                                            <label class="kt-radio">
+                                                <input type="radio" name="gender" value="other" 
+                                                <?php if($user->gender ==  'other'){?>
+                                                    checked="checked"
+                                                <?php }
+                                                ?>> Other
+                                                <span></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -138,6 +146,14 @@
                                                 ?>> Unmarried
                                                 <span></span>
                                             </label>
+                                            <label class="kt-radio">
+                                                <input type="radio" name="maritial_status" value="firm"
+                                                <?php if($user->maritial_status ==  'firm'){?>
+                                                    checked="checked"
+                                                <?php }
+                                                ?>> Firm
+                                                <span></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +174,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                         <lable>You must be at least 18 years of age.</lable>
+                                        <lable>You must be at least 18 years of age.</lable>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -180,13 +196,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-xl-3 col-lg-3 col-form-label">Area Code</label>
-                                    <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" type="number" value="<?= $user->area_code; ?>" name="area_code">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-xl-3 col-lg-3 col-form-label">Pin Code</label>
+                                    <label class="col-xl-3 col-lg-3 col-form-label">Pin Code<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6 col-xl-6">
                                         <input class="form-control" type="number"  value="<?= $user->pin_code; ?>" name="pin_code">
                                     </div>
@@ -201,6 +211,12 @@
                                     <label class="col-xl-3 col-lg-3 col-form-label">Income Amount</label>
                                     <div class="col-lg-6 col-xl-6">
                                         <input class="form-control" name="income_amt" type="number" value="<?= $user->income_amt; ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xl-3 col-lg-3 col-form-label">Agent Code</label>
+                                    <div class="col-lg-6 col-xl-6">
+                                        <input class="form-control" type="number" value="<?= $user->area_code; ?>" name="area_code">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -233,7 +249,7 @@
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Nominee relation</label>
                                     <div class="col-lg-6 col-xl-6">
-                                       <?php 
+                                        <?php 
                                         $nominee_relations = ['Father' => 'Father',
                                                               'Mother' => 'Mother',
                                                               'Sister' => 'Sister',

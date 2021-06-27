@@ -60,6 +60,9 @@ class AuctionsTable extends Table
         $this->hasMany('Payments', [
             'foreignKey' => 'auction_id',
         ]);
+        $this->hasMany('PaymentVouchers', [
+            'foreignKey' => 'auction_id'
+        ]);
     }
 
     /**
@@ -206,7 +209,11 @@ class AuctionsTable extends Table
 
     //Function for ajax listing, filter, sort, search
     public function GetData() {
-        $aColumns = array( 'a.id','g.group_code','a.auction_no','a.auction_date','a.auction_highest_percent',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as winner",'a.chit_amount','a.priced_amount','a.foreman_commission','a.total_subscriber_dividend','a.subscriber_dividend','a.net_subscription_amount' );
+        $ucase_first_name = "CONCAT(UCASE(LEFT(u.first_name, 1)),SUBSTRING(u.first_name, 2)) "; 
+        $ucase_middle_name = "CONCAT(UCASE(LEFT(u.middle_name, 1)),SUBSTRING(u.middle_name, 2)) "; 
+        $ucase_last_name = "CONCAT(UCASE(LEFT(u.last_name, 1)),SUBSTRING(u.last_name, 2)) "; 
+        
+        $aColumns = array( 'a.id','g.group_code','a.auction_no','a.auction_date','a.auction_highest_percent',"concat($ucase_first_name,' ', $ucase_middle_name,' ',$ucase_last_name) as winner",'a.chit_amount','a.priced_amount','a.foreman_commission','a.total_subscriber_dividend','a.subscriber_dividend','a.net_subscription_amount' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "a.id";
         /* DB table to use */

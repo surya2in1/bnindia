@@ -1,0 +1,88 @@
+Sub rs: 150000  late fee  2865.24  
+
+===============================================
+received 1000
+												   remaining_late_fee
+late fee= received - late fee ==== 1000-2865.24 = -1865.24  
+
+								   3000-2865.24 = 	134.76			
+late fee = 2865.24/ sub 15000
+1. received   sub       late_fee     total   netdue
+      1000     0         1000		 1000     16865.24
+      3000	  134.76     2865.24     3000     14865.24 
+       0       0         0			  0		  17865.24
+      2000	   0	     865.24      865.24   17000  
+--------------------------------------------------------
+
+var subcription_rs = 0; 
+var remaining_late_fee = 0; 
+var calculate_late_fee = parseFloat($('#received_amount').val()) - parseFloat($('#late_fee').val())
+if(calculate_late_fee > 0){
+	subcription_rs = remaining_late_fee;
+}else{
+	remaining_late_fee = calculate_late_fee;
+}
+
+$('#subscription_amount').val(parseFloat(subcription_rs));
+
+$('#late_fee').val(parseFloat(remaining_late_fee));
+
+$('#remaining_late_fee').val(parseFloat(remaining_late_fee));
+
+
+
+------------------------------------------------------
+
+pendingamount           sub rs   + late due  =  total      = total due
+	17865.24		  15000.00 + 2865.24	 = 	 17865.24   = 17865.24
+
+						0		 + 1865.24   = 1865.24     =  16865.24
+
+
+total due = pendingamount - received_amount = 17865.24 - 1000 = 
+
+
+
+============================================================================================================
+
+Test Case for payment submit:
+Group A3 member BNindia 
+late fee = 2865.24/ sub 15000
+Check remaining late fee and is
+1. Before Submit
+   received   sub       late_fee     total   netdue
+      1000     0         1000		 1000     16865.24
+      3000	  134.76     2865.24     3000     14865.24 
+       0       0         0			  0		  17865.24
+      2000	   0	     865.24      865.24   17000  
+
+
+2. After Submit
+If late fee > 0 then sub amount same as premium
+If late fee = 0 then late fee always 0
+total and net due same 
+
+received    sub       late_fee     total         netdue
+    0      15000       1865.24	   16865.24     16865.24
+    0      14865.24     0          14865.24     14865.24 
+
+3. Check List with net due amounts
+
+4. Check on receipt
+   
+
+============================================================================================================
+
+
+net_sub_rs  late_fee remainging_late_fee sub_amount  remainging_sub_amount
+
+ 15000       2865.24      0               134.76            14865.24 
+ 15000       2865.24      0               865.24      		14000
+
+
+ if(sub_amount>0){
+ 	remainging_sub_amount = remainging_sub_amount - sub_amount
+ }
+ 14865.24 -134
+
+ test both cases

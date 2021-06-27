@@ -128,7 +128,70 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <input type="text" class="form-control" name="group_code" id="group_code" value="<?= isset($group->group_code) ? $group->group_code : '';?>" readonly  title="You can not change this value."/>
                                     </div>
-                                </div>  
+                                </div> 
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label"><b>Bank deposit details:</b></label>
+                                    <div class="col-lg-6"> 
+                                    </div>
+                                 </div>
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Bank Deposit Amount:</label>
+                                    <div class="col-lg-6"> 
+                                        <input type="number" class="form-control" name="bank_deposite_amount" id="bank_deposite_amount" value="<?= isset($group->bank_deposite_amount) ? $group->bank_deposite_amount : '';?>" />
+                                    </div>
+                                 </div>
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Bank Deposit Number:</label>
+                                    <div class="col-lg-6"> 
+                                        <input type="number" class="form-control" name="bank_deposite_number" id="bank_deposite_number" value="<?= isset($group->bank_deposite_number) ? $group->bank_deposite_number : '';?>" />
+                                    </div>
+                                 </div>
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Bank Name:</label>
+                                    <div class="col-lg-6"> 
+                                        <input type="text" class="form-control" name="bank_name" id="bank_name" value="<?= isset($group->bank_name) ? $group->bank_name : '';?>" />
+                                    </div>
+                                 </div>
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Bank Deposit Date:</label>
+                                    <div class="col-lg-6"> 
+                                        <div class="input-group date">
+                                            <?php 
+                                                $bank_deposite_date = '';
+                                                if(strtotime($group->bank_deposite_date) > 0){
+                                                    $bank_deposite_date = date('m/d/Y',strtotime($group->bank_deposite_date));
+                                                }
+                                            ?>
+                                            <input type="text" class="form-control" readonly="" value="<?= $bank_deposite_date; ?>" id="bank_deposite_date" name="bank_deposite_date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="la la-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div>
+                                 
+                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Deposit Maturity Date:</label>
+                                    <div class="col-lg-6"> 
+                                        <div class="input-group date">
+                                            <?php 
+                                                $deposite_maturity_date = '';
+                                                if(strtotime($group->deposite_maturity_date) > 0){
+                                                    $deposite_maturity_date = date('m/d/Y',strtotime($group->deposite_maturity_date));
+                                                }
+                                            ?>
+                                            <input type="text" class="form-control" readonly="" value="<?= $deposite_maturity_date; ?>" id="deposite_maturity_date" name="deposite_maturity_date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="la la-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div> 
+                                
                             </div>
                         </div>
                     </div>

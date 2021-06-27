@@ -18,7 +18,7 @@
                                         <h5>(Goverment Registered Chit Fund Company)</h5> 
                                     </label> 
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-2 logo1-back2 max-width-20" > 
+                                <div class="col-lg-2 col-md-2 col-sm-2" > 
                                 </div>
                             </div> 
                             <!-- First row end -->
@@ -94,8 +94,9 @@
                                             <th rowspan="2">T.No.</th>
                                             <th rowspan="2">Inst No.</th>
                                             <th rowspan="2">Month</th>
-                                            <th colspan="2">Month </th> 
-                                            <th rowspan="2">Remark</th>
+                                            <th colspan="2">Received Amount</th> 
+                                            <th rowspan="2">Total Outstanding Amount</th>
+                                            <th rowspan="2">Total Due Amount</th>
                                         </tr> 
                                         <tr>
                                             <th>Subscription Rs.</th>
@@ -108,17 +109,19 @@
                                             <td><?= isset($receipt_data->members_group->ticket_no) ? $receipt_data->members_group->ticket_no : '-';  ?></td> 
                                             <td><?= isset($receipt_data->instalment_no) ? $receipt_data->instalment_no : '-';  ?></td> 
                                             <td><?= isset($receipt_data->instalment_month) ? $receipt_data->instalment_month : '-';  ?></td>
-                                             <td><?= isset($receipt_data->subscription_amount) ? $receipt_data->subscription_amount : '-';  ?></td> 
-                                             <td><?= isset($receipt_data->late_fee) ? $receipt_data->late_fee : '-';  ?></td> 
-                                             <td><?= isset($receipt_data->remark) ? $receipt_data->remark : '-';  ?></td>
+                                            <td><?= isset($receipt_data->subscription_amount) ? $receipt_data->subscription_amount : '-';  ?></td> 
+                                            <td><?= isset($receipt_data->late_fee) ? $receipt_data->late_fee : '-';  ?></td> 
+                                            <td><?= isset($receipt_data->remark) ? $receipt_data->remark : '-';  ?></td>
+                                            <td><?= isset($all_months_due_amount['total_amount']) ? $all_months_due_amount['total_amount'] : '-';  ?></td>
                                         </tr>
                                          <tr>
                                             <td></td> 
                                             <td></td> 
                                             <td></td> 
                                             <td><b>Total</b></td>
-                                             <td colspan="2"><b><?= isset($receipt_data->total_amount) ? $receipt_data->total_amount : '-';  ?></b></td> 
-                                             <td></td> 
+                                            <td colspan="2"><b><?= isset($receipt_data->total_amount) ? $receipt_data->total_amount : '-';  ?></b></td> 
+                                            <td></td> 
+                                            <td></td> 
                                         </tr>
                                     </tbody>
                                 </table> 

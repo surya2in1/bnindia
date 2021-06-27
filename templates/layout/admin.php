@@ -52,10 +52,14 @@ $cakeDescription = 'Bnindia';
     <!-- begin:: Page -->
 
     <!-- begin:: Header Mobile -->
-    <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed no-print">
+    <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
         <div class="kt-header-mobile__logo">
-            <a href="<?php echo Router::url('/dashboard', true); ?>">
-                <img alt="Logo" src="assets/media/logos/bn2.png" />
+             <a href="<?php echo Router::url('/dashboard', true); ?>">
+                <!--<img alt="Logo" src="assets/media/logos/bn2.png" />-->
+                <img alt="Logo" src="http://staging.bnindia.co.in/css/logos/logo11.png" style="
+                    width: 61px;
+                    height: 49px;
+                ">
             </a>
         </div>
         <div class="kt-header-mobile__toolbar">
@@ -171,20 +175,29 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('groups.js') ?> 
         <?php } ?>
 
-        <?php if($this->request->getParam('controller') == 'Groups' && ($this->request->getParam('action') == 'groupform' || $this->request->getParam('action') == 'addGroupMembers')) { ?> 
+        <?php if($this->request->getParam('controller') == 'Groups' && ($this->request->getParam('action') == 'groupform' || $this->request->getParam('action') == 'addGroupMembers')) {  ?> 
             <?= $this->Html->script('group_members.js') ?>
         <?php } ?>
+        
         <?php if($this->request->getParam('controller') == 'Auctions') { ?> 
             <?= $this->Html->script('auctionform.js') ?>
         <?php } ?>
+        
         <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'paymentform') { ?> 
             <?= $this->Html->script('paymentform.js') ?>
         <?php } ?>
         <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'index') { ?> 
             <?= $this->Html->script('payments.js') ?>
         <?php } ?>
+        <?php if($this->request->getParam('controller') == 'PaymentVouchers') { ?> 
+            <?= $this->Html->script('payment_voucher.js') ?>
+        <?php } ?>
+        <?php if($this->request->getParam('controller') == 'OtherPayments') { ?> 
+            <?= $this->Html->script('other_payments.js') ?>
+        <?php } ?>
+        
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
-    </footer> 
+    </footer>
 </body>
 </html>

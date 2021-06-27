@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
+use Cake\I18n\Date;
 
 /**
  * Groups Controller
@@ -29,6 +30,31 @@ class GroupsController extends AppController
         
     }
 
+    function testPaymentsDue(){
+        $d1 = new Date("2021-01-31");
+        $d2 = new Date("2021-05-21");
+        $interval = $d1->diff($d2); 
+        $totalMonths  = $interval->m;
+        $group_late_fee = 6;
+        $net_subscription_amount = 17000;
+        $total_late_fee =0;
+        $inc = 0;
+        
+        WHILE ($inc <= $totalMonths){
+            IF($inc==0) {
+                $late_fee =($net_subscription_amount * $group_late_fee)/100;
+            } ELSE {
+            	$late_fee = $late_fee+(($late_fee*$group_late_fee)/100);
+            }
+            
+             $total_late_fee = $total_late_fee+$late_fee;
+             echo "$totalMonths == $late_fee == $total_late_fee <br/>";
+             $inc = $inc + 1;
+        
+        }
+        exit;
+    }
+    
     /**
      * View method
      *
@@ -88,6 +114,13 @@ class GroupsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();
             $post['created_by'] = $user_id;
+             //convert dates to db field format
+            if(strtotime($post['bank_deposite_date']) > 0){
+                $post['bank_deposite_date'] = date('Y-m-d',strtotime($post['bank_deposite_date']));
+            }
+            if(strtotime($post['deposite_maturity_date']) > 0){
+                $post['deposite_maturity_date'] = date('Y-m-d',strtotime($post['deposite_maturity_date']));
+            }
            // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {

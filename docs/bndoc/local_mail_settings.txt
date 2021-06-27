@@ -1,0 +1,22 @@
+1. In C:\xampp\sendmail\sendmail.ini change the below values
+smtp_server=smtp.gmail.com
+smtp_port=587
+smtp_ssl=tls
+auth_username=riyajaya692@gmail.com
+auth_password=etgtxblbsftaupzd
+
+2. In php.ini
+sendmail_from = riyajaya692@gmail.com
+
+3. Check mail is send or not in simple php file
+<?php
+$message = "Hi!,\r\nThis is one line.\r\nAnd this is another.\r\nBye!";
+ echo	mail('jayshris22@gmail.com','jaya test mail',$message,'From: jayshris22@gmail.com');
+?>
+
+4. Check errors in C:\xampp\sendmail\error.log file
+
+Note. Sendmail extenstion must be on in server
+
+
+BKBM/A1/08

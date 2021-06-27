@@ -1,0 +1,68 @@
+1. New form add payment
+Gst calculation
+Chit amount :-100000
+Members :- 20
+Instalment : 100000/20=5000
+Gst :- 5000*18%
+
+2. Auction form change  - Done
+ - below member, show ticket no  - Done
+ - Add Auction highest rs field / Discount_amount means action_highest_Rs / remove action_highest_Rs  - Done
+ - Get Foreman comm from db - Done
+ - 5% highest auction ला submit होत नाही - Done
+
+3. Add receipt मध्ये बदल  => Done
+👉🏻Remark च्या ऐवजी Net Due amount* असे करावे
+👉🏻 remark च्या खाली Received Amount असा नवीन option करावा
+ 
+Received amount टाकण्यासाठी एन्ट्री करायला लागल्यास एक window open व्हावा त्यामध्ये
+
+2000 X ___ =
+1000 X ___ =
+500.  X ___ =
+100.  X ___ =
+50.    X ___ =
+20     X ___ =
+10.    X ___ =
+5.      X ___ =
+
+Coins X __ =
+
+Reverse amount = - ___
+
+Total ____
+Delivery of money notes
+
+4. जिथे जिथे manually details भरावयाची आहे फक्त तिथे square हे dark /bold करावे - Done
+
+5. Add member मध्ये  => Done
+👉🏻Gender मध्ये other हा option टाका
+👉🏻Maritial status मध्ये firm हा एक option add करा 
+Pin code हा area code च्या वर पाहिजे
+
+6.Create group मध्ये  => Done
+ option ऍड करायाचे आहेत
+
+Bank deposit details-
+1) Bank deposit amount
+2) Bank Deposit number
+3) Bank name
+4)bank deposit date
+
+7. Received Amount functionality on group page -> Done
+
+8.Recipt / पावती मध्ये 
+Cheque payment घेतल्यास चेक नंबर आणि cheque date दिसत नाही
+
+लोगो एकच ठेवा bni हा काढून टाका
+=======================================
+3-6-21
+- Create group मध्ये 
+ option ऍड करायाचे आहेत
+
+Bank deposit details-
+1) Bank deposit amount
+2) Bank Deposit number
+3) Bank name
+4)bank deposit date
+

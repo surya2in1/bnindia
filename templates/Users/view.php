@@ -226,7 +226,7 @@
                                     <div class="col-lg-6 col-xl-6">
                                         <?php if($membergroups){ 
                                             foreach ($membergroups as $key => $value) {
-                                                    echo ($key+1).'. '.$value->group->group_code."<br/><br/>";
+                                                     echo ($key+1).'. '.$value->group->group_code."<br/><br/>";
                                                 }    
                                         }else{
                                             echo 'No groups available';
