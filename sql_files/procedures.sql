@@ -58,3 +58,164 @@ BEGIN
 END$$
 DELIMITER ;
 ------------------------------------------------------------------------------------------------
+
+BEGIN
+DECLARE month VARCHAR(20); 
+DECLARE group_due_date VARCHAR(20); 
+DECLARE auction_last_day INT DEFAULT 0; 
+Declare  day VARCHAR(20);
+SET day = param_day;
+
+/*Calculate day as per group type - start */
+IF group_type = 'fortnight'  Then
+  IF DAY(auction_date) <= 15 THEN 
+    SET day =  (SELECT SUBSTRING_INDEX(param_day, ',', 1));
+  ELSE 
+    SET day =  (SELECT SUBSTRING_INDEX(param_day, ',', 2));  
+  END IF;
+END IF;
+
+IF group_type = 'weekly'  Then 
+    SET @week_start_date =(SELECT day(DATE(auction_date + INTERVAL ( - WEEKDAY(auction_date)) DAY)));
+    SET @week_end_date = (SELECT day(DATE(auction_date + INTERVAL (6 - WEEKDAY(auction_date)) DAY)));
+    IF param_day >= @week_start_date and param_day<=@week_end_date THEN  
+      SET no = @week_start_date; 
+      label: LOOP
+        SET no = @week_start_date +1; 
+          IF no =param_day THEN
+               LEAVE label;
+           END IF; 
+          IF no =@week_end_date THEN 
+           LEAVE label;
+          END IF; 
+      END LOOP label; 
+      SET day = no;
+
+    ELSE
+      SET day ='';  
+
+    END IF;  
+END IF;
+
+IF group_type = 'daily'  Then 
+  SET day = DAY(auction_date);
+END IF;
+/*Calculate day as per group type-end */
+
+SET month = MONTH(auction_date);
+
+IF month<10 
+ THEN SET month = CONCAT('0',month); 
+END IF;
+
+IF day<10 
+THEN SET day = CONCAT('0',day); 
+END IF; 
+
+SET auction_last_day = DAY(LAST_DAY(auction_date));
+ 
+IF day>auction_last_day
+  THEN SET day = auction_last_day;
+END IF;
+
+SET group_due_date = CONCAT(YEAR(auction_date),'-',month,'-',day);
+
+RETURN group_due_date;
+END
+
+--------------------------------------Bk------------------------------------------
+
+BEGIN
+DECLARE month VARCHAR(20); 
+DECLARE group_due_date VARCHAR(20); 
+DECLARE auction_last_day INT DEFAULT 0; 
+
+SET month = MONTH(auction_date);
+
+IF month<10 
+ THEN SET month = CONCAT('0',month); 
+END IF;
+
+IF day<10 
+THEN SET day = CONCAT('0',day); 
+END IF; 
+
+SET auction_last_day = DAY(LAST_DAY(auction_date));
+ 
+IF day>auction_last_day
+  THEN SET day = auction_last_day;
+END IF;
+
+SET group_due_date = CONCAT(YEAR(auction_date),'-',month,'-',day);
+
+RETURN group_due_date;
+END
+
+
+=======================================================
+
+BEGIN
+DECLARE month VARCHAR(20); 
+DECLARE group_due_date VARCHAR(20); 
+DECLARE auction_last_day INT DEFAULT 0; 
+Declare  day VARCHAR(20);
+Declare  week_day VARCHAR(20);
+DECLARE no INT;
+SET day = param_day;
+
+IF group_type = 'fortnight'  Then
+  IF DAY(auction_date) <= 15 THEN 
+    SET day =  (SELECT SPLIT_STRING(param_day, ',', 1));
+  ELSE 
+    SET day =  (SELECT SPLIT_STRING(param_day, ',', 2));  
+  END IF;
+  IF day = '' THEN  SET day =  DAY(auction_date); END IF;
+END IF;
+
+IF group_type = 'weekly'  Then 
+   SET @check_week_day = (SELECT FIND_IN_SET(param_day,'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday')); 
+   
+  IF  @check_week_day > 0  AND @check_week_day <=7 THEN  
+      SET @week_start_date =(SELECT day(DATE(auction_date + INTERVAL ( - WEEKDAY(auction_date)) DAY)));
+      SET @week_end_date = (SELECT day(DATE(auction_date + INTERVAL (6 - WEEKDAY(auction_date)) DAY)));
+      SET no = @week_start_date; 
+        label: LOOP 
+            SET week_day = DAYNAME(CONCAT(YEAR(auction_date),'-',MONTH(auction_date),'-',no));
+            IF week_day = param_day THEN
+                 LEAVE label;
+             END IF; 
+            IF no =@week_end_date THEN 
+             LEAVE label;
+            END IF; 
+            SET no = no +1; 
+        END LOOP label; 
+      SET day = no;  
+  ELSE
+     SET day =  DAY(auction_date);   
+  END IF;
+END IF;
+
+IF group_type = 'daily'  Then 
+  SET day = DAY(auction_date);
+END IF;
+
+SET month = MONTH(auction_date);
+
+IF month<10 
+ THEN SET month = CONCAT('0',month); 
+END IF;
+
+IF day<10 
+THEN SET day = CONCAT('0',day); 
+END IF; 
+
+SET auction_last_day = DAY(LAST_DAY(auction_date));
+ 
+IF day>auction_last_day
+  THEN SET day = auction_last_day;
+END IF;
+
+SET group_due_date = CONCAT(YEAR(auction_date),'-',month,'-',day);
+
+RETURN group_due_date;
+END

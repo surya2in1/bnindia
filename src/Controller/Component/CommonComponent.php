@@ -116,16 +116,16 @@ class CommonComponent extends Component {
     $query = $auctionTable->find();
     $instalment_nos = $query->select(['pid' => 'p.id','instalment_month'=>'MONTHNAME(Auctions.auction_date)','Auctions.net_subscription_amount',
       'due_amount' => '( CASE WHEN p.pending_amount > 0 THEN p.pending_amount ELSE Auctions.net_subscription_amount END) ',
-      //'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))',
+      //'due_late_fee' => 'CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date,g.group_type))',
       'due_late_fee' => '( CASE WHEN (p.is_late_fee_clear <1 and p.remaining_late_fee  < 1) or (remaining_late_fee  IS NULL and is_late_fee_clear  IS NULL ) THEN 
-                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))   
+                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,Auctions.auction_group_due_date)   
                                       WHEN p.is_late_fee_clear <1 and p.remaining_late_fee  > 1 THEN 
                                          p.remaining_late_fee
                                       ELSE  0.00
                                 END)',
       'auction_no'=>'Auctions.auction_no','id'=>'Auctions.id',
       'plate_fee'=>'p.late_fee ',
-      'due_date' => 'CreateDateFromDay(g.date,Auctions.auction_date)' 
+      'due_date' => 'Auctions.auction_group_due_date' 
     ])
            ->join([
               'table' => 'payments',

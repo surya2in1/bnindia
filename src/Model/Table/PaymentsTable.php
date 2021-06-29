@@ -394,9 +394,9 @@ class PaymentsTable extends Table
             "MONTHNAME(Auctions.auction_date) as instalment_month",
             'Auctions.net_subscription_amount',
             " @due_amount :=( CASE WHEN p.remaining_subscription_amount > 0 THEN p.remaining_subscription_amount ELSE Auctions.net_subscription_amount END) as due_amount",
-            //" @due_late_fee :=CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date)) as due_late_fee" ,
+            //" @due_late_fee :=CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date,g.group_type)) as due_late_fee" ,
             " @due_late_fee := ( CASE WHEN (p.is_late_fee_clear <1 and p.remaining_late_fee  < 1) or (remaining_late_fee  IS NULL and is_late_fee_clear  IS NULL ) THEN 
-                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))   
+                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,Auctions.auction_group_due_date)   
                                       WHEN p.is_late_fee_clear <1 and p.remaining_late_fee  > 1 THEN 
                                          p.remaining_late_fee
                                       ELSE  0.00
@@ -592,7 +592,7 @@ class PaymentsTable extends Table
             'Auctions.net_subscription_amount',
             " @due_amount :=( CASE WHEN p.remaining_subscription_amount > 0 THEN p.remaining_subscription_amount ELSE Auctions.net_subscription_amount END) as due_amount",
             " @due_late_fee := ( CASE WHEN (p.is_late_fee_clear <1 and p.remaining_late_fee  < 1) or (remaining_late_fee  IS NULL and is_late_fee_clear  IS NULL ) THEN 
-                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,CreateDateFromDay(g.date,Auctions.auction_date))   
+                                        CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,Auctions.auction_group_due_date)   
                                       WHEN p.is_late_fee_clear <1 and p.remaining_late_fee  > 1 THEN 
                                          p.remaining_late_fee
                                       ELSE  0.00

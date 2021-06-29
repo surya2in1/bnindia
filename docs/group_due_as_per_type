@@ -36,8 +36,11 @@ forthnight date 1 must be between 1-15
 
  2.Forthnight   g.date explode with comma
  				Declare day VARCHAR(20);
- 				day = explode(',',paramday);
+ 				cal_day = SELECT SUBSTRING_INDEX('21,12', ',', 1)
+;//explode(',',paramday);
+
  				Declare auction_date_day;
+
  				auction_date_day = DAY(auction_date);
  				if(auction_date_day <= 15){
  				   day = g_date_explode[0]

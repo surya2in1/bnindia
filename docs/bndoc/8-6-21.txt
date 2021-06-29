@@ -33,10 +33,16 @@ Add member
 ----------------------------------------------------------------
 Remaining
 
+************************Later*********************************
 Move resaon from payment voucher to other payment
 
 Add member
 1. Replace Area code to Agent code db field
+
+Print receipt:
+Show amount in word
+add reg no
+**********************************************************
 
 Dashboard:
 Add Daily repots:
@@ -61,8 +67,13 @@ List,View
 Reports
 
 -----------------------------------------------------------------------------------------------------------
+ISSUES:
+in group form date datepicker
 
 
-Add remaining_late_fee and remaining_late_fee fields in page
+Check wherever used CreateDateFromDay function in code
+Save due date after save auction 
+Change in fron end for group form for collection date and auction except monthly type
+
 
 
