@@ -47,7 +47,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Group Type:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $group_type =  isset($group->group_type) ? $group->group_type : 'monthly';?>
-                                        <select id="group_type" name="group_type" class="form-control" onchange="calculate_no_of_months();">
+                                        <select id="group_type" name="group_type" class="form-control" onchange="calculate_no_of_months();change_collectio_date_auction_date_dropdown('auction_date_div','auction_date','Auction Date');change_collectio_date_auction_date_dropdown('collection_date_div','date','Collection Date');">
                                             <option value="monthly" <?php if($group_type == 'monthly'){ echo 'selected'; } ?>>Monthly</option>
                                             <option value="fortnight" <?php if($group_type == 'fortnight'){ echo 'selected'; } ?> >Fortnight</option>
                                             <option value="weekly" <?php if($group_type == 'weekly'){ echo 'selected'; } ?> >Weekly</option>
@@ -85,22 +85,14 @@ use Cake\Routing\Router;
                                         <input type="text" class="form-control" name="gov_reg_no" placeholder="Enter Goverment Registration Number" value="<?= isset($group->gov_reg_no) ? $group->gov_reg_no : '';?>">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Auction Day:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6"> 
-                                        <?php 
-                                        $weekdays = array('Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday',
-                                            'Friday'=>'Friday','Saturday'=>'Saturday',
-                                            'Sunday'=>'Sunday');
+                                <?php 
+                                $weekdays = array('Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday',
+                                    'Friday'=>'Friday','Saturday'=>'Saturday',
+                                    'Sunday'=>'Sunday');
 
-                                        $auction_day =  isset($group->auction_day) ? $group->auction_day : '';
-                                        ?>
-                                        <select id="auction_day" name="auction_day" class="form-control">
-                                            <?php foreach($weekdays  as $key => $weekday){ ?>
-                                            <option value="<?= $key; ?>" <?php if($auction_day == $key){ echo "selected";}?>><?= $weekday; ?></option> 
-                                            <?php } ?>
-                                        </select>
-                                    </div>
+                                $auction_day =  isset($group->auction_day) ? $group->auction_day : '';
+                                ?>
+                                <div class="form-group row" id="auction_date_div"> 
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Late fee(in percent):<span class="required" aria-required="true"> * </span></label>
@@ -108,20 +100,21 @@ use Cake\Routing\Router;
                                         <input type="text" class="form-control" name="late_fee" placeholder="Enter Late Fee" value="<?= isset($group->late_fee) ? $group->late_fee : '';?>">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-lg-3 col-form-label">Collection Date:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6">  
-                                        <?php 
-                                        $month_dates = array_combine( range(1,31), range(1,31));  
-                                        $date =  isset($group->date) ? $group->date : 0;
-                                        ?>
-                                        <select id="date" name="date" class="form-control">
-                                            <?php foreach($month_dates  as $key => $month_date){ ?>
-                                            <option value="<?= $key; ?>" <?php if($date == $key){ echo "selected";}?>><?= $month_date; ?></option> 
-                                            <?php } ?>
-                                        </select>
+                                <?php 
+                                $month_dates = array_combine( range(1,31), range(1,31));  
+                                $first_fortnight_dates = array_combine( range(1,15), range(1,15));  
+                                $second_fortnight_dates = array_combine( range(16,31), range(16,31));  
 
-                                    </div>
+                                $date =  isset($group->date) && !empty($group->date) ? explode(',', $group->date) : ''; 
+                                ?>
+                                <input type="hidden" id="month_dates" value="<?= htmlspecialchars(json_encode($month_dates)); ?>"/>
+                                <input type="hidden" id="first_fortnight_dates" value="<?= htmlspecialchars(json_encode($first_fortnight_dates)); ?>"/>
+                                <input type="hidden" id="second_fortnight_dates" value="<?= htmlspecialchars(json_encode($second_fortnight_dates)); ?>"/>
+                                <input type="hidden" id="weekdays" value="<?= htmlspecialchars(json_encode($weekdays)); ?>"/>
+
+                                <input type="hidden" id="selected_date" value="<?=  isset($date[0]) ? $date[0] : '';  ?>"/>
+                                <input type="hidden" id="selected_date2" value="<?= isset($date[1]) ? $date[1] : ''; ?>"/>
+                                <div class="form-group row" id="collection_date_div"> 
                                 </div>  
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Group Code:<span class="required" aria-required="true"> * </span></label>

@@ -315,6 +315,8 @@ jQuery(document).ready(function() {
 	if(group_code !=''){
 		$('#list_label').html('<b>List of "'+group_code+'" group members:</b>');
 	}
+	change_collectio_date_auction_date_dropdown('auction_date_div','auction_date','Auction Date');
+	change_collectio_date_auction_date_dropdown('collection_date_div','date','Collection Date');
 });
 
 function calculate_premium(){
@@ -349,7 +351,7 @@ function calculate_no_of_months(){
 		}
 		$('#no_of_months').val(no_of_months);
 	}
-}
+} 
 
 /*
 * Add member to new group form table
@@ -544,4 +546,70 @@ function get_group_code(){
 			}); 
 }
  
+function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_name){
+	var group_type = $('#group_type').val();  
+	var html = '<label class="col-lg-3 col-form-label">'+label_name+':<span class="required" aria-required="true"> * </span></label>';
+	
+	if(group_type == 'fortnight'){ 
+		var first_fortnight_dates = $.parseJSON($('#first_fortnight_dates').val()); 
+		var second_fortnight_dates = $.parseJSON($('#second_fortnight_dates').val()); 
+		//First div
+		html += '<div class="col-lg-3">';
+		html += '<select id="'+input_id+'" name="'+input_id+'[]" class="form-control">';
+		html += '<option value="">Select First Fortnight</option>';
+		$.each(first_fortnight_dates, function( key, value ) { 
+		    var selected='';
+		    if($('#selected_date').val() == key){
+		        selected='selected';
+		    }
+           html += '<option value='+key+' '+selected+'>'+value+'</option>';
+		});
+        html += '</select>';
+        html += '</div>';
 
+        //Second div
+        html += '<div class="col-lg-3">';
+		html += '<select name="'+input_id+'[]" class="form-control">';
+		html += '<option value="">Select Second Fortnight</option>';
+		$.each(second_fortnight_dates, function( key, value ) { 
+		    var selected='';
+		    if($('#selected_date2').val() == key){
+		        selected='selected';
+		    }
+           html += '<option value='+key+' '+selected+'>'+value+'</option>';
+		});
+        html += '</select>';
+        html += '</div>';
+	}else if(group_type=='weekly'){
+		var weekdays = $.parseJSON($('#weekdays').val()); 
+		html += '<div class="col-lg-6">';
+		html += '<select id="'+input_id+'" name="'+input_id+'" class="form-control">';
+		$.each(weekdays, function( key, value ) { 
+		    var selected='';
+		    if($('#selected_date').val() == key){
+		        selected='selected';
+		    }
+           html += '<option value='+key+' '+selected+'>'+value+'</option>';
+		});
+        html += '</select>';
+        html += '</div>';
+	}else if(group_type=='daily'){ 
+		html += '<div class="col-lg-6">'; 
+		html += '<input type="text" class="form-control" name="'+input_id+'" id="'+input_id+'" value="Daily" readonly/>'; 
+        html += '</div>';
+	}else if(group_type =='monthly'){
+		var month_dates = $.parseJSON($('#month_dates').val()); 
+		html += '<div class="col-lg-6">';
+		html += '<select id="'+input_id+'" name="'+input_id+'" class="form-control">';
+		$.each(month_dates, function( key, value ) { 
+		    var selected='';
+		    if($('#selected_date').val() == key){
+		        selected='selected';
+		    }
+           html += '<option value='+key+' '+selected+'>'+value+'</option>';
+		});
+        html += '</select>';
+        html += '</div>';
+	}
+	$('#'+changed_div).html(html);
+}

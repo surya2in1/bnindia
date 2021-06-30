@@ -75,5 +75,5 @@ Check wherever used CreateDateFromDay function in code
 Save due date after save auction 
 Change in fron end for group form for collection date and auction except monthly type
 
-
+Group auction date use in auction form as auction date after change group /edit
 
