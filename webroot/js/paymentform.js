@@ -13,7 +13,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 	        form.find('.alert').remove(); 
 	        KTUtil.animateClass(alert[0], 'fadeIn animated'); 
-	    }
+	    } 
+        var names = "";
+        $('.group-required').each(function() {
+            names += $(this).attr('name') + " ";
+        });
 	    $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -64,6 +68,16 @@ var KTDatatablesDataSourceAjaxServer = function() {
                             return parseFloat($('#total_due_amount').val());
                         }
 	                },
+                     groups: {
+                        myGroup: names
+                    },
+                    // "money_notes":{ 
+                    //     require_from_group: [1, ".group-required"],
+                        // required: function(element){
+                        //     return $("#received_by option:selected").val() == 1;
+                        //     }, 
+                        // number:true
+                    // },
             		cheque_no: { required: function(element){
                             return $("#received_by option:selected").val() == 2;
                             }, number:true
@@ -393,6 +407,7 @@ $('#received_by').change(function(e) {
 	    $('#payment_received_amount_div').removeClass('hide');   
 	    $('#received_amount').attr('readonly',true);   
 	    $('#received_amount').removeClass('border-black');
+        $('#received_amount_btn').trigger('click');
 	}else{
 	    $('#payment_received_amount_div').addClass('hide');
 	    $('#received_amount').attr('readonly',false);

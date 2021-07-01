@@ -69,11 +69,14 @@ Reports
 -----------------------------------------------------------------------------------------------------------
 ISSUES:
 in group form date datepicker
-
+Group auction date use in auction form as auction date after change group /edit
+In payment form money_notes required validation
 
 Check wherever used CreateDateFromDay function in code
 Save due date after save auction 
 Change in fron end for group form for collection date and auction except monthly type
+group form validation for acuction and collection and submit
 
-Group auction date use in auction form as auction date after change group /edit
+
+
 

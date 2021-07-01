@@ -297,13 +297,13 @@ use Cake\Routing\Router;
                                             <tbody>
                                                 <tr>
                                                     <td>2000</td> 
-                                                    <td><input type="number" class="form-control border-black" name="money_notes[2000][val]" id="no_of_two_thousands_notes" placeholder="Enter No. Of Two Thousands Notes" value="" lbl-val="2000"></td> 
+                                                    <td><input type="number" class="form-control border-black group-required" name="money_notes[2000][val]" id="no_of_two_thousands_notes" placeholder="Enter No. Of Two Thousands Notes" value="" lbl-val="2000"></td> 
                                                     <td><input type="number" class="form-control total" name="money_notes[2000][total]" id="no_of_two_thousands_notes_total" placeholder="Enter Total" value="" readonly></td> 
                                                 </tr>
                                                 
                                                 <tr>
                                                     <td>1000</td> 
-                                                    <td><input type="number" class="form-control border-black" name="money_notes[1000][val]" id="no_of_one_thousands_notes" placeholder="Enter No. Of One Thousands Notes" value="" lbl-val="1000"></td> 
+                                                    <td><input type="number" class="form-control border-black group-required" name="money_notes[1000][val]" id="no_of_one_thousands_notes" placeholder="Enter No. Of One Thousands Notes" value="" lbl-val="1000"></td> 
                                                     <td><input type="number" class="form-control total" name="money_notes[1000][total]" id="no_of_one_thousands_notes_total" placeholder="Enter Total" value="" readonly></td> 
                                                 </tr>
                                                 

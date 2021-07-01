@@ -121,7 +121,7 @@ class GroupsController extends AppController
             if(strtotime($post['deposite_maturity_date']) > 0){
                 $post['deposite_maturity_date'] = date('Y-m-d',strtotime($post['deposite_maturity_date']));
             }
-           // echo '<pre>';print_r($post); exit;  
+           echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
                 echo 1;

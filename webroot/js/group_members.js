@@ -74,20 +74,32 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        KTUtil.animateClass(alert[0], 'fadeIn animated');
 	        //alert.find('span').html(msg);
 	    }
+	    $.validator.addMethod("allRequired", function(value, elem){
+        // Use the name to get all the inputs and verify them
+	        var name = elem.name;
+	        return  $('input[name="'+name+'"]').map(function(i,obj){return $(obj).val();}).get().every(function(v){ return v; });
+	    });
+     $.validator.addMethod("validateGroups", function(value, element) { 
+        return value != '' ;
+       }, "This field is required.");
+           
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
             var form = $(this).closest('form');
 	        form.validate({
-	        	 ignoreTitle: true,
+	        	 ignoreTitle: true,  
 	     		// define validation rules
 	            rules: {
 	                group_type: {
 	                        required: true,
 	                },
-	                auction_day: {
-	                        required: true,
-	                },
+	                auction_date:{
+				        required:true
+				    },
+	                "category[]" :{
+				        required:true
+				    },
 	                chit_amount: {
 	                        required: true,
 	                        number:true,
@@ -124,9 +136,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        min:1
 	                },
 	                date:{
-	                	required:true,
-	                	max : 31,
-	                    min:1
+	                	required:true 
+	                },
+	                "date[]":{
+	                	required:true 
 	                },
 	                 group_code: {
 	                        required: true,
@@ -555,7 +568,7 @@ function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_
 		var second_fortnight_dates = $.parseJSON($('#second_fortnight_dates').val()); 
 		//First div
 		html += '<div class="col-lg-3">';
-		html += '<select id="'+input_id+'" name="'+input_id+'[]" class="form-control">';
+		html += '<select  name="'+input_id+'[]" class="form-control">';
 		html += '<option value="">Select First Fortnight</option>';
 		$.each(first_fortnight_dates, function( key, value ) { 
 		    var selected='';
@@ -600,7 +613,7 @@ function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_
 	}else if(group_type =='monthly'){
 		var month_dates = $.parseJSON($('#month_dates').val()); 
 		html += '<div class="col-lg-6">';
-		html += '<select id="'+input_id+'" name="'+input_id+'" class="form-control">';
+		html += '<select id="'+input_id+'" name="'+input_id+'" class="form-control">'; 
 		$.each(month_dates, function( key, value ) { 
 		    var selected='';
 		    if($('#selected_date').val() == key){
