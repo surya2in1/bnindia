@@ -68,6 +68,7 @@ use Cake\Routing\Router;
                                     <div class="col-lg-6">
                                         <?php $auction_member_id =  isset($auction->auction_winner_member) ? $auction->auction_winner_member : 0;
                                         ?>
+                                        <input type="hidden" name="auction_member_id" id="auction_member_id" value="<?= $auction_member_id; ?>">
                                         <!-- Get member list -->
                                         <select id="auction_winner_member" name="auction_winner_member" class="form-control" onchange="member_change(this);">
                                              <option value="">Select Member</option>

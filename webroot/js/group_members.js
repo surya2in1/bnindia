@@ -73,16 +73,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        //alert.animateClass('fadeIn animated');
 	        KTUtil.animateClass(alert[0], 'fadeIn animated');
 	        //alert.find('span').html(msg);
-	    }
-	    $.validator.addMethod("allRequired", function(value, elem){
-        // Use the name to get all the inputs and verify them
-	        var name = elem.name;
-	        return  $('input[name="'+name+'"]').map(function(i,obj){return $(obj).val();}).get().every(function(v){ return v; });
-	    });
-     $.validator.addMethod("validateGroups", function(value, element) { 
-        return value != '' ;
-       }, "This field is required.");
-           
+	    } 
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -97,7 +88,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                auction_date:{
 				        required:true
 				    },
-	                "category[]" :{
+	                "auction_date[]" :{
 				        required:true
 				    },
 	                chit_amount: {
@@ -152,7 +143,19 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                } else {
 	                    element.after(error.addClass('invalid-feedback'));
 	                }
-	                 element.addClass('is-invalid');
+	                console.log(element.attr("name")); 
+	                 if (element.attr("name") == "auction_date[]" || element.attr("name") == "date[]") {
+	                 	var attr =element.attr("name");  
+	                 	$('[name="'+attr+'"]').map(function () {
+	                 		console.log(this.value); 
+	                 		if(this.value==''){
+	                 			element.addClass('is-invalid');
+	                 		} 
+						});
+	                 }else{
+	                 	element.addClass('is-invalid');
+
+	                 }
 	            },    
 	        });
 			

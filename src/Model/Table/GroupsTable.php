@@ -89,7 +89,7 @@ class GroupsTable extends Table
             ->notEmptyString('gov_reg_no');
 
         $validator
-            ->integer('date')
+            ->scalar('date')
             ->requirePresence('date', 'create')
             ->notEmptyString('date');
 
@@ -104,9 +104,9 @@ class GroupsTable extends Table
             ->notEmptyString('group_type');
 
         $validator
-            ->scalar('auction_day') 
-            ->requirePresence('auction_day', 'create')
-            ->notEmptyString('auction_day');
+            ->scalar('auction_date') 
+            ->requirePresence('auction_date', 'create')
+            ->notEmptyString('auction_date');
 
         $validator
             ->decimal('late_fee')

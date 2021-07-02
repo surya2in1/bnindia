@@ -233,7 +233,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 jQuery(document).ready(function() {
     KTDatatablesDataSourceAjaxServer.init();  
-    $("#auction_date").datepicker().datepicker("setDate", new Date());
+    if($('#id').val() > 0){
+        $('#groups').trigger('change');
+    }
+    //$("#auction_date").datepicker().datepicker("setDate", new Date());
+
 });
 
 //Show members after select group
@@ -253,6 +257,7 @@ $('#groups').change(function(e) {
         return false;
     }
     $('.bnspinner').removeClass('hide');
+    var selected_auction_member_id = $('#auction_member_id').val();
 	$.ajax({
 		   "url": $('#router_url').val()+"Auctions/getMembersByGrooupId",
             "type": "POST",
@@ -262,19 +267,23 @@ $('#groups').change(function(e) {
             beforeSend: function (xhr) { // Add this line
                 xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
             },
-            success: function(response, status, xhr, $form) {
-                $('.bnspinner').addClass('hide');
+            success: function(response, status, xhr, $form) { 
                 var result = JSON.parse(response);
                 if(result != ''){
                 	if((result.group_members)!=''){
                 		$.each((result.group_members), function( key, value ) { 
-    					  member_options += '<option value="'+value.user_id+'" ticket_no='+value.ticket_no+'>'+value.name+'</option>';
+                         var selected = "";
+                         if(selected_auction_member_id == value.user_id){
+                            selected = "selected";
+                         }
+    					  member_options += '<option value="'+value.user_id+'" "'+selected+'" ticket_no='+value.ticket_no+'>'+value.name+'</option>';
     					});
                         if((result.groups)!=''){
                             $('#chit_amount').val(result.groups.chit_amount);
                             $('#total_members').val(result.groups.total_number);
                             $('#premium').val(result.groups.premium);
                             $('#group_type').val(result.groups.group_type);
+                            get_group_auction_date(result.groups.id,result.groups.group_type,result.groups.auction_date);
                         }
                         if(result.auction_count){
                             $('#auction_no').val(result.auction_count);
@@ -282,9 +291,30 @@ $('#groups').change(function(e) {
                 	} 
     	           $('#auction_winner_member').html(member_options);
                 }
+                $('.bnspinner').addClass('hide');
             }
 		}); 
+        if(selected_auction_member_id > 0){
+            $('#auction_winner_member').trigger('change');
+        }
 });
+
+//get selected group auction date
+function get_group_auction_date(group_id,group_type,group_auction_date){
+    $.ajax({
+           "url": $('#router_url').val()+"Auctions/get_group_auction_date",
+            "type": "POST",
+            "data": {
+                        "group_id":group_id,"group_type":group_type,"group_auction_date":group_auction_date}
+                    ,
+            beforeSend: function (xhr) { // Add this line
+                xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+            },
+            success: function(response, status, xhr, $form) { 
+                 
+            }
+        }); 
+}
 
 //Set calcustion after enter auction highest percent
 function calculate_subscription_amount(){

@@ -1,5 +1,7 @@
 ALTER TABLE `groups` CHANGE `date` `date` VARCHAR(20) NOT NULL;
 ALTER TABLE `auctions	` add `auction_group_due_date` VARCHAR(20) NOT NULL;
+ALTER TABLE `groups` CHANGE `auction_day` `auction_date` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
 ========================================================================================
 
 DELIMITER $$

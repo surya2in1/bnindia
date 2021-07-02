@@ -6,6 +6,7 @@ use Cake\Mailer\TransportFactory;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\I18n\FrozenDate;
+use Cake\Core\Configure;
 
 class CommonComponent extends Component {
 	function searchUserPermission($id, $array) {
@@ -77,7 +78,7 @@ class CommonComponent extends Component {
             'contain' => [
                              'Groups' => function($q) use ($group_id) {
                                 return $q
-                                    ->select(['id','chit_amount','total_number','premium','date','late_fee','group_type'])
+                                    ->select(['id','chit_amount','total_number','premium','date','late_fee','group_type','auction_date'])
                                     ->contain(['Auctions' => function($q) use ($group_id) {
                                           return $q
                                               ->select(['Auctions.group_id','Auctions.auction_date',
@@ -217,6 +218,79 @@ class CommonComponent extends Component {
         }    
         // echo '$auctions<pre>';print_r($auctions);exit;
         return $auctions;
+  }
+
+  function get_group_auction_date($group_id,$group_type,$group_auction_date){
+    $last_dt_auction_date = ''; 
+    echo 'group_type= '.$group_type.'/$group_auction_date '.$group_auction_date."<br/>";
+    if($group_id >0 && $group_type!='' &&  $group_auction_date!=''){ 
+          //generate next auction date as per group type
+          $last_auction_date =  $this->get_last_auction_date($group_id);
+          
+          if($group_type == Configure::read('monthly')){ 
+              echo 'monthly last_auction_date '.$last_auction_date."<br/>";exit;
+              if($last_auction_date){
+                $last_dt_auction_date = date('Y-m-d', strtotime('+1 month', strtotime($last_auction_date)));  
+              }else{
+                $last_dt_auction_date = date('Y-m-d', strtotime($group_auction_date));  
+              }
+            } 
+
+          if($group_type == Configure::read('fortnight')){ 
+
+              $exploded_auction_date = !empty($group_auction_date) ? explode(',', $group_auction_date) :''; 
+
+              $first_auction_date = isset($exploded_auction_date[0]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[0])) :'';
+
+              $second_auction_date = isset($exploded_auction_date[1]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[1])):'';
+               echo 'fortnight first_auction_date '.$first_auction_date.'/ second_auction_date '.$second_auction_date."<br/>";
+              if($last_auction_date==''){
+                $last_auction_date =   $last_dt_auction_date = date('Y-m-d',strtotime($first_auction_date)); 
+              }else{
+                if($last_auction_date >= date('Y-m-01',strtotime($last_auction_date)) && $last_auction_date <= date('Y-m-15',strtotime($last_auction_date)) ){
+
+                    $last_dt_auction_date = date('Y-m-d',strtotime($second_auction_date)); 
+                } 
+              }
+
+                echo 'fortnight last_auction_date '.$last_auction_date.'/ last_dt_auction_date '.$last_dt_auction_date."<br/>";exit;
+          }
+
+          if($group_type == Configure::read('weekly')){
+            if($last_auction_date){
+              $last_dt_auction_date =  date('Y-m-d', strtotime('next monday', strtotime($last_auction_date)));
+            }else{
+              $last_dt_auction_date = date('Y-m-d', strtotime('next ' . $group_auction_date));  
+            } 
+             // $last_dt_auction_date = date('Y-m-d', strtotime('next monday', strtotime($last_auction_date))); 
+          }
+
+          if($group_type == Configure::read('daily')){
+            if($last_auction_date){
+              $last_dt_auction_date =   date('Y-m-d', strtotime($last_auction_date. ' + 1 days'));
+            }else{
+              $last_dt_auction_date =  date('Y-m-d');  
+            }  
+          } 
+    }
+    return $last_dt_auction_date;
+ }
+
+  function get_last_auction_date($group_id){
+    $last_auction_date =  '';
+    if($group_id>0){
+      $auctionTable= TableRegistry::get('Auctions'); 
+      $last_acution =  $auctionTable->find()
+              ->select(['auction_date'])
+              ->where(['group_id' => $group_id])
+              ->order(['id' => 'DESC'])
+              ->first();   
+      if(isset($last_acution->auction_date) && !empty($last_acution->auction_date)){
+          $FrozenDateObj = new FrozenDate($last_acution->auction_date); 
+          $last_auction_date = $FrozenDateObj->i18nFormat('yyyy-MM-dd'); 
+      }
+    }
+    return $last_auction_date;        
   }
 }
 ?>

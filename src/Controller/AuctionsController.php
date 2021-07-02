@@ -138,4 +138,9 @@ class AuctionsController extends AppController
         }
         echo json_encode($selected_group_members);exit;
     }
+
+    function getGroupAuctionDate(){ 
+        $get_group_auction_date = $this->Common->get_group_auction_date($this->request->getData('group_id'),$this->request->getData('group_type'),$this->request->getData('group_auction_date')); 
+        echo $get_group_auction_date;exit;
+    }
 }

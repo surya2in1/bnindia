@@ -43,7 +43,7 @@ class Group extends Entity
         'created_date' => true,
         'modified_date' => true,
         'group_type' => true,
-        'auction_day' => true,
+        'auction_date' => true,
         'late_fee'=> true,
         'created_by' => true,
         'bank_name'=>true,
