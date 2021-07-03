@@ -611,7 +611,7 @@ function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_
         html += '</div>';
 	}else if(group_type=='daily'){ 
 		html += '<div class="col-lg-6">'; 
-		html += '<input type="text" class="form-control" name="'+input_id+'" id="'+input_id+'" value="Daily" readonly/>'; 
+		html += '<input type="text" class="form-control" name="'+input_id+'" id="'+input_id+'" value="daily" readonly/>'; 
         html += '</div>';
 	}else if(group_type =='monthly'){
 		var month_dates = $.parseJSON($('#month_dates').val()); 

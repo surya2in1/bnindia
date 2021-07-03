@@ -79,4 +79,4 @@ group form validation for acuction and collection and submit
 
 
 
-
+auction weekly    date for eaxting auction dte

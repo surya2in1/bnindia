@@ -225,42 +225,63 @@ class CommonComponent extends Component {
     echo 'group_type= '.$group_type.'/$group_auction_date '.$group_auction_date."<br/>";
     if($group_id >0 && $group_type!='' &&  $group_auction_date!=''){ 
           //generate next auction date as per group type
-          $last_auction_date =  $this->get_last_auction_date($group_id);
-          
-          if($group_type == Configure::read('monthly')){ 
-              echo 'monthly last_auction_date '.$last_auction_date."<br/>";exit;
+          $last_auction_date = $this->get_last_auction_date($group_id);
+          echo '$last_auction_date  '.$last_auction_date ."<br/>";
+          $group_auction_coverted_date = date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$group_auction_date));
+
+          if($group_type == Configure::read('monthly')){  
               if($last_auction_date){
-                $last_dt_auction_date = date('Y-m-d', strtotime('+1 month', strtotime($last_auction_date)));  
+                $last_acution_year = date("Y", strtotime($last_auction_date));
+                $last_acution_month = date("m", strtotime($last_auction_date));
+
+                $monthly_auction_date = date('Y-m-d',strtotime($last_acution_year."-".$last_acution_month."-".$group_auction_date)); 
+
+                $last_dt_auction_date = date('Y-m-d', strtotime('+1 month', strtotime($monthly_auction_date)));  
               }else{
-                $last_dt_auction_date = date('Y-m-d', strtotime($group_auction_date));  
+                $last_dt_auction_date = date('Y-m-d', strtotime($group_auction_coverted_date));  
               }
             } 
 
           if($group_type == Configure::read('fortnight')){ 
 
               $exploded_auction_date = !empty($group_auction_date) ? explode(',', $group_auction_date) :''; 
-
-              $first_auction_date = isset($exploded_auction_date[0]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[0])) :'';
-
-              $second_auction_date = isset($exploded_auction_date[1]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[1])):'';
-               echo 'fortnight first_auction_date '.$first_auction_date.'/ second_auction_date '.$second_auction_date."<br/>";
               if($last_auction_date==''){
-                $last_auction_date =   $last_dt_auction_date = date('Y-m-d',strtotime($first_auction_date)); 
-              }else{
-                if($last_auction_date >= date('Y-m-01',strtotime($last_auction_date)) && $last_auction_date <= date('Y-m-15',strtotime($last_auction_date)) ){
+                //If last auction date empty and current date is in first fortnight then create auction date
+                if(date('d') >= 1 &&  date('d') <= 15 ){
 
-                    $last_dt_auction_date = date('Y-m-d',strtotime($second_auction_date)); 
+                   $first_auction_date = isset($exploded_auction_date[0]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[0])) :'';
+                   $last_dt_auction_date = date('Y-m-d',strtotime($first_auction_date));  
+                }
+                //If last auction date empty and current date is in second fortnight then create auction date
+                if( date('d') >= 15 &&  date('d') <= 31){
+                  $second_auction_date = isset($exploded_auction_date[1]) ? date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$exploded_auction_date[1])):''; 
+
+                 $last_dt_auction_date = date('Y-m-d',strtotime($second_auction_date)); 
+               }
+              }else{ 
+                $last_auction_dt= date("d", strtotime($last_auction_date));
+                $last_acution_year = date("Y", strtotime($last_auction_date));
+                $last_acution_month = date("m", strtotime($last_auction_date)); 
+
+                //If last auction date in first fortnight then create auction date with second group auction date
+                if($last_auction_dt >= 1 && $last_auction_dt <= 15){
+                    $first_fortnight_dt = strtotime($last_acution_year."-".$last_acution_month."-".$exploded_auction_date[1]); 
+                    $last_dt_auction_date = date('Y-m-d',$first_fortnight_dt); 
                 } 
-              }
-
-                echo 'fortnight last_auction_date '.$last_auction_date.'/ last_dt_auction_date '.$last_dt_auction_date."<br/>";exit;
+                //If last auction date in second fortnight then create auction date with next month first group auction date
+                if($last_auction_dt >= 16 && $last_auction_dt <= 31 ){
+                    $second_fortnight_dt = strtotime('+1 month',strtotime($last_acution_year."-".$last_acution_month."-".$exploded_auction_date[0])); 
+                    $last_dt_auction_date = date('Y-m-d',$second_fortnight_dt); 
+                } 
+              } 
           }
 
           if($group_type == Configure::read('weekly')){
-            if($last_auction_date){
-              $last_dt_auction_date =  date('Y-m-d', strtotime('next monday', strtotime($last_auction_date)));
+            //$last_auction_date='2021-07-06';
+            if($last_auction_date){//date("d", strtotime($last_auction_date));
+              $last_dt_auction_date =  date('Y-m-d', strtotime('next '.strtotime(date("d", strtotime($last_auction_date)))));
             }else{
-              $last_dt_auction_date = date('Y-m-d', strtotime('next ' . $group_auction_date));  
+              $last_dt_auction_date = date('Y-m-d', strtotime($group_auction_date));  
             } 
              // $last_dt_auction_date = date('Y-m-d', strtotime('next monday', strtotime($last_auction_date))); 
           }
@@ -272,6 +293,7 @@ class CommonComponent extends Component {
               $last_dt_auction_date =  date('Y-m-d');  
             }  
           } 
+          echo 'final auction date '.$last_dt_auction_date."<br/>";exit;
     }
     return $last_dt_auction_date;
  }

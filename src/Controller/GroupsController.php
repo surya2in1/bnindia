@@ -121,12 +121,14 @@ class GroupsController extends AppController
             if(strtotime($post['deposite_maturity_date']) > 0){
                 $post['deposite_maturity_date'] = date('Y-m-d',strtotime($post['deposite_maturity_date']));
             }
-            if(isset($post['auction_date']) && !empty($post['auction_date'])){
-              $post['auction_date'] =implode(',', $post['auction_date']);
-            }
-            if(isset($post['date']) && !empty($post['date'])){
-              $post['date'] =implode(',', $post['date']);
-            }
+           if(isset($post['group_type']) && $post['group_type'] == 'fortnight'){
+              if(isset($post['auction_date']) && !empty($post['auction_date'])){
+                $post['auction_date'] =implode(',', $post['auction_date']);
+              }
+              if(isset($post['date']) && !empty($post['date'])){
+                $post['date'] =implode(',', $post['date']);
+              }
+           }
            // echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
