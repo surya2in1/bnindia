@@ -1,5 +1,7 @@
 <?php
 use Cake\Routing\Router;
+use Cake\Core\Configure;
+
 ?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
@@ -99,6 +101,8 @@ use Cake\Routing\Router;
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Auction Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
+                                        <?php if($current_role == Configure::read('ROLE_SUPERADMIN')){ ?>
+                                        <!-- If superadmin then only editable-->
                                         <div class="input-group date">
                                             <input type="text" class="form-control" readonly="" value="<?= isset($auction->auction_date) && strtotime($auction->auction_date) > 0 ? date('m/d/Y',strtotime($auction->auction_date)) : '';?>" id="auction_date" name="auction_date">
                                             <div class="input-group-append">
@@ -107,6 +111,9 @@ use Cake\Routing\Router;
                                                 </span>
                                             </div>
                                         </div>
+                                        <?php }else{ ?>
+                                            <input type="text" class="form-control" readonly="" disabled="" value="<?= isset($auction->auction_date) && strtotime($auction->auction_date) > 0 ? date('m/d/Y',strtotime($auction->auction_date)) : '';?>" id="auction_date" name="auction_date"   /> 
+                                        <?php } ?>
                                     </div>
                                 </div>  
 

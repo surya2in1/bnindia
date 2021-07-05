@@ -19,7 +19,8 @@ var KTDatatablesDataSourceAjaxServer = function() {
             names += $(this).attr('name') + " ";
         });
 	    $('#submit').click(function(e) {
-            e.preventDefault();
+            //If received by is cash then enter atleast one no.of notes
+            e.preventDefault(); 
             var btn = $(this);
             var form = $(this).closest('form');
 	        form.validate({
@@ -118,9 +119,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        });
 			
 			if (!form.valid()) {
+                var err='There are some errors in your submission. Please correct them.';
+                if($("#received_by option:selected").val() == 1){
+                   err = "Enter value in at least one No.Of Notes";
+                }
                swal.fire({
                     "title": "",
-                    "text": "There are some errors in your submission. Please correct them.",
+                    "text": err,
                     "type": "error",
                     "confirmButtonClass": "btn btn-secondary",
                     "onClose": function(e) {
@@ -160,13 +165,21 @@ var KTDatatablesDataSourceAjaxServer = function() {
                             window.location.reload();
                         }, 2000); 
 
-                    }else{
-                    	var err = 'Some error has been occured. Please try again.'; 
-                    	// similate 2s delay
-                    	setTimeout(function() {
-    	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-    	                    showErrorMsg(form, 'danger', err);
-                        }, 2000);                        
+                    }else{ 
+                        var err = 'Some error has been occured. Please try again.'; 
+                         swal.fire({
+                            "title": "",
+                            "text": err,
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function(e) {
+                                  btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+                            showErrorMsg(form, 'danger', err);
+                                 $('html, body').animate({
+                                    scrollTop: $("#kt_content").offset().top
+                                }, 1000); 
+                            }
+                        });                          
                     }
                 	$('html, body').animate({
                         scrollTop: "0"
@@ -621,7 +634,7 @@ $('#reverse_notes').change(function() {
     var late_fee = parseFloat($('#due_late_fee').val());
     var fixed_remaining_subscription_amount = parseFloat($('#fixed_remaining_subscription_amount').val());
     var is_late_fee_clear = 0;
-    if(receive_amount > late_fee){
+    if(receive_amount >= late_fee){
         subcription_rs = parseFloat($('#received_amount').val()) - late_fee;
         $('#late_fee').val(late_fee);
         is_late_fee_clear =1;

@@ -75,25 +75,16 @@ class AuctionsController extends AppController
         $this->set(compact('auction','groups','selected_group_members','foreman_commission_in_percent'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $post = $this->request->getData(); 
-            
-            $last_acution =  $this->Auctions->find()
-            ->select(['auction_date'])
-            ->where(['group_id' => $post['group_id']])
-            ->order(['id' => 'DESC'])
-            ->first();  
-            $last_auction_date='';
-            if(isset($last_acution->auction_date) && !empty($last_acution->auction_date)){
-                $FrozenDateObj = new FrozenDate($last_acution->auction_date); 
-                $last_auction_date = $FrozenDateObj->i18nFormat('yyyy-MM-dd'); 
-            }
+            $post = $this->request->getData();  
+
+            $last_auction_date = $this->Common->get_last_auction_date($post['group_id']); 
             $post['last_auction_date'] = $last_auction_date;
              
            //convert dates to db field format
             if(strtotime($post['auction_date']) > 0){
                 $post['auction_date'] = date('Y-m-d',strtotime($post['auction_date']));
             }
-           // echo '<pre>';print_r($post);// exit;  
+            //echo '<pre>';print_r($post); exit;  
             $auction = $this->Auctions->patchEntity($auction, $post);
             if ($result = $this->Auctions->save($auction)) { 
                 //check if all auction complete then update groups 

@@ -72,6 +72,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
         }, "Commission must be minimum 5% of Chit Amount:."); 
         
         $('#submit').click(function(e) {
+             $(':disabled').each(function(e) {
+                $(this).removeAttr('disabled');
+            })
             e.preventDefault();
             var btn = $(this);
             var form = $(this).closest('form');
@@ -310,8 +313,10 @@ function get_group_auction_date(group_id,group_type,group_auction_date){
             beforeSend: function (xhr) { // Add this line
                 xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
             },
-            success: function(response, status, xhr, $form) { 
-                 
+            success: function(response, status, xhr, $form) {  
+                 if(response){
+                    $('#auction_date').val(response);
+                 }
             }
         }); 
 }

@@ -222,14 +222,14 @@ class CommonComponent extends Component {
 
   function get_group_auction_date($group_id,$group_type,$group_auction_date){
     $last_dt_auction_date = ''; 
-    echo 'group_type= '.$group_type.'/$group_auction_date '.$group_auction_date."<br/>";
+    //echo 'group_type= '.$group_type.'/$group_auction_date '.$group_auction_date."<br/>";
     if($group_id >0 && $group_type!='' &&  $group_auction_date!=''){ 
           //generate next auction date as per group type
           $last_auction_date = $this->get_last_auction_date($group_id);
-          echo '$last_auction_date  '.$last_auction_date ."<br/>";
-          $group_auction_coverted_date = date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$group_auction_date));
+          //echo '$last_auction_date  '.$last_auction_date ."<br/>";
 
           if($group_type == Configure::read('monthly')){  
+              $group_auction_coverted_date = date('Y-m-d',strtotime(date('Y')."-".date('m')."-".$group_auction_date));
               if($last_auction_date){
                 $last_acution_year = date("Y", strtotime($last_auction_date));
                 $last_acution_month = date("m", strtotime($last_auction_date));
@@ -277,23 +277,24 @@ class CommonComponent extends Component {
           }
 
           if($group_type == Configure::read('weekly')){
-            //$last_auction_date='2021-07-06';
-            if($last_auction_date){//date("d", strtotime($last_auction_date));
-              $last_dt_auction_date =  date('Y-m-d', strtotime('next '.strtotime(date("d", strtotime($last_auction_date)))));
-            }else{
-              $last_dt_auction_date = date('Y-m-d', strtotime($group_auction_date));  
-            } 
-             // $last_dt_auction_date = date('Y-m-d', strtotime('next monday', strtotime($last_auction_date))); 
+            if($last_auction_date){ 
+              $last_dt_auction_date =  date('Y-m-d', strtotime('next week '.$group_auction_date,strtotime($last_auction_date)));
+            }else{   
+              $last_dt_auction_date = date('Y-m-d', strtotime('next '.$group_auction_date));
+            }  
           }
 
-          if($group_type == Configure::read('daily')){
+          if($group_type == Configure::read('daily')){ 
             if($last_auction_date){
               $last_dt_auction_date =   date('Y-m-d', strtotime($last_auction_date. ' + 1 days'));
             }else{
               $last_dt_auction_date =  date('Y-m-d');  
             }  
           } 
-          echo 'final auction date '.$last_dt_auction_date."<br/>";exit;
+          //echo 'final auction date '.$last_dt_auction_date."<br/>";exit;
+    }
+    if($last_dt_auction_date){
+      $last_dt_auction_date = date('m/d/Y',strtotime($last_dt_auction_date));
     }
     return $last_dt_auction_date;
  }
