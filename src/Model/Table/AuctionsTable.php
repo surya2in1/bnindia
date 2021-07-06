@@ -281,7 +281,7 @@ class AuctionsTable extends Table
         * Get data to display
         */
         $sQuery = "
-        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." 
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." , a.id as action
         FROM   $sTable join groups g on g.id = a.group_id join users u on u.id = a.auction_winner_member
         $sWhere
         $sOrder

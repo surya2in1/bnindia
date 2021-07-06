@@ -32,7 +32,7 @@ class AuctionsController extends AppController
     /*
     ** add edit auction
     */
-     function auctionform($id=null){
+     function auctionform($id=null){ 
         $this->viewBuilder()->setLayout('admin');
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
@@ -51,12 +51,16 @@ class AuctionsController extends AppController
         // echo '<pre>';print_r($user);exit();
         $role = isset($user->role->name) ? $user->role->name : ''; 
         
-        
         $selected_group_members = [];  
         $auction = [];
-        if($id>0){
+        if($id>0){  
+            $user = $this->Auth->user(); 
+            $current_role  =isset($user['role']['name']) ? $user['role']['name'] :'';
+            if($current_role != Configure::read('ROLE_SUPERADMIN')){
+                 return $this->redirect(['action' => 'index']);
+            } 
             $auction = $this->Auctions->get($id, [
-                'contain' => ['Users','Members'],
+                'contain' => ['Users','Groups'],
             ]); 
             $selected_group_members = $this->Common->getGroupMember($auction->group_id); 
         }else{
@@ -71,7 +75,8 @@ class AuctionsController extends AppController
                                     ])
                     ->where(['status '=>0,'is_all_auction_completed' => 0])->toArray();
 
-        //echo '<pre>';print_r($auction);exit();
+        //echo '<pre>';print_r($auction);
+        //echo 'selected_group_members<pre>';print_r($selected_group_members);exit();
         $this->set(compact('auction','groups','selected_group_members','foreman_commission_in_percent'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {

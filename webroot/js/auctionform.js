@@ -2,7 +2,37 @@
 var table = $('#auctions_table'); 
 var KTDatatablesDataSourceAjaxServer = function() { 
     var initTable1 = function() {
-
+        var columndef = [];
+        var defined_columns = [
+                {data: 'id'},
+                {data: 'group_code'},
+                {data: 'auction_no'},
+                {data: 'auction_date'},
+                {data: 'auction_highest_percent'},
+                {data: 'winner'},
+                {data: 'chit_amount'},
+                {data: 'priced_amount'},
+                {data: 'foreman_commission'}, 
+                {data: 'total_subscriber_dividend'},
+                {data: 'subscriber_dividend'},
+                {data: 'net_subscription_amount'}, 
+            ];
+        if($('#current_role').val()==$('#cofig_superadmin').val()){
+            defined_columns.push({data: 'action'});
+            columndef = [ 
+                {
+                    targets: -1,
+                    title: 'Action',
+                    orderable: false,
+                    render: function(data, type, full, meta) {   
+                            return '\ <a href="auction_form/'+data+'" class="kt-nav__link">\
+                                                <i class="kt-nav__link-icon flaticon2-contract"></i>\
+                                            </a>\
+                        '; 
+                    },
+                }, 
+            ];
+        }     
         // begin first table
         table.DataTable({
             // "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -17,20 +47,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
             },
-            columns: [
-                {data: 'id'},
-                {data: 'group_code'},
-                {data: 'auction_no'},
-                {data: 'auction_date'},
-                {data: 'auction_highest_percent'},
-                {data: 'winner'},
-                {data: 'chit_amount'},
-                {data: 'priced_amount'},
-                {data: 'foreman_commission'}, 
-                {data: 'total_subscriber_dividend'},
-                {data: 'subscriber_dividend'},
-                {data: 'net_subscription_amount'}, 
-            ], 
+            columns: defined_columns, 
             columnDefs: [ 
                 {
                     targets: 3,
@@ -43,6 +60,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     },
                 }, 
             ],
+            columnDefs: columndef
         });
 
     };
@@ -249,12 +267,13 @@ $('#groups').change(function(e) {
 	var group_id = $(this).val(); 
     var member_options = '<option value="">Select Member</option>';
     $('#chit_amount').val('');
-    $('#auction_no').val(0);
+    if($('#id').val()<1){
+        $('#auction_no').val(0);
+    }
     $('#total_members').val(0);
     $('#premium').val(0);
     $('#group_type').val('');
-    $('#ticket_no').val(0);
-    $('#auction_highest_percent').val(0);
+    $('#ticket_no').val(0); 
     if(group_id == ''){
         $('#auction_winner_member').html(member_options);
         return false;
@@ -279,27 +298,29 @@ $('#groups').change(function(e) {
                          if(selected_auction_member_id == value.user_id){
                             selected = "selected";
                          }
-    					  member_options += '<option value="'+value.user_id+'" "'+selected+'" ticket_no='+value.ticket_no+'>'+value.name+'</option>';
+    					  member_options += '<option value="'+value.user_id+'" '+selected+' ticket_no='+value.ticket_no+'>'+value.name+'</option>';
     					});
                         if((result.groups)!=''){
                             $('#chit_amount').val(result.groups.chit_amount);
                             $('#total_members').val(result.groups.total_number);
                             $('#premium').val(result.groups.premium);
                             $('#group_type').val(result.groups.group_type);
-                            get_group_auction_date(result.groups.id,result.groups.group_type,result.groups.auction_date);
+                            if($('#id').val()<1){
+                                get_group_auction_date(result.groups.id,result.groups.group_type,result.groups.auction_date);
+                            }    
                         }
-                        if(result.auction_count){
+                        if(result.auction_count && $('#id').val()<1){
                             $('#auction_no').val(result.auction_count);
                         }
                 	} 
     	           $('#auction_winner_member').html(member_options);
+                    if(selected_auction_member_id > 0){
+                        $('#auction_winner_member').trigger('change');
+                    }
                 }
                 $('.bnspinner').addClass('hide');
             }
 		}); 
-        if(selected_auction_member_id > 0){
-            $('#auction_winner_member').trigger('change');
-        }
 });
 
 //get selected group auction date
@@ -363,6 +384,6 @@ function calculate_subscription_amount(){
     } 
 } 
 
-function member_change(thisval){
+function member_change(thisval){ 
     $('#ticket_no').val($(thisval).find(':selected').attr('ticket_no'));
 }

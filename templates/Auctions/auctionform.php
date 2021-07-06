@@ -60,7 +60,7 @@ use Cake\Core\Configure;
                                         </select> 
                                         <input type="hidden" name="total_members" id="total_members">
                                         <input type="hidden" name="premium" id="premium">
-                                        <input type="hidden" name="group_type" id="group_type">
+                                        <input type="hidden" name="group_type" id="group_type"> 
                                     </div>
                                     <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner"></div>
                                 </div>

@@ -1,3 +1,6 @@
+<?php
+use Cake\Core\Configure;
+?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -43,7 +46,8 @@
             </div>
         </div>
         <div class="kt-portlet__body">
-
+            <input type="hidden" name="current_role" id="current_role" value="<?= $current_role; ?>">
+            <input type="hidden" name="cofig_superadmin" id="cofig_superadmin" value="<?= Configure::read('ROLE_SUPERADMIN'); ?>"> 
             <!--begin: Datatable -->
             <table class="table table-striped- table-bordered table-hover table-checkable" id="auctions_table">
                 <thead>
@@ -60,6 +64,9 @@
                         <th>Total Subscriber Dividend</th>
                         <th>Subscriber Dividend</th>
                         <th>Net Subscription Amt</th>
+                        <?php if($current_role == Configure::read('ROLE_SUPERADMIN')){ ?>
+                            <th>Action</th>
+                        <?php }?>
                     </tr>
                 </thead>
             </table>

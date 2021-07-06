@@ -45,10 +45,26 @@ class UsersController extends AppController
 //                             echo "ss <pre>";print_r($_COOKIE);
 // exit();
         if ($this->request->is('post')) {
-            $post = $this->request->getData();
+            $post = $this->request->getData(); 
             $user = $this->Auth->identify();
-             // debug($user);
+            
+             // debug($user);exit;
             if ($user) {
+                $user = $this->Users->get($user['id'], [
+                    'contain' => [
+                                     'Roles' => function ($q) {
+                                        return $q
+                                            ->select(['id','name'])
+                                            ->contain(['RolePermissions' => function ($q) {
+                                                    return $q
+                                                        ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
+                                                        ->contain(['Modules','Permissions']);
+                                                },  
+                                            ]);
+                                    },      
+                                 ],
+                ])->toArray(); 
+                // echo "user <pre>";print_r($user);exit;
                 $this->Auth->setUser($user);
                 //Check remeber me 
                 if (isset($post['remember_me']) && $post['remember_me'] == 'on') {     

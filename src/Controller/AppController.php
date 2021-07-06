@@ -86,23 +86,10 @@ class AppController extends Controller
         $this->set('Auth', $this->Auth);
 
         if ($this->Auth->user()) {
-            $ROLE_ADMIN = Configure::read('ROLE_ADMIN');
-            $users= TableRegistry::get('Users');
-            $user = $users->get($this->Auth->user('id'), [
-                'contain' => [
-                                 'Roles' => function ($q) {
-                                    return $q
-                                        ->select(['id','name'])
-                                        ->contain(['RolePermissions' => function ($q) {
-                                                return $q
-                                                    ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
-                                                    ->contain(['Modules','Permissions']);
-                                            },  
-                                        ]);
-                                },      
-                             ],
-            ])->toArray();
-            //echo '<pre>';print_r($user);exit;
+            $ROLE_ADMIN = Configure::read('ROLE_ADMIN'); 
+            $user = $this->Auth->user(); 
+            //echo '<pre>';print_r($user);exit();
+
             $this->set('current_role', isset($user['role']['name']) ? $user['role']['name'] : '');
               
             $this->set('member_side_menu', $this->Common->searchUserPermission('members',$user['role']['role_permissions']));

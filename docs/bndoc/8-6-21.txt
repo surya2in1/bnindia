@@ -81,3 +81,5 @@ group form validation for acuction and collection and submit
 
 auction weekly    date for eaxting auction dte
 Check auction edit (If any of one payment done then not allow to edit auction ),edit for only superadmin
+
+redirect auction edit if not superadmin in index page add  action
