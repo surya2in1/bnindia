@@ -83,3 +83,28 @@ auction weekly    date for eaxting auction dte
 Check auction edit (If any of one payment done then not allow to edit auction ),edit for only superadmin
 
 redirect auction edit if not superadmin in index page add  action
+
+=========================================================================================
+
+Group:
+Changes on Calulation of late fee as per group type collection date overall
+1. Added auction date field as per selected group type.
+
+    Group Type					Auction Date 
+    -----------------------------------------------
+ 	 Monthly               1-31 => single dropdown	
+ 	 Forthnight			 1-15 & 16-31 => 2 dropdown	
+ 	 Weekly				        Monday - Sunday	
+	 Daily						Daily        
+
+2. Added Collection date field as per selected group type.
+
+    Group Type					Collection Date 
+    -----------------------------------------------
+ 	 Monthly               1-31 => single dropdown	
+ 	 Forthnight			 1-15 & 16-31 => 2 dropdown	
+ 	 Weekly				        Monday - Sunday	
+	 Daily						Daily        	 
+
+3. In Add Auction form, selected auction date as per group selection and last auction date
+	 

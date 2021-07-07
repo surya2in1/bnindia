@@ -276,11 +276,14 @@ class CommonComponent extends Component {
               } 
           }
 
-          if($group_type == Configure::read('weekly')){
+          if($group_type == Configure::read('weekly')){ 
             if($last_auction_date){ 
               $last_dt_auction_date =  date('Y-m-d', strtotime('next week '.$group_auction_date,strtotime($last_auction_date)));
             }else{   
-              $last_dt_auction_date = date('Y-m-d', strtotime('next '.$group_auction_date));
+              $weekdays=['Sunday'=>0,'Monday'=>1,'Tuesday'=>2,'Wednesday'=>3,'Thursday'=>4,'Friday'=>5,'Saturday'=>6,'Sunday'=>7]; 
+              $dayofweek = date('w', strtotime(date('Y-m-d')));
+              $last_dt_auction_date  = date('Y-m-d', strtotime(($weekdays[$group_auction_date] - $dayofweek).' day', strtotime(date('Y-m-d')))); 
+              //$last_dt_auction_date = date('Y-m-d', strtotime(' '.$group_auction_date));
             }  
           }
 
