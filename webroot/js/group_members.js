@@ -74,6 +74,58 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        KTUtil.animateClass(alert[0], 'fadeIn animated');
 	        //alert.find('span').html(msg);
 	    } 
+	    $.validator.addMethod("lessThanEqual",
+            function (value, element, param) {
+            	if($("#group_type option:selected").val() == 'monthly' || $("#group_type option:selected").val() == 'weekly'){
+                  var $otherElement = $(param);
+                  return parseInt(value, 10) <= parseInt($otherElement.val(), 10);
+            	}else{
+            		return true;
+            	}	
+        }, "This field must be less than or equals to date value."); 
+        
+         $.validator.addMethod("greaterThanEqual",
+            function (value, element, param) { 
+            	if($("#group_type option:selected").val() == 'monthly' || $("#group_type option:selected").val() == 'weekly'){
+                  var $otherElement = $(param);
+                  return parseInt(value, 10) >= parseInt($otherElement.val(), 10);
+            	}else{
+            		return true;
+            	}	
+        }, "This field must be greater than or equals to auction date value."); 
+ 
+       $.validator.addMethod("checkvalid", function (value, element) {
+			var flag = true;
+			$('#auc_f_for').remove();        
+			$('#auc_s_for').remove();  
+			$("[name^='auction_date[]']").each(function (i, j) {  
+			//	console.log($(this).attr('id'));           
+                if (($(this).attr('id') == 'auction_date_first_fortnight') && (parseInt($('#auction_date_first_fortnight').val()) > parseInt($('#date_first_fortnight').val()))) {
+                    flag = false;
+                    $(this).after('<div id="auc_f_for" class="error">This field must be less than or equals to date first fortnight value.</div>');
+                }
+                if (($(this).attr('id') == 'auction_date_second_fortnight') && (parseInt($('#auction_date_second_fortnight').val()) > parseInt($('#date_second_fortnight').val()))) {
+                    flag = false;
+                    $(this).after('<div id="auc_s_for" class="error">This field must be less than or equals to date second fortnight value.</div>');
+                }  
+            }); 
+            $('#date_f_for').remove();        
+			$('#date_s_for').remove(); 
+			$("[name^='date[]']").each(function (i, j) {  
+				console.log($(this).attr('id'));           
+               if (($(this).attr('id') == 'date_first_fortnight') && (parseInt($('#auction_date_first_fortnight').val()) > parseInt($('#date_first_fortnight').val()))) {
+                	console.log($('#auction_date_first_fortnight').val());
+                	console.log($('#date_first_fortnight').val());
+                	flag = false;
+                    $(this).after('<div id="date_f_for" class="error">This field must be greater than or equals to auction date first fortnight value.</div>');
+                }
+                if (($(this).attr('id') == 'date_second_fortnight') && (parseInt($('#auction_date_second_fortnight').val()) > parseInt($('#date_second_fortnight').val()))) {
+                    flag = false;
+                    $(this).after('<div id="date_s_for" class="error">This field must be greater than or equals to auction date second fortnight value.</div>');
+                }  
+            }); 
+            return flag; 
+    	}, ''); 
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -86,10 +138,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        required: true,
 	                },
 	                auction_date:{
-				        required:true
+				        required:true,
+				        lessThanEqual:"#date",
 				    },
 	                "auction_date[]" :{
-				        required:true
+				        required:true,
+				        checkvalid:true
 				    },
 	                chit_amount: {
 	                        required: true,
@@ -127,10 +181,12 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                        min:1
 	                },
 	                date:{
-	                	required:true 
+	                	required:true,
+	                	greaterThanEqual:"#auction_date",
 	                },
 	                "date[]":{
-	                	required:true 
+	                	required:true,
+				        checkvalid:true
 	                },
 	                 group_code: {
 	                        required: true,
@@ -143,11 +199,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                } else {
 	                    element.after(error.addClass('invalid-feedback'));
 	                }
-	                console.log(element.attr("name")); 
+	                //console.log(element.attr("name")); 
 	                 if (element.attr("name") == "auction_date[]" || element.attr("name") == "date[]") {
 	                 	var attr =element.attr("name");  
 	                 	$('[name="'+attr+'"]').map(function () {
-	                 		console.log(this.value); 
+	                 		//console.log(this.value); 
 	                 		if(this.value==''){
 	                 			element.addClass('is-invalid');
 	                 		} 
@@ -571,7 +627,7 @@ function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_
 		var second_fortnight_dates = $.parseJSON($('#second_fortnight_dates').val()); 
 		//First div
 		html += '<div class="col-lg-3">';
-		html += '<select  name="'+input_id+'[]" class="form-control">';
+		html += '<select  name="'+input_id+'[]" id="'+input_id+'_first_fortnight" class="form-control">';
 		html += '<option value="">Select First Fortnight</option>';
 		$.each(first_fortnight_dates, function( key, value ) { 
 		    var selected='';
@@ -585,7 +641,7 @@ function change_collectio_date_auction_date_dropdown(changed_div,input_id,label_
 
         //Second div
         html += '<div class="col-lg-3">';
-		html += '<select name="'+input_id+'[]" class="form-control">';
+		html += '<select name="'+input_id+'[]"  id="'+input_id+'_second_fortnight" class="form-control">';
 		html += '<option value="">Select Second Fortnight</option>';
 		$.each(second_fortnight_dates, function( key, value ) { 
 		    var selected='';

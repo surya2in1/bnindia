@@ -1,5 +1,6 @@
 <?php
 use Cake\Routing\Router;
+use Cake\Core\Configure;
 ?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
@@ -86,9 +87,7 @@ use Cake\Routing\Router;
                                     </div>
                                 </div>
                                 <?php 
-                                $weekdays = array('Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday',
-                                    'Friday'=>'Friday','Saturday'=>'Saturday',
-                                    'Sunday'=>'Sunday');
+                                $weekdays = Configure::read('weekdays');
 
                                 $auction_day =  isset($group->auction_day) ? $group->auction_day : '';
                                 ?>

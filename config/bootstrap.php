@@ -223,3 +223,4 @@ Configure::write('monthly','monthly');
 Configure::write('fortnight','fortnight');
 Configure::write('weekly','weekly');
 Configure::write('daily','daily');
+Configure::write('weekdays',[1=>'Monday',2=>'Tuesday',3=>'Wednesday',4=>'Thursday', 5=>'Friday',6=>'Saturday',7=>'Sunday']);

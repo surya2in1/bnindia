@@ -188,6 +188,11 @@
 .border-bottom-9px{
     border-bottom:1px solid #ebedf2;
 }
+
+.error{
+  color:red;
+  font-size: 80%;
+}
 @media print {
     .no-print, #kt_header_mobile{
         display: none;

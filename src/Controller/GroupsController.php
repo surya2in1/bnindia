@@ -129,7 +129,12 @@ class GroupsController extends AppController
                 $post['date'] =implode(',', $post['date']);
               }
            }
-           // echo '<pre>';print_r($post); exit;  
+           if(isset($post['group_type']) && ($post['group_type'] =='weekly')){
+                $weekdays = Configure::read('weekdays');
+                $post['auction_date']= $weekdays[$post['auction_date']];
+                $post['date']= $weekdays[$post['date']];
+           }
+           //echo '<pre>';print_r($post); exit;  
             $group = $this->Groups->patchEntity($group, $post);
             if ($result = $this->Groups->save($group)) {
                 echo 1;
