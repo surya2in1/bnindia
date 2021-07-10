@@ -96,6 +96,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/other_payment_form/*', ['controller' => 'OtherPayments', 'action' => 'otherpaymentform']);
     
+     $builder->connect('/receipt_statement', ['controller' => 'Reports', 'action' => 'receiptstatement']);
     /*
      * Connect catchall routes for all controllers.
      *

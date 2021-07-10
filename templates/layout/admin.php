@@ -145,7 +145,7 @@ $cakeDescription = 'Bnindia';
         <!--begin::Page Vendors(used by this page) -->
         <?= $this->Html->script('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js') ?>
         <?= $this->Html->script('assets/plugins/custom/gmaps/gmaps.js') ?>
-        <script src="//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM" type="text/javascript"></script>
+      <!--   <script src="//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM" type="text/javascript"></script> -->
        
         <!--end::Page Vendors -->
 
