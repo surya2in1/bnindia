@@ -66,7 +66,7 @@ var KTBootstrapDatepicker = function () {
             autoclose: true,
         }).on("clearDate", function(e) { 
             $('#date_of_birth').val("").datepicker("update");
-        });;
+        });
         $('#nominee_dob').datepicker({
             rtl: KTUtil.isRTL(),
             todayBtn: "linked",
@@ -152,6 +152,7 @@ var KTBootstrapDatepicker = function () {
         // range picker
         $('#kt_datepicker_5').datepicker({
             rtl: KTUtil.isRTL(),
+            orientation: "bottom left",
             todayHighlight: true,
             templates: arrows
         });
@@ -188,7 +189,7 @@ var KTBootstrapDatepicker = function () {
             todayHighlight: true,
             templates: arrows, 
             autoclose: true,
-        });
+        }); 
     }
 
     return {

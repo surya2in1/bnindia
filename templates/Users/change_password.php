@@ -39,7 +39,7 @@
 						<?= $this->Flash->render() ?>
 						
 						<?= $this->Form->create(null, array(
-											   'url'=>'/change_password',
+											   'url'=>'/change-password',
 						                       'class'=>'kt-form kt-form--label-right',
 						                       'id'=>'change_password',
 						                       'method'=> 'Post'

@@ -46,7 +46,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="group_form/'+data+'" class="kt-nav__link '+isDisabled+'" title="'+isDisabledTitle+'">\
+											<a href="group-form/'+data+'" class="kt-nav__link '+isDisabled+'" title="'+isDisabledTitle+'">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\
@@ -181,7 +181,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'group_form/'+$('#id').val(),
+                url: 'group-form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());

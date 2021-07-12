@@ -195,7 +195,9 @@ $cakeDescription = 'Bnindia';
         <?php if($this->request->getParam('controller') == 'OtherPayments') { ?> 
             <?= $this->Html->script('other_payments.js') ?>
         <?php } ?>
-        
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'receiptStatement') { ?> 
+            <?= $this->Html->script('receipt_statement.js') ?>
+        <?php } ?>
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>

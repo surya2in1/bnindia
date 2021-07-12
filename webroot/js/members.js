@@ -40,7 +40,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="member_form/'+data+'" class="kt-nav__link">\
+											<a href="member-form/'+data+'" class="kt-nav__link">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\
@@ -289,7 +289,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'member_form/'+$('#id').val(),
+                url: 'member-form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());

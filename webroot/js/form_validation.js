@@ -218,3 +218,9 @@ var KTFormControls = function () {
 jQuery(document).ready(function() {
     KTFormControls.init();
 });
+function ucfirst(str){
+    var str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+        return letter.toUpperCase();
+    }); 
+    return str;
+}

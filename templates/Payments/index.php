@@ -37,7 +37,7 @@ use Cake\Routing\Router;
                 <div class="kt-portlet__head-wrapper">
                     <div class="kt-portlet__head-actions">
                         <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
-                        <a href="payment_form" class="btn btn-brand btn-elevate btn-icon-sm">
+                        <a href="payment-form" class="btn btn-brand btn-elevate btn-icon-sm">
                             <i class="la la-plus"></i>
                             New Record
                         </a>  

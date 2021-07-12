@@ -63,7 +63,7 @@ use Cake\Routing\Router;
                                         <div class="typeahead">
                                             <input class="form-control" id="customer_id_typeahead" type="text" dir="ltr" placeholder="Enter Customer Id or Customer Name" customer_id = "" cust_id="" name="" address="" autocomplete="chrome-off"/>  
                                         </div> 
-                                        <span class="kt-margin-l-10"> <a href="member_form" target="_blank" class="kt-link kt-font-bold">If member not create then create a member using this link</a></span>
+                                        <span class="kt-margin-l-10"> <a href="member-form" target="_blank" class="kt-link kt-font-bold">If member not create then create a member using this link</a></span>
                                     </div> 
                                     <div class="col-lg-3">
                                     </div>

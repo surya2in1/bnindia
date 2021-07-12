@@ -79,7 +79,7 @@
 										</span>
 									</span>
 								</a>
-								<a href="change_password" class="kt-widget__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'changePassword') { ?> kt-widget__item--active<?php } ?>">
+								<a href="change-password" class="kt-widget__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'changePassword') { ?> kt-widget__item--active<?php } ?>">
 									<span class="kt-widget__section">
 										<span class="kt-widget__icon">
 											<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">

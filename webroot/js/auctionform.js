@@ -25,7 +25,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                     title: 'Action',
                     orderable: false,
                     render: function(data, type, full, meta) {   
-                            return '\ <a href="auction_form/'+data+'" class="kt-nav__link">\
+                            return '\ <a href="auction-form/'+data+'" class="kt-nav__link">\
                                                 <i class="kt-nav__link-icon flaticon2-contract"></i>\
                                             </a>\
                         '; 
@@ -189,7 +189,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
             // form.submit();
             form.ajaxSubmit({
-                url: 'auction_form/'+$('#id').val(),
+                url: 'auction-form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());

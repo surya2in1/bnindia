@@ -81,7 +81,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: 'other_payment_form/'+$('#id').val(),
+                url: 'other-payment-form/'+$('#id').val(),
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
@@ -179,7 +179,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
 										<li class="kt-nav__item">\
-											<a href="other_payment_form/'+data+'" class="kt-nav__link">\
+											<a href="other-payment-form/'+data+'" class="kt-nav__link">\
 												<i class="kt-nav__link-icon flaticon2-contract"></i>\
 												<span class="kt-nav__link-text">Edit</span>\
 											</a>\

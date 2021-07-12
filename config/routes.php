@@ -74,29 +74,29 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/members', ['controller' => 'Users', 'action' => 'members']);
     $builder->connect('/resetpassword/*', ['controller' => 'Users', 'action' => 'resetPassword']);
     $builder->connect('/personalinfo', ['controller' => 'Users', 'action' => 'personalinfo']);
-    $builder->connect('/change_password', ['controller' => 'Users', 'action' => 'changePassword']);
+    $builder->connect('/change-password', ['controller' => 'Users', 'action' => 'changePassword']);
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
 
-    $builder->connect('/group_form/*', ['controller' => 'Groups', 'action' => 'groupform']);
+    $builder->connect('/group-form/*', ['controller' => 'Groups', 'action' => 'groupform']);
 
-    $builder->connect('/add_group_members', ['controller' => 'Groups', 'action' => 'addGroupMembers']);
+    $builder->connect('/add-group-members', ['controller' => 'Groups', 'action' => 'addGroupMembers']);
 
-    $builder->connect('/member_form/*', ['controller' => 'Users', 'action' => 'memberform']);
+    $builder->connect('/member-form/*', ['controller' => 'Users', 'action' => 'memberform']);
     
     $builder->connect('/error404', ['controller' => 'Error', 'action' => 'error404']);
     
-    $builder->connect('/auction_form/*', ['controller' => 'Auctions', 'action' => 'auctionform']);
+    $builder->connect('/auction-form/*', ['controller' => 'Auctions', 'action' => 'auctionform']);
     
-    $builder->connect('/payment_form/*', ['controller' => 'Payments', 'action' => 'paymentform']);
+    $builder->connect('/payment-form/*', ['controller' => 'Payments', 'action' => 'paymentform']);
     
-    $builder->connect('/payment_voucher_form/*', ['controller' => 'PaymentVouchers', 'action' => 'paymentvoucherform']);
+    $builder->connect('/payment-voucher-form/*', ['controller' => 'PaymentVouchers', 'action' => 'paymentvoucherform']);
 
-    $builder->connect('/other_payment_form/*', ['controller' => 'OtherPayments', 'action' => 'otherpaymentform']);
+    $builder->connect('/other-payment-form/*', ['controller' => 'OtherPayments', 'action' => 'otherpaymentform']);
     
-     $builder->connect('/receipt_statement', ['controller' => 'Reports', 'action' => 'receiptstatement']);
+     $builder->connect('/receipt-statement', ['controller' => 'Reports', 'action' => 'receiptstatement']);
     /*
      * Connect catchall routes for all controllers.
      *
