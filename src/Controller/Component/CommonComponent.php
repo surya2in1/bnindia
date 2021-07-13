@@ -181,7 +181,8 @@ class CommonComponent extends Component {
         //echo 'group_members<pre>';print_r($auction_details);exit;
         return $auction_details;      
   }
-   function getPaymentVoucherGroupAuctions($group_id,$payment_voucher_id=0){
+  
+  function getPaymentVoucherGroupAuctions($group_id,$payment_voucher_id=0){
        $where_Conditions[]= ['Auctions.group_id'=>$group_id];
         if($payment_voucher_id>0){ 
             $where_Conditions['OR'] = [
@@ -317,6 +318,57 @@ class CommonComponent extends Component {
       }
     }
     return $last_auction_date;        
+  }
+
+  function getReceiptStatement($post){
+    $payments =[];
+    if(isset($post['start']) && isset($post['end']) && isset($post['search_by'])){
+       $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
+       $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
+        echo '$post<pre>';print_r($post); 
+       $where_Conditions = [];
+       if($post['search_by'] == 'group_by' || $post['search_by'] == 'member_by'){
+          $where_Conditions[]= ['g.id'=>$post['group_id']];
+       }
+       if($post['search_by'] == 'member_by'){
+          $where_Conditions[]= ['u.id'=>$post['user_id']];
+       }
+        //echo '$where_Conditions<pre>';print_r($where_Conditions);//exit;
+        $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+        $query = $PaymentsTable->find();     
+        $payments = $query->select([ 'p.receipt_no','date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",'g.group_code',
+            'member'=>"concat(u.first_name,' ', u.middle_name,' ',u.last_name)",
+            'p.subscriber_ticket_no',
+            'p.instalment_no',
+            'p.instalment_month',
+            'due_date'=>"DATE_FORMAT(p.due_date,'%m/%d/%Y')",
+            'p.subscription_amount','p.late_fee','p.total_amount',
+            'received_by'=>"(
+            CASE 
+                WHEN received_by =1 THEN 'Cash'
+                WHEN received_by =2 THEN 'Cheque'
+                WHEN received_by =3 THEN 'Direct Debit' 
+                ELSE '--'
+            END)",
+            'p.remark'])
+             ->join([
+                'table' => 'groups',
+                'alias' => 'g',
+                'type' => 'LEFT',
+                'conditions' =>'p.group_id = g.id',
+            ]) 
+           ->join([
+                'table' => 'users',
+                'alias' => 'u',
+                'type' => 'LEFT',
+                'conditions' =>'p.user_id = u.id',
+            ])  
+            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end']])
+            ->where($where_Conditions)
+            ->toArray();  
+    }
+    echo '$payments<pre>';print_r($payments);  exit;
+    return $payments;
   }
 }
 ?>

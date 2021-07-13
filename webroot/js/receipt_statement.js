@@ -70,12 +70,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 		    // form.submit();
             form.ajaxSubmit({
-                url: '/Reports/receiptStatement',
+                url: $('#router_url').val()+'Reports/receiptStatement',
                 type:'POST',
                 // beforeSend: function (xhr) { // Add this line
                 //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 // },
                 success: function(response, status, xhr, $form) {
+                	btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
                     if(response>0){
                         // similate 2s delay
                         setTimeout(function() {

@@ -14,6 +14,12 @@ use Cake\Core\Configure;
  */
 class ReportsController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize(); 
+        $this->loadComponent('Common');
+    }
+
     function receiptStatement(){
         $this->viewBuilder()->setLayout('admin'); 
         $GroupsTable= TableRegistry::get('Groups');
@@ -25,8 +31,9 @@ class ReportsController extends AppController
         $this->set(compact('groups'));
                      
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $post = $this->request->getData();  
-             echo '$post <pre>';print_r($post);exit;
+            $post = $this->request->getData();   
+             $data = $this->Common->getReceiptStatement($post); 
+             echo json_encode($data);exit;
         }
     }
 
