@@ -224,3 +224,32 @@ Configure::write('fortnight','fortnight');
 Configure::write('weekly','weekly');
 Configure::write('daily','daily');
 Configure::write('weekdays',[1=>'Monday',2=>'Tuesday',3=>'Wednesday',4=>'Thursday', 5=>'Friday',6=>'Saturday',7=>'Sunday']);
+
+// Configure::write('CakePdf', [
+//     'engine' => 'CakePdf.WkHtmlToPdf',
+//     'margin' => [
+//         'bottom' => 15,
+//         'left' => 50,
+//         'right' => 30,
+//         'top' => 45
+//     ],
+//     'orientation' => 'landscape',
+//     'download' => true
+// ]);
+
+Configure::write('CakePdf', [
+    'engine' => [
+        'className' => 'CakePdf.DomPdf',
+        'options' => [
+            'isRemoteEnabled' => true
+        ]
+    ],
+    'margin' => [
+        'bottom' => 10,
+        'left' => 10,
+        'right' => 10,
+        'top' => 10
+    ],
+    'orientation' => 'portrait',
+    'download' => false
+]);

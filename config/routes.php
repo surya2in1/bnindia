@@ -60,6 +60,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * Requires middleware to be registered through `Application::routes()` with `registerMiddleware()`
      */
     $builder->applyMiddleware('csrf','cookies');
+    $builder->setExtensions(['pdf']);
 
     /*
      * Here, we are connecting '/' (base path) to a controller called 'Pages',

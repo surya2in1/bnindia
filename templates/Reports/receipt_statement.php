@@ -34,8 +34,9 @@ use Cake\Routing\Router;
 
                 <!--begin::Form-->
                 <?= $this->Form->create(null, array(
-                       'class'=>'kt-form',
-                       'id'=>'group_form',
+                       'class'=>'kt-form', 
+                       'id'=>'receipt_form',
+                       'url'=>  Router::url('/', true).'reports/pdf',
                        'method'=> 'Post'
                      )); ?> 
                     <div class="kt-portlet__body pad-bot-0">
@@ -111,7 +112,7 @@ use Cake\Routing\Router;
                             <div class="row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    <button type="button" id="submit" class="btn btn-success">Submit</button>
+                                    <button type="submit"  class="btn btn-success">Submit</button>
                                     <button type="reset" id="cancel" class="btn btn-secondary">Cancel</button>
                                 </div>
                             </div>

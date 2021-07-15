@@ -325,7 +325,7 @@ class CommonComponent extends Component {
     if(isset($post['start']) && isset($post['end']) && isset($post['search_by'])){
        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
-        echo '$post<pre>';print_r($post); 
+        //echo '$post<pre>';print_r($post); 
        $where_Conditions = [];
        if($post['search_by'] == 'group_by' || $post['search_by'] == 'member_by'){
           $where_Conditions[]= ['g.id'=>$post['group_id']];
@@ -343,11 +343,11 @@ class CommonComponent extends Component {
             'p.instalment_month',
             'due_date'=>"DATE_FORMAT(p.due_date,'%m/%d/%Y')",
             'p.subscription_amount','p.late_fee','p.total_amount',
-            'received_by'=>"(
+            'receivedby'=>"(
             CASE 
-                WHEN received_by =1 THEN 'Cash'
-                WHEN received_by =2 THEN 'Cheque'
-                WHEN received_by =3 THEN 'Direct Debit' 
+                WHEN p.received_by =1 THEN 'Cash'
+                WHEN p.received_by =2 THEN 'Cheque'
+                WHEN p.received_by =3 THEN 'Direct Debit' 
                 ELSE '--'
             END)",
             'p.remark'])
@@ -367,7 +367,7 @@ class CommonComponent extends Component {
             ->where($where_Conditions)
             ->toArray();  
     }
-    echo '$payments<pre>';print_r($payments);  exit;
+    // echo '$payments<pre>';print_r($payments);  exit;
     return $payments;
   }
 }
