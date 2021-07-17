@@ -72,6 +72,7 @@ class User extends Entity
         'profile_picture' => true,
         'status' => true,
         'role_id' => true,
+        'created_by'=>true,
         'branch_name' => true,
         'created' => true,
         'modified' => true,

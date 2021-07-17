@@ -136,7 +136,7 @@ class GroupsTable extends Table
     }
 
     //Function for ajax listing, filter, sort, search
-    public function GetData() {
+    public function GetData($user_id) {
         $aColumns = array('g.group_code','g.chit_amount','g.total_number','g.premium','g.gov_reg_no','g.date','g.no_of_months','g.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "g.id";
@@ -187,10 +187,10 @@ class GroupsTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = "";
+        $sWhere = " WHERE g.created_by= '".$user_id."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
-            $sWhere .= " WHERE (";
+            $sWhere .= " AND (";
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
                     $sWhere .= "".$aColumns[$i]." LIKE '%".( $_POST['search']['value'] )."%' OR ";

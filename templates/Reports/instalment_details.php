@@ -25,7 +25,7 @@ use Cake\Routing\Router;
                 <div class="kt-portlet__head">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                             Receipt Statement
+                             Instalment details
                         </h3>
                         <lable>(Fields marked with * are mandatory.)</lable>
                     </div>
@@ -36,7 +36,7 @@ use Cake\Routing\Router;
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form', 
                        'id'=>'receipt_form',
-                       'url'=>  Router::url('/', true).'reports/pdf',
+                       'url'=>  Router::url('/', true).'reports/instalment_details_pdf',
                        'method'=> 'Post'
                      )); ?> 
                     <div class="kt-portlet__body pad-bot-0">
@@ -83,7 +83,7 @@ use Cake\Routing\Router;
                                         <div class="input-daterange input-group" id="kt_datepicker_5">
                                             <div class="col-lg-6"> 
                                                 <div class="input-group date">
-                                                    <input type="text" class="form-control" name="start" placeholder="Start Date" autocomplete="off">
+                                                    <input type="text" class="form-control" name="start" placeholder="Start Date">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text">
                                                             <i class="la la-calendar"></i>
@@ -93,7 +93,7 @@ use Cake\Routing\Router;
                                             </div> 
                                             <div class="col-lg-6"> 
                                                 <div class="input-group date">
-                                                    <input type="text" class="form-control" name="end" placeholder="End Date" autocomplete="off">
+                                                    <input type="text" class="form-control" name="end" placeholder="End Date">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text">
                                                             <i class="la la-calendar"></i>

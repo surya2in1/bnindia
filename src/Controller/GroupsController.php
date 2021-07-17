@@ -23,7 +23,7 @@ class GroupsController extends AppController
     {
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) {
-             $output = $this->Groups->GetData();
+             $output = $this->Groups->GetData($this->Auth->user('id'));
               // echo '<pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }
@@ -167,7 +167,7 @@ class GroupsController extends AppController
                                         'keyField' => 'id',
                                         'valueField' => 'group_code'
                                     ])
-                     ->where(['status' => 1 ])->toArray();
+                     ->where(['status' => 1,'created_by'=>$this->Auth->user('id') ])->toArray();
         $this->set(compact('groups','role','config_superadmin_role'));
      }
 

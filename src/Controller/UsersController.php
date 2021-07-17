@@ -415,7 +415,7 @@ class UsersController extends AppController
     {
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) {
-             $output = $this->Users->GetData();
+             $output = $this->Users->GetData($this->Auth->user('id'));
              // debug($output);exit;
              echo json_encode($output);exit;
         }
@@ -508,7 +508,8 @@ class UsersController extends AppController
             $RolesTable = TableRegistry::get('Roles');
             $role = $RolesTable->find('all')->where(['name'=>'member'])->first();
             $post['role_id'] = $role->id;
-
+            $post['created_by'] = $this->Auth->user('id');
+            // echo '<pre>';print_r($post);exit;
             $user = $this->Users->patchEntity($user, $post);
             if ($result = $this->Users->save($user)) {  
                 $profile_picture = $profile_picture_data;
@@ -606,7 +607,7 @@ class UsersController extends AppController
 
      function getMembers($query_string,$group_id=0,$selected_member_ids=0){
         $members = [];
-        if (!empty($query_string)) {
+        if (!empty($query_string) and $group_id>0) {
              $query = $this->Users->find();
              $config_member_role=Configure::read('ROLE_MEMBER');
              //Excapt admin search all member

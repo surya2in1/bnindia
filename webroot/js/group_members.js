@@ -285,11 +285,19 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		  	 return data.customer_id+' – '+ucfirst(data.name);
 		  	},
 		  source: function show(q, cb, cba) {
+    		var mvalues = (values!='') ? values : 0;
+	    	var group_id = $('#id').val(); 
+	    	if(group_id<1){
+		    	$('#customer_id_typeahead').css('border-color','red');
+				$("#customer_id_typeahead").after("<span style='color:red'>Please select group first.</span>");
+			}else{
+	    		$('#customer_id_typeahead').css('border-color','1px solid #e2e5ec');
+	    		$("#customer_id_typeahead").next("span").remove();
+	    	}
+
 		  	var values = $("input[name='members_ids[]']")
               .map(function(){return $(this).val();}).get();
               // alert(values); 
-    		var mvalues = (values!='') ? values : 0;
-	    	var group_id = $('#id').val(); 
 		    var url = $('#router_url').val()+"Users/getMembers/"+q+"/"+group_id+"/"+mvalues;
 		    $.ajax({ 
 		    		url: url,

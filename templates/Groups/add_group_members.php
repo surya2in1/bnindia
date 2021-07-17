@@ -46,7 +46,7 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Group:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6"> 
                                         <select id="id" name="group_id" class="form-control" onchange="refresh_member_table()">
-                                            <option value="">Select Group</option>
+                                            <option value="0">Select Group</option>
                                              <?php if($groups){ 
                                                 foreach ($groups as $key => $group) {?>
                                                     <option <?php if($key == 1){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$group?></option>

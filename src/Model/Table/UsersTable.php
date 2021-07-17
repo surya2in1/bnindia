@@ -225,7 +225,7 @@ class UsersTable extends Table
         return $rules;
     }
 
-    public function GetData() {
+    public function GetData($user_id) { 
         $aColumns = array('u.customer_id', 'u.email','u.first_name','u.last_name','u.gender','u.status' );
         /* Indexed column (used for fast and accurate table cardinality) */
         $sIndexColumn = "u.id";
@@ -274,7 +274,7 @@ class UsersTable extends Table
         * on very large tables, and MySQL's regex functionality is very limited
         */
         $config_role_member = Configure::read('ROLE_MEMBER'); 
-        $sWhere = "WHERE r.name = '".$config_role_member."' ";
+        $sWhere = "WHERE r.name = '".$config_role_member."' and u.created_by= '".$user_id."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
             $sWhere .= " AND (";
