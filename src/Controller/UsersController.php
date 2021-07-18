@@ -612,6 +612,7 @@ class UsersController extends AppController
              $config_member_role=Configure::read('ROLE_MEMBER');
              //Excapt admin search all member
              $where_Conditions['r.name']  = $config_member_role; 
+             $where_Conditions['Users.created_by']  = $this->Auth->user('id'); 
              if($query_string > 0){
                 $where_Conditions['Users.customer_id'] = $query_string;
              }else{
