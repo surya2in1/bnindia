@@ -30,7 +30,7 @@ class PaymentsController extends AppController
     {  
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) { 
-             $output = $this->Payments->GetData();
+             $output = $this->Payments->GetData($this->Auth->user('id'));
              echo json_encode($output);exit;
         }
     }
@@ -94,6 +94,7 @@ class PaymentsController extends AppController
                      ->contain([
                             'Groups'  
                         ])
+                    ->where(['Auctions.created_by'=>$this->Auth->user('id')])
                     ->group(['Auctions.group_id'])->toArray();
         // echo '$groups<pre>';print_r($groups);exit;
        
@@ -117,6 +118,7 @@ class PaymentsController extends AppController
           //SELECT money_notes->'$."2000".val' as code4 FROM payments
     
           //=echo '<pre>';print_r($post);exit;
+          $post['created_by'] = $this->Auth->user('id');
           $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
           if ($this->Payments->save($payment)) {
                echo 1;exit;

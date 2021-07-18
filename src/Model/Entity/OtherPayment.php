@@ -45,6 +45,7 @@ class OtherPayment extends Entity
         'cheque_transaction_no' => true,
         'created' => true,
         'modified' => true,
+        'created_by' => true,
         'payment_head' => true
     ];
 }

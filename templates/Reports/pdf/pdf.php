@@ -98,7 +98,7 @@ tr:nth-child(even) {
 		  				</tr>	
 		  			<?php }
 		  		}else{ ?>
-		  			<tr><td colspan="13">Records not found!!!</td></tr>
+		  			<tr><td colspan="13"><center>Records not found!!!</center></td></tr>
 		  		<?php }
 				?>
 		  	</tbody>

@@ -24,7 +24,7 @@ class AuctionsController extends AppController
     { 
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) { 
-             $output = $this->Auctions->GetData();
+             $output = $this->Auctions->GetData($this->Auth->user('id'));
              echo json_encode($output);exit;
         }
     }
@@ -73,7 +73,7 @@ class AuctionsController extends AppController
                                         'keyField' => 'id',
                                         'valueField' => 'group_code' 
                                     ])
-                    ->where(['status '=>0,'is_all_auction_completed' => 0])->toArray();
+                    ->where(['status '=>0,'is_all_auction_completed' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
 
         //echo '<pre>';print_r($auction);
         //echo 'selected_group_members<pre>';print_r($selected_group_members);exit();
@@ -90,6 +90,7 @@ class AuctionsController extends AppController
                 $post['auction_date'] = date('Y-m-d',strtotime($post['auction_date']));
             }
             //echo '<pre>';print_r($post); exit;  
+            $post['created_by'] = $this->Auth->user('id');
             $auction = $this->Auctions->patchEntity($auction, $post);
             if ($result = $this->Auctions->save($auction)) { 
                 //check if all auction complete then update groups 

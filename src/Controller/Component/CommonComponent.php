@@ -126,7 +126,7 @@ class CommonComponent extends Component {
                                 END)',
       'auction_no'=>'Auctions.auction_no','id'=>'Auctions.id',
       'plate_fee'=>'p.late_fee ',
-      'due_date' => 'Auctions.auction_group_due_date' 
+      'due_date' => "DATE_FORMAT(Auctions.auction_group_due_date,'%m/%d/%Y')"
     ])
            ->join([
               'table' => 'payments',
@@ -320,7 +320,7 @@ class CommonComponent extends Component {
     return $last_auction_date;        
   }
 
-  function getReceiptStatement($post){
+  function getReceiptStatement($post,$user_id){
     $payments =[];
     if(isset($post['start']) && isset($post['end']) && isset($post['search_by'])){
        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
@@ -363,7 +363,7 @@ class CommonComponent extends Component {
                 'type' => 'LEFT',
                 'conditions' =>'p.user_id = u.id',
             ])  
-            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end']])
+            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end'],'p.created_by'=>$user_id])
             ->where($where_Conditions)
             ->toArray();  
     }

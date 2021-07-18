@@ -267,7 +267,7 @@ class PaymentsTable extends Table
     }
 
     //Function for ajax listing, filter, sort, search
-    public function GetData() {
+    public function GetData($user_id) {
         $aColumns = array( 'p.receipt_no',"DATE_FORMAT(p.date,'%m/%d/%Y') as date",'g.group_code',"concat(u.first_name,' ', u.middle_name,' ',u.last_name) as member",
             'p.subscriber_ticket_no',
             'p.instalment_no',
@@ -330,7 +330,7 @@ class PaymentsTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = "";
+        $sWhere = " WHERE p.created_by= '".$user_id."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
             $sWhere .= " WHERE (";

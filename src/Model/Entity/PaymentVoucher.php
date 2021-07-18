@@ -32,6 +32,7 @@ class PaymentVoucher extends Entity
           'gst'=>true,
           'total'=>true,
           'cheque_dd_no'=>true,
+          'created_by' => true,
           'resaon' => true,
     ];
 }

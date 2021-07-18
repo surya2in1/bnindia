@@ -24,7 +24,7 @@ class PaymentVouchersController extends AppController
     {
        $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) { 
-             $output = $this->PaymentVouchers->GetData();
+             $output = $this->PaymentVouchers->GetData($this->Auth->user('id'));
              echo json_encode($output);exit;
         }
     }
@@ -42,11 +42,12 @@ class PaymentVouchersController extends AppController
             ]);
             $where_Conditions['OR'] = [
                                     'Auctions.is_payment_done' => 0,
-                                    'p.id' => $id
+                                    'p.id' => $id,
+                                    'Auctions.created_by'=>$this->Auth->user('id')
                                 ];
         }else{
             $payment = $this->PaymentVouchers->newEmptyEntity();
-            $where_Conditions= ['Auctions.is_payment_done'=>0];
+            $where_Conditions= ['Auctions.is_payment_done'=>0,'Auctions.created_by'=>$this->Auth->user('id')];
         }
         
          //Get available Auctions
@@ -88,6 +89,7 @@ class PaymentVouchersController extends AppController
           $post['auction_date'] = (strtotime($post['auction_date']) > 0) ? date('Y-m-d',strtotime($post['auction_date'])): '';
          
           // echo '<pre>';print_r($post);exit;
+          $post['created_by'] = $this->Auth->user('id');
           $PaymentVouchers = $this->PaymentVouchers->patchEntity($payment, $post);
           if ($this->PaymentVouchers->save($PaymentVouchers)) {
             $auctionstable = TableRegistry::get("Auctions"); 

@@ -72,7 +72,9 @@ class Payment extends Entity
         'is_late_fee_clear' => true,
         'remaining_subscription_amount' =>true,
         'money_notes' =>true,
+        'created_by' => true,
         'created' => true,
         'modified' => true,
     ];
 }
+

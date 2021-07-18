@@ -30,6 +30,7 @@ class PaymentHead extends Entity
         'payment_head' => true,
         'created' => true,
         'modified' => true,
+        'created_by' => true,
         'other_payments' => true,
     ];
 }

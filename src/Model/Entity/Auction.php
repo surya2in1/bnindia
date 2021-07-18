@@ -54,6 +54,7 @@ class Auction extends Entity
         'created' => true,
         'modified' => true,
         'group' => true,
+        'created_by' => true,
         'is_all_auction_completed' => true
     ];
 }

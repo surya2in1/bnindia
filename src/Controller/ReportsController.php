@@ -36,7 +36,7 @@ class ReportsController extends AppController
     { 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();   
-            $report = $this->Common->getReceiptStatement($post);  
+            $report = $this->Common->getReceiptStatement($post,$this->Auth->user('id'));  
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');

@@ -24,7 +24,7 @@ class OtherPaymentsController extends AppController
     {
         $this->viewBuilder()->setLayout('admin');    
         if ($this->request->is('post')) { 
-             $output = $this->OtherPayments->GetData();
+             $output = $this->OtherPayments->GetData($this->Auth->user('id'));
              echo json_encode($output);exit;
         }
     }
@@ -81,7 +81,7 @@ class OtherPaymentsController extends AppController
           
           //convert dates to db field format
           $post['date'] = (strtotime($post['date']) > 0) ? date('Y-m-d',strtotime($post['date'])): ''; 
-         
+          $post['created_by'] = $this->Auth->user('id');
           //echo '<pre>';print_r($post);exit;
           $OtherPayments = $this->OtherPayments->patchEntity($payment, $post);
           if ($this->OtherPayments->save($OtherPayments)) { 

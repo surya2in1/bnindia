@@ -208,7 +208,7 @@ class AuctionsTable extends Table
     }
 
     //Function for ajax listing, filter, sort, search
-    public function GetData() {
+    public function GetData($user_id) {
         $ucase_first_name = "CONCAT(UCASE(LEFT(u.first_name, 1)),SUBSTRING(u.first_name, 2)) "; 
         $ucase_middle_name = "CONCAT(UCASE(LEFT(u.middle_name, 1)),SUBSTRING(u.middle_name, 2)) "; 
         $ucase_last_name = "CONCAT(UCASE(LEFT(u.last_name, 1)),SUBSTRING(u.last_name, 2)) "; 
@@ -262,10 +262,10 @@ class AuctionsTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = "";
+        $sWhere = " WHERE a.created_by= '".$user_id."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
-            $sWhere .= " WHERE (";
+            $sWhere .= " AND (";
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
                     //remove 'as' word if exist
