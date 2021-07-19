@@ -63,16 +63,43 @@ class ReportsController extends AppController
     public function instalmentDetails()
     { 
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
+        $UsersTable= TableRegistry::get('Users');
+        $users = $UsersTable->find('list', [
                                     'keyField' => 'id',
-                                    'valueField' => 'group_code'
+                                     'valueField' => function ($row) {
+                                          return $row['first_name'].' '.$row['middle_name'].' '.$row['last_name'];
+                                    } ,
+                                    'contain' => ['Roles' => function ($q) {
+                                            return $q
+                                                ->select(['name'])
+                                                ->where(['Roles.name' => Configure::read('ROLE_MEMBER') ]);
+                                        },     
+                                     ], 
                                 ])
-                 ->where(['status ' => 0])->toArray();
-        $this->set(compact('groups'));
+                 ->where(['status ' => 1,'created_by'=>$this->Auth->User('id')])->toArray();
+                 // echo 'users<pre>';print_r($users);exit;
+        $this->set(compact('users'));
     } 
     
     function instalmentDetailsPdf(){
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $post = $this->request->getData();   
+            // echo '$post<pre>';print_r($post);  exit;
+            $report = $this->Common->getInstalmentDetails($post,$this->Auth->user('id'));  
+            $this->viewBuilder()->enableAutoLayout(false);    
+            $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
+            $this->viewBuilder()->setLayout('admin');
+            $this->viewBuilder()->setOption(
+                'pdfConfig',
+                [
+                    'orientation' => 'portrait',
+                    // 'render' => 'browser',
+                    'download' => true, // This can be omitted if "filename" is specified.
+                   'filename' => 'receipt_statement' .'.pdf' //// This can be omitted if you want file name based on URL.
+                ]
+            );
 
+            $this->set('report', $report);
+        }
     }
 }

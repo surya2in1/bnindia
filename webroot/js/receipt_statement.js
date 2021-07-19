@@ -18,7 +18,7 @@ var KTFormControls = function() {
                             return ($("#search_by option:selected").val() == 'group_by' || $("#search_by option:selected").val() == 'member_by');
                             },  
             		},
-            		members: { required: function(element){
+            		user_id: { required: function(element){
                             return ($("#search_by option:selected").val() == 'member_by');
                             },
             		},

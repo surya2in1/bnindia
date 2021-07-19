@@ -35,44 +35,24 @@ use Cake\Routing\Router;
                 <!--begin::Form-->
                 <?= $this->Form->create(null, array(
                        'class'=>'kt-form', 
-                       'id'=>'receipt_form',
+                       'id'=>'report_form',
                        'url'=>  Router::url('/', true).'reports/instalment_details_pdf',
                        'method'=> 'Post'
                      )); ?> 
                     <div class="kt-portlet__body pad-bot-0">
                         <div class="kt-section kt-section--first marg-bot-0">
                             <div class="kt-section__body">
+
                                 <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label">Search By:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6"> 
-                                        <select id="search_by" name="search_by" class="form-control" onchange="show_hide_type_div()"> 
-                                            <option value="">Select Search By</option>
-                                            <option value="group_by">Group Wise</option>
-                                            <option value="member_by">Member Wise</option>
-                                            <option value="all">all</option>
-                                        </select> 
-                                    </div> 
-                                </div>
-
-                                <div class="form-group row hide-div search_by " id="group_div">
-                                    <label class="col-lg-2 col-form-label">Group:<span class="required" aria-required="true"> * </span></label>
-                                    <div class="col-lg-6"> 
-                                        <select id="group_id" name="group_id" class="form-control" onchange="show_members()">
-                                            <option value="">Select Group</option>
-                                             <?php if($groups){ 
-                                                foreach ($groups as $key => $group) {?>
-                                                    <option value="<?= $key; ?>"><?=$group?></option>
-                                               <?php } 
-                                            } ?> 
-                                        </select> 
-                                    </div> 
-                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner"></div>
-                                </div>
-
-                                <div class="form-group row search_by hide-div" id="member_div">
                                     <label class="col-form-label col-lg-2 col-sm-12">Member:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <select id="members" name="user_id" class="form-control">
+                                             <option value="">Select Member</option>
+                                             <?php if($users){ 
+                                                foreach ($users as $key => $user) {?>
+                                                    <option value="<?= $key; ?>"><?=ucwords($user);?></option>
+                                               <?php } 
+                                            } ?> 
                                         </select> 
                                     </div>   
                                 </div>
@@ -83,7 +63,7 @@ use Cake\Routing\Router;
                                         <div class="input-daterange input-group" id="kt_datepicker_5">
                                             <div class="col-lg-6"> 
                                                 <div class="input-group date">
-                                                    <input type="text" class="form-control" name="start" placeholder="Start Date">
+                                                    <input type="text" class="form-control" name="start" placeholder="Start Date" autocomplete="off">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text">
                                                             <i class="la la-calendar"></i>
@@ -93,7 +73,7 @@ use Cake\Routing\Router;
                                             </div> 
                                             <div class="col-lg-6"> 
                                                 <div class="input-group date">
-                                                    <input type="text" class="form-control" name="end" placeholder="End Date">
+                                                    <input type="text" class="form-control" name="end" placeholder="End Date" autocomplete="off">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text">
                                                             <i class="la la-calendar"></i>

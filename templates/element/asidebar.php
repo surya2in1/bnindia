@@ -314,7 +314,7 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li> 
-                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'instalment_details') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'instalmentDetails') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
