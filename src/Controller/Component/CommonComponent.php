@@ -373,19 +373,23 @@ class CommonComponent extends Component {
   }
 
   function getInstalmentDetails($post,$user_id){
-    $payments =[];
+    $report['payments'] =[];
+    $report['all_months_due_amount'] = 0;
+
     if(isset($post['start']) && isset($post['end']) && isset($post['user_id'])){
        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
         $where_Conditions[]= ['u.id'=>$post['user_id']];
-        echo '$post<pre>';print_r($post);
-        $all_months_due_amount = $this->getAllMonthsDueAmount($post['user_id']);
-        echo $all_months_due_amount;exit;
+        // echo '$post<pre>';print_r($post);
+
+        $report['all_months_due_amount'] = $this->getAllMonthsDueAmount($post['user_id']);
+        // echo '$all_months_due_amount '.$report['all_months_due_amount'];
+
         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         
         
         $query = $PaymentsTable->find();     
-        $payments = $query->select([ 'p.receipt_no','date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",'g.group_code',
+        $report['payments'] = $query->select([ 'p.receipt_no','date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",'g.group_code',
             'member'=>"concat(u.first_name,' ', u.middle_name,' ',u.last_name)",
             'u.pin_code',
             'u.area_code',
@@ -429,22 +433,17 @@ class CommonComponent extends Component {
             ->where($where_Conditions)
             ->toArray();  
     }
-    echo '$payments<pre>';print_r($payments);  exit;
-    return $payments;
+    // echo '$report<pre>';print_r($report);  exit;
+    return $report;
   }
 
   function getAllMonthsDueAmount($payment_user_id,$payment_group_id=0){
-        if($payment_user_id < 1 ){
-           $return['total_amount'] = 0;
-           $return['auction_no'] = 0;  
-           return $return;
+        if($payment_user_id < 1 ){ 
+           return 0;
         }
-        $whereconditions = "";
-        if($payment_group_id>0){
-            $whereconditions = " and group_id = $payment_group_id";
-        }
+
         $conn = ConnectionManager::get('default');
-         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+        $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         $aColumns = [ 
             'Auctions.auction_no',
             "MONTHNAME(Auctions.auction_date) as instalment_month",
@@ -460,31 +459,53 @@ class CommonComponent extends Component {
             
             "round((@due_amount + @due_late_fee),2) as total_amount"
         ]; 
+        if($payment_group_id > 0){
+            $sQuery = " 
+              SELECT SUM(total_amount) total_amount from 
+              (
+                  SELECT p.id as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
+                      FROM auctions Auctions
+                      LEFT JOIN payments p ON p.auction_id=Auctions.id AND p.id = (
+                      SELECT MAX(id) pid FROM payments WHERE user_id = $payment_user_id and group_id = $payment_group_id and auction_id =Auctions.id GROUP BY auction_id 
+                    )   
+          
+                      LEFT JOIN groups g on Auctions.group_id = g.id WHERE Auctions.group_id = $payment_group_id 
+                      GROUP BY Auctions.auction_no HAVING pid NOT IN (
+                              SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = $payment_user_id and group_id = $payment_group_id and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC
+                            ) or pid is null ORDER BY Auctions.auction_no asc
+              
+              ) t
+          ";
+        }else{
+          $sQuery = " 
+              SELECT SUM(total_amount) total_amount from 
+              (
+                  SELECT p.id as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
+                      FROM auctions Auctions
+                      LEFT JOIN payments p ON p.auction_id=Auctions.id AND p.id = (
+                        SELECT MAX(id) pid FROM payments WHERE user_id = $payment_user_id and auction_id =Auctions.id GROUP BY auction_id 
+                      )   
+                      LEFT JOIN groups g on Auctions.group_id = g.id 
+
+                      WHERE Auctions.group_id in (SELECT group_id  FROM payments WHERE user_id = 2 GROUP BY group_id)
+
+                      GROUP BY Auctions.auction_no, Auctions.group_id
+
+                      HAVING pid NOT IN (
+                              SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = $payment_user_id
+                              and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC
+                            ) or pid is null ORDER BY Auctions.auction_no asc
+              
+              ) t
+          ";
+        }
         
-        $sQuery = " 
-            SELECT SUM(total_amount) total_amount,GROUP_CONCAT(auction_no) auction_no from 
-            (
-                SELECT p.id as pid, ".str_replace(' , ', ' ', implode(', ', $aColumns))." 
-                    FROM auctions Auctions
-                    LEFT JOIN payments p ON p.auction_id=Auctions.id AND p.id = (
-                    SELECT MAX(id) pid FROM payments WHERE user_id = $payment_user_id and auction_id =Auctions.id GROUP BY auction_id 
-                  )   
-        
-                    LEFT JOIN groups g on Auctions.group_id = g.id  
-                    GROUP BY p.group_id HAVING pid NOT IN (
-                            SELECT IFNULL(MAX(id), 0) AS mId FROM payments
-                             where user_id = $payment_user_id and is_installment_complete = 1 $whereconditions GROUP BY group_id,user_id,auction_id ASC
-                          ) or pid is null ORDER BY Auctions.auction_no asc
-            
-            ) t
-        ";
-        
-        echo $sQuery."<br/>";
+        // echo $sQuery."<br/>";
 
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetch('assoc');
-        echo '$aResultTotal<pre>';print_r($aResultTotal);exit;
-        return $aResultTotal;
+        // echo '$aResultTotal<pre>';print_r($aResultTotal);exit;
+        return $aResultTotal['total_amount'];
     }
 }
 ?>

@@ -13,3 +13,39 @@ UPDATE `payments` SET `created_by` = '1' WHERE 1 = 1;
 UPDATE `payment_heads` SET `created_by` = '1' WHERE 1 = 1;
 UPDATE `payment_vouchers` SET `created_by` = '1' WHERE 1 = 1;
 UPDATE `other_payments` SET `created_by` = '1' WHERE 1 = 1;
+============================================================================================================
+
+
+SELECT p.id as pid, Auctions.auction_no, MONTHNAME(Auctions.auction_date) as instalment_month, Auctions.net_subscription_amount, @due_amount :=( CASE WHEN p.remaining_subscription_amount > 0 THEN p.remaining_subscription_amount ELSE Auctions.net_subscription_amount END) as due_amount, @due_late_fee := ( CASE WHEN (p.is_late_fee_clear <1 and p.remaining_late_fee < 1) or (remaining_late_fee IS NULL and is_late_fee_clear IS NULL ) THEN CalculateLateFee(Auctions.net_subscription_amount,g.late_fee,Auctions.auction_group_due_date) WHEN p.is_late_fee_clear <1 and p.remaining_late_fee > 1 THEN p.remaining_late_fee ELSE 0.00 END) as due_late_fee, round((@due_amount + @due_late_fee),2) as total_amount 
+
+FROM auctions Auctions
+LEFT JOIN payments p ON p.auction_id=Auctions.id 
+	AND p.id = ( SELECT MAX(id) pid FROM payments WHERE user_id = 2 and auction_id =Auctions.id GROUP BY auction_id ) 
+LEFT JOIN groups g on Auctions.group_id = g.id 
+
+GROUP BY Auctions.auction_no 
+
+HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC ) or pid is null 
+
+ORDER BY Auctions.auction_no asc 
+
+
+
+
+SELECT p.id as pid, Auctions.id,Auctions.auction_no,Auctions.group_id, MONTHNAME(Auctions.auction_date) as instalment_month FROM auctions Auctions LEFT JOIN payments p ON p.auction_id=Auctions.id AND p.id IN ( 6,4 ) where Auctions.group_id in (3,4) GROUP BY Auctions.auction_no, Auctions.group_id
+
+
+SELECT p.id as pid,p.group_id, Auctions.id, Auctions.auction_no,Auctions.group_id, MONTHNAME(Auctions.auction_date) as instalment_month
+FROM auctions Auctions
+LEFT JOIN payments p ON p.auction_id=Auctions.id 
+	AND p.id = ( SELECT MAX(id) pid FROM payments WHERE user_id = 2 and auction_id =Auctions.id GROUP BY auction_id ) 
+    
+ where Auctions.group_id in (SELECT group_id  FROM payments WHERE user_id = 2 GROUP BY group_id)
+
+GROUP BY Auctions.auction_no, Auctions.group_id
+
+HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id = 2 and is_installment_complete = 1 GROUP BY group_id,user_id,auction_id ASC ) or pid is null
+
+
+
+ 
