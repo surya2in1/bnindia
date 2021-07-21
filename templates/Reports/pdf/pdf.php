@@ -1,5 +1,6 @@
 <?php 
 use Cake\I18n\FrozenDate;
+use Cake\Core\Configure;
 
 $cakeDescription = 'Bnindia'; 
 ?>
@@ -24,22 +25,47 @@ table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 td, th {
   border: 1px solid #dddddd;
   text-align: left;
-  padding: 4px;
+  padding: 4px !important;
 }
 
 tr:nth-child(even) {
   background-color: #dddddd;
+}
+
+.tbl-header{
+	margin-top: 10px;
 }
 </style>
 
 </head>
 <body>
 	<div class="content"> 
+		<table class="tbl-header">
+       <tr>
+         <td>
+           <?=Configure::read('CHITNAME'); ?>
+         </td>
+         <td rowspan=3 width="50%">
+           <?= Configure::read('CHITINFO'); ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+           Date: <?= date('m/d/Y');?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+           Branch Name: <?= isset($report[0]->ug['branch_name']) ? $report[0]->ug['branch_name'] : '-' ?>
+         </td>
+       </tr>
+     </table>ss
 		<h3>Receipt Statement</h3> 
 		<table>
 			<thead>

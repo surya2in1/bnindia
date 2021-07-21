@@ -351,13 +351,21 @@ class CommonComponent extends Component {
                 WHEN p.received_by =3 THEN 'Direct Debit' 
                 ELSE '--'
             END)",
-            'p.remark'])
+            'p.remark',
+            'ug.branch_name',
+          ])
              ->join([
                 'table' => 'groups',
                 'alias' => 'g',
                 'type' => 'LEFT',
                 'conditions' =>'p.group_id = g.id',
             ]) 
+            ->join([
+                'table' => 'users',
+                'alias' => 'ug',
+                'type' => 'LEFT',
+                'conditions' =>'g.created_by = ug.id',
+           ]) 
            ->join([
                 'table' => 'users',
                 'alias' => 'u',
@@ -379,11 +387,13 @@ class CommonComponent extends Component {
     if(isset($post['start']) && isset($post['end']) && isset($post['user_id'])){
        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
-        $where_Conditions[]= ['u.id'=>$post['user_id']];
+        $where_Conditions[]= ['p.user_id'=>$post['user_id']];
         // echo '$post<pre>';print_r($post);
 
         $report['all_months_due_amount'] = $this->getAllMonthsDueAmount($post['user_id']);
         // echo '$all_months_due_amount '.$report['all_months_due_amount'];
+
+        $report['total_fully_paid_interest'] = $this->getTotalFullyPaidInterest($post['user_id']);
 
         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         
@@ -391,6 +401,7 @@ class CommonComponent extends Component {
         $query = $PaymentsTable->find();     
         $report['payments'] = $query->select([ 'p.receipt_no','date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",'g.group_code',
             'member'=>"concat(u.first_name,' ', u.middle_name,' ',u.last_name)",
+            'address_u' =>"CONCAT_WS(', ',IF(u.address = '', NULL, u.address),IF(u.city = '', NULL, u.city),IF(u.state = '', NULL, u.state))",
             'u.pin_code',
             'u.area_code',
             'p.subscriber_ticket_no',
@@ -410,6 +421,7 @@ class CommonComponent extends Component {
             'ug.address',
             'ug.city',
             'ug.state',
+            'ug.area_code',
             ])
              ->join([
                 'table' => 'groups',
@@ -435,6 +447,15 @@ class CommonComponent extends Component {
     }
     // echo '$report<pre>';print_r($report);  exit;
     return $report;
+  }
+
+  function getTotalFullyPaidInterest($user_id){
+      $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+      $query = $PaymentsTable->find();     
+      $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
+          ->where(['p.user_id'=>$user_id,'p.is_installment_complete'=>1]) 
+          ->first();  
+      return $payments->total_fully_paid_interest;    
   }
 
   function getAllMonthsDueAmount($payment_user_id,$payment_group_id=0){
@@ -507,5 +528,7 @@ class CommonComponent extends Component {
         // echo '$aResultTotal<pre>';print_r($aResultTotal);exit;
         return $aResultTotal['total_amount'];
     }
+
+    
 }
 ?>

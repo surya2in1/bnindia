@@ -253,3 +253,10 @@ Configure::write('CakePdf', [
     'orientation' => 'portrait',
     'download' => false
 ]);
+
+Configure::write('CHITNAME','SHRIRAM CHITS (MAHARASHTRA) LTD');
+
+Configure::write('CHITINFO','LEDGER MAINTAINED UNDER SECTION 16 OF THE 
+           MAHARASHTRA CHIT FUND ACT LV 1974 FORM NO.VII
+           (see rule 21 of MAHARASHTRA Chit Fund Act LV 1974)');
+
