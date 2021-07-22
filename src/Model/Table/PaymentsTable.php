@@ -333,7 +333,7 @@ class PaymentsTable extends Table
         $sWhere = " WHERE p.created_by= '".$user_id."' ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
-            $sWhere .= " WHERE (";
+            $sWhere .= " AND (";
                 for ( $i=0 ; $i<count($aColumns) ; $i++ )
                 {
                     //remove 'as' word if exist

@@ -508,7 +508,7 @@ class CommonComponent extends Component {
                       )   
                       LEFT JOIN groups g on Auctions.group_id = g.id 
 
-                      WHERE Auctions.group_id in (SELECT group_id  FROM payments WHERE user_id = 2 GROUP BY group_id)
+                      WHERE Auctions.group_id in (SELECT group_id  FROM members_groups WHERE user_id = $payment_user_id)
 
                       GROUP BY Auctions.auction_no, Auctions.group_id
 

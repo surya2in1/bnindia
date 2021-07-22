@@ -65,7 +65,7 @@ tr:nth-child(even) {
            Branch Name: <?= isset($report[0]->ug['branch_name']) ? $report[0]->ug['branch_name'] : '-' ?>
          </td>
        </tr>
-     </table>ss
+     </table>
 		<h3>Receipt Statement</h3> 
 		<table>
 			<thead>

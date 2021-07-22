@@ -95,7 +95,7 @@ class ReportsController extends AppController
                     'orientation' => 'portrait',
                     // 'render' => 'browser',
                     'download' => true, // This can be omitted if "filename" is specified.
-                   'filename' => 'receipt_statement' .'.pdf' //// This can be omitted if you want file name based on URL.
+                   'filename' => 'instalment_details' .'.pdf' //// This can be omitted if you want file name based on URL.
                 ]
             );
 
