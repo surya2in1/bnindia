@@ -67,6 +67,7 @@ tr:nth-child(even) {
            Group Code: <?= isset($report[0]->g['group_code']) ? $report[0]->g['group_code'] : '-' ?>
            &nbsp; &nbsp;
            Denomination: (<?= isset($report[0]->g['premium']) ? $report[0]->g['premium'] : '-' ?> * <?= isset($report[0]->g['total_number']) ? $report[0]->g['total_number'] : '-' ?>)
+           &nbsp; &nbsp; 
            Chit Value: <?= isset($report[0]->g['chit_amount']) ? $report[0]->g['chit_amount'] : '0.00' ?>
          </td>
        </tr>

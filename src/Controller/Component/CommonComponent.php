@@ -549,7 +549,7 @@ class CommonComponent extends Component {
             $result = $query->select([
                             'g.group_code','g.chit_amount','g.total_number','g.premium',
                             'mg.temp_customer_id','mg.ticket_no',
-                            'member'=>"CONCAT_WS(', ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+                            'member'=>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
                             'u.customer_id','u.area_code',
                             'p.paid_sub_amt','p.paid_instalments',
                             'ug.branch_name',
