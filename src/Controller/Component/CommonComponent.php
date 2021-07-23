@@ -529,6 +529,60 @@ class CommonComponent extends Component {
         return $aResultTotal['total_amount'];
     }
 
-    
+    public function getSubscribersDetails($post,$user_id)
+    {
+        $result=[];
+        if(isset($post['group_id']) && isset($user_id)){
+            $payment= TableRegistry::get('Payments');
+            $subquery = $payment->find();
+            $subquery->select([
+                'p_id' => 'Payments.id', 
+                'p_group_id' => 'Payments.group_id', 
+                'p_user_id' => 'Payments.user_id', 
+                'paid_sub_amt' => "SUM(Payments.subscription_amount)", 
+                'paid_instalments' => "SUM(if(is_installment_complete = '1', 1, 0))", 
+            ]) 
+            ->group(['group_id']);
+
+            $membersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+            $query = $membersGroupsTable->find();
+            $result = $query->select([
+                            'g.group_code','g.chit_amount','g.total_number','g.premium',
+                            'mg.temp_customer_id','mg.ticket_no',
+                            'member'=>"CONCAT_WS(', ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+                            'u.customer_id','u.area_code',
+                            'p.paid_sub_amt','p.paid_instalments',
+                            'ug.branch_name',
+                          ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g',
+                    'type' => 'LEFT',
+                    'conditions' =>'mg.group_id = g.id',
+                ]) 
+               ->join([
+                    'table' => 'users',
+                    'alias' => 'u',
+                    'type' => 'LEFT',
+                    'conditions' =>'mg.user_id = u.id',
+                ])  
+               ->join([
+                    'table' => 'users',
+                    'alias' => 'ug',
+                    'type' => 'LEFT',
+                    'conditions' =>'g.created_by = ug.id',
+                ]) 
+                ->join([
+                  'table' => '('.$subquery.')',
+                  'alias' => 'p',
+                  'type' => 'LEFT',
+                  'conditions' => 'p.p_group_id = g.id and p.p_user_id=u.id ',
+               ]) 
+               ->where(['g.id'=>$post['group_id'],'g.created_by'=>$user_id])
+               ->toArray();
+               // echo '$result<pre>';print_r($result);exit;
+        }
+        return $result;
+    }    
 }
 ?>

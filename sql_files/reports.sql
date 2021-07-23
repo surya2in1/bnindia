@@ -59,4 +59,24 @@ HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where user_id
 
 
 
+SELECT 
+g.group_code,g.chit_amount,g.total_number,g.premium,
+mg.temp_customer_id,mg.ticket_no,
+CONCAT_WS(', ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name)) as member,
+u.customer_id,u.area_code,
+p.paid_sub_amt,p.paid_instalments
+FROM members_groups mg 
+LEFT JOIN groups g on  g.id= mg.group_id
+LEFT JOIN users u on u.id=mg.user_id
+LEFT JOIN (SELECT
+           id,
+           group_id,
+           user_id,
+           SUM(subscription_amount)  paid_sub_amt,
+           SUM(if(is_installment_complete = '1', 1, 0)) AS paid_instalments
+         FROM payments
+         GROUP BY group_id) AS p
+    ON p.group_id = g.id and p.user_id=u.id 
+    
+WHERE g.id= 3 and g.created_by= 1
  

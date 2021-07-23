@@ -102,4 +102,39 @@ class ReportsController extends AppController
             $this->set('report', $report);
         }
     }
+
+     public function subscribersDetails()
+    { 
+        $this->viewBuilder()->setLayout('admin');  
+        $GroupsTable= TableRegistry::get('Groups');
+        $groups = $GroupsTable->find('list', [
+                                    'keyField' => 'id',
+                                    'valueField' => 'group_code'
+                                ])
+                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
+        $this->set(compact('groups')); 
+    } 
+
+    function subscribersDetailsPdf(){
+        $report =[];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $post = $this->request->getData();   
+            // echo '$post<pre>';print_r($post);  exit;
+            $report = $this->Common->getSubscribersDetails($post,$this->Auth->user('id'));  
+            $this->viewBuilder()->enableAutoLayout(false);    
+            $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
+            $this->viewBuilder()->setLayout('admin');
+            $this->viewBuilder()->setOption(
+                'pdfConfig',
+                [
+                    'orientation' => 'portrait',
+                    // 'render' => 'browser',
+                    'download' => true, // This can be omitted if "filename" is specified.
+                   'filename' => 'subscribers_details' .'.pdf' //// This can be omitted if you want file name based on URL.
+                ]
+            );
+
+        }
+        $this->set('report', $report);
+    }
 }
