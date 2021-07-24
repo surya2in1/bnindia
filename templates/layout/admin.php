@@ -204,7 +204,13 @@ $cakeDescription = 'Bnindia';
 
         <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'subscribersDetails') { ?> 
             <?= $this->Html->script('subscribers_details.js') ?>
-        <?php } ?>        <?= $this->fetch('script') ?>
+        <?php } ?>      
+
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'auctionsDetails') { ?> 
+            <?= $this->Html->script('auctions_details.js') ?>
+        <?php } ?>  
+
+        <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>
 </body>

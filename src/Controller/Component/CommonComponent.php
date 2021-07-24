@@ -400,10 +400,6 @@ class CommonComponent extends Component {
         
         $query = $PaymentsTable->find();     
         $report['payments'] = $query->select([ 'p.receipt_no','date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",'g.group_code',
-            'member'=>"concat(u.first_name,' ', u.middle_name,' ',u.last_name)",
-            'address_u' =>"CONCAT_WS(', ',IF(u.address = '', NULL, u.address),IF(u.city = '', NULL, u.city),IF(u.state = '', NULL, u.state))",
-            'u.pin_code',
-            'u.area_code',
             'p.subscriber_ticket_no',
             'p.instalment_no',
             'p.instalment_month',
@@ -416,30 +412,13 @@ class CommonComponent extends Component {
                 WHEN p.received_by =3 THEN 'Direct Debit' 
                 ELSE '--'
             END)",
-            'p.remark',
-            'ug.branch_name',
-            'ug.address',
-            'ug.city',
-            'ug.state',
-            'ug.area_code',
+            'p.remark', 
             ])
              ->join([
                 'table' => 'groups',
                 'alias' => 'g',
                 'type' => 'LEFT',
                 'conditions' =>'p.group_id = g.id',
-            ]) 
-            ->join([
-                'table' => 'users',
-                'alias' => 'ug',
-                'type' => 'LEFT',
-                'conditions' =>'g.created_by = ug.id',
-            ]) 
-           ->join([
-                'table' => 'users',
-                'alias' => 'u',
-                'type' => 'LEFT',
-                'conditions' =>'p.user_id = u.id',
             ])  
             ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end'],'p.created_by'=>$user_id])
             ->where($where_Conditions)
@@ -584,5 +563,84 @@ class CommonComponent extends Component {
         }
         return $result;
     }    
+
+    public function getAuctionsDetails($post,$user_id)
+    {
+      $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
+      $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';  
+      $AuctionsTable = TableRegistry::get('a', ['table' => 'auctions']);
+      $query = $AuctionsTable->find();     
+      $auctions = $query->select(['a.auction_no','a.auction_date','a.auction_highest_percent','a.ticket_no','a.priced_amount','a.total_subscriber_dividend','a.subscriber_dividend',
+           'member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+            ]) 
+           ->join([
+                'table' => 'users',
+                'alias' => 'u',
+                'type' => 'LEFT',
+                'conditions' =>'a.auction_winner_member = u.id',
+            ])  
+          ->where(['a.auction_date >='=> $post['start'],'a.auction_date <='=> $post['end'],'a.created_by'=>$user_id,'a.group_id'=>$post['group_id']]) 
+          ->toArray();  
+           // echo '$auctions<pre>';print_r($auctions);  exit;
+      return $auctions;    
+    }
+
+     function getGroupsDetails($post, $user_id){
+          $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
+          $query = $GroupsTable->find();     
+          $groups = $query->select(['g.group_code','g.chit_amount','g.total_number','g.premium',
+                    'ug.branch_name',
+                    'ug.address',
+                    'ug.city',
+                    'ug.state',
+                    'ug.area_code',
+                ])
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'ug',
+                    'type' => 'LEFT',
+                    'conditions' =>'g.created_by = ug.id',
+                ]) 
+              ->where(['g.id'=>$post['group_id'],'g.created_by'=>$user_id]) 
+              ->first();  
+          return $groups;    
+      }
+
+      function getUserGroupDetails($post, $user_id){
+          $GroupsTable = TableRegistry::get('u', ['table' => 'users']);
+          $query = $GroupsTable->find();     
+          $groups = $query->select(['g.group_code','g.chit_amount','g.total_number','g.premium',
+                    'ug.branch_name',
+                    'ug.address',
+                    'ug.city',
+                    'ug.state',
+                    'ug.area_code',
+                    'member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+                    'address_u' =>"CONCAT_WS(', ',IF(u.address = '', NULL, u.address),IF(u.city = '', NULL, u.city),IF(u.state = '', NULL, u.state))",
+                    'u.pin_code',
+                    'u.area_code',
+                ])
+                ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg',
+                    'type' => 'LEFT',
+                    'conditions' =>'u.id = mg.user_id',
+                ]) 
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g',
+                    'type' => 'LEFT',
+                    'conditions' =>'g.id = mg.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'ug',
+                    'type' => 'LEFT',
+                    'conditions' =>'g.created_by = ug.id',
+                ]) 
+              ->where(['u.id'=>$post['user_id'],'g.created_by'=>$user_id]) 
+              ->first();  
+          return $groups;    
+      }
 }
 ?>

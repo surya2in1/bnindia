@@ -62,7 +62,7 @@ tr:nth-child(even) {
        </tr>
        <tr>
          <td valign=middle>
-           Branch Name: <?= isset($report[0]->ug['branch_name']) ? $report[0]->ug['branch_name'] : '-' ?>
+           Branch Name: <?= isset($branch_name) ? $branch_name : '-' ?>
          </td>
        </tr>
      </table>

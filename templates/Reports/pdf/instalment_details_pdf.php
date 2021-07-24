@@ -62,7 +62,7 @@ tr:nth-child(even) {
        </tr>
        <tr>
          <td valign=middle>
-           Branch Name: <?= isset($report['payments'][0]->ug['branch_name']) ? $report['payments'][0]->ug['branch_name'] : '-' ?>
+           Branch Name: <?= isset($user_details->ug['branch_name']) ? $user_details->ug['branch_name'] : '-' ?>
          </td>
        </tr>
      </table>
@@ -70,20 +70,20 @@ tr:nth-child(even) {
       <h3>Instalmentwise Payment Details</h3> 
       <table>
          <tr>
-            <td>Branch: <?= isset($report['payments'][0]->ug['branch_name']) ? $report['payments'][0]->ug['branch_name'] : '-' ?></td>
-            <td>Agent Code: <?= isset($report['payments'][0]->ug['area_code']) ? $report['payments'][0]->ug['area_code'] : '-' ?></td>
+            <td>Branch: <?= isset($user_details->ug['branch_name']) ? $user_details->ug['branch_name'] : '-' ?></td>
+            <td>Agent Code: <?= isset($user_details->ug['area_code']) ? $user_details->ug['area_code'] : '-' ?></td>
          </tr>
          <tr>
-            <td>Name: <?= isset($report['payments'][0]->member) ? ucwords($report['payments'][0]->member) : '-' ?></td>
+            <td>Name: <?= isset($user_details->member) ? ucwords($user_details->member) : '-' ?></td>
             <td>Total Due:  <?= isset($report['all_months_due_amount']) ? number_format((float)$report['all_months_due_amount'], 2, '.', '') : '0.00' ?></td>
          </tr>
          <tr>
-            <td>Address: <?= isset($report['payments'][0]->address_u) ? ucwords($report['payments'][0]->address_u) : '-' ?> 
+            <td>Address: <?= isset($user_details->address_u) ? ucwords($user_details->address_u) : '-' ?> 
             </td>
             <td>Interest Fully Paid: <?= isset($report['total_fully_paid_interest']) ? $report['total_fully_paid_interest']: '0' ?></td>
          </tr>
          <tr>
-            <td>Pincode: <?= isset($report['payments'][0]->u['pin_code']) ? $report['payments'][0]->u['area_code'] : '-' ?></td>
+            <td>Pincode: <?= isset($user_details->pin_code) ? $user_details->pin_code : '-' ?></td>
             <td></td>
          </tr>
       </table>

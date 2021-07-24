@@ -59,7 +59,7 @@ tr:nth-child(even) {
        </tr>
        <tr>
          <td>
-           Name List Of Subscribers (All Cases)
+           Auction Details
          </td>
        </tr>
         <tr>
@@ -78,31 +78,40 @@ tr:nth-child(even) {
        </tr>
      </table>
 
-      <h3>Subscribers Details</h3> 
+      <h3>Auction Report</h3> 
       <table>
          <thead>
            <tr> 
-             <th>Group Code</th>
-             <th>Temp Customer Id</th>
-             <th>Subscriber Ticket No.</th> 
-             <th>Name Of Subscriber</th>
-             <th>Agent Code</th> 
-             <th>Sub. Amt. Paid</th>
-             <th>Inst. Paid</th>
+             <th>Auction No.</th>
+             <th>Date</th>
+             <th>Winner Subscriber Name</th> 
+             <th>Ticket No.</th>
+             <th>Priced Amount</th> 
+             <th>Total Dividend</th>
+             <th>Subscriber Dividend</th>
             </tr>
          </thead>
          <tbody>
             <?php  
             if(!empty($report)){
                foreach ($report as $key => $value) {?>
-                   <tr>
-                     <td><?= ($value->g['group_code']) ? $value->g['group_code'] : '-'; ?></td>
-                     <td><?= ($value->temp_customer_id) ? $value->temp_customer_id : '-'; ?></td>
-                     <td><?= ($value->ticket_no) ? $value->ticket_no : '-'; ?></td>
+                   <tr> 
+                     <td><?= ($value->auction_no) ? $value->auction_no : '-'; ?></td>
+                     <td>
+                        <?php 
+                          if($value->auction_date){
+                            $FrozenDateObj = new FrozenDate($value->auction_date); 
+                                echo $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+                          }else{
+                            echo '-';
+                          }
+                        ?>
+                     </td>
                      <td><?= ($value->member) ? ucwords($value->member) : '-'; ?></td>
-                     <td><?= ($value->u['area_code']) ? $value->u['area_code'] : '-'; ?></td>
-                     <td><?= ($value->p['paid_sub_amt']) ? $value->p['paid_sub_amt'] : '-'; ?></td>
-                     <td><?= ($value->p['paid_instalments']) ? $value->p['paid_instalments'] : '-'; ?></td>
+                     <td><?= ($value->ticket_no) ? $value->ticket_no : '-'; ?></td> 
+                     <td><?= ($value->priced_amount) ? $value->priced_amount : '-'; ?></td> 
+                     <td><?= ($value->total_subscriber_dividend) ? $value->total_subscriber_dividend : '-'; ?></td> 
+                     <td><?= ($value->subscriber_dividend) ? $value->subscriber_dividend : '-'; ?></td> 
                   </tr> 
                <?php }
             }else{ ?>
