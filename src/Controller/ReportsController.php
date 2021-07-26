@@ -176,4 +176,32 @@ class ReportsController extends AppController
         // echo '$group_details<pre>';print_r($group_details);  exit;
         $this->set(compact('report','group_details'));
     }
+
+    function groupsDetails(){
+        $this->viewBuilder()->setLayout('admin');  
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+    }
+
+    function groupsDetailsPdf(){
+        $report =[]; 
+        if ($this->request->is(['patch', 'post', 'put'])) { 
+            $report = $this->Common->getGroupList($this->Auth->user('id'));    
+            $this->viewBuilder()->enableAutoLayout(false);    
+            $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
+            $this->viewBuilder()->setLayout('admin');
+            $this->viewBuilder()->setOption(
+                'pdfConfig',
+                [
+                    'orientation' => 'portrait',
+                    // 'render' => 'browser',
+                    'download' => true, // This can be omitted if "filename" is specified.
+                   'filename' => 'groups_details' .'.pdf' //// This can be omitted if you want file name based on URL.
+                ]
+            );
+
+        }
+        // echo '$report<pre>';print_r($report);exit;
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+        $this->set(compact('report'));
+    }
 }

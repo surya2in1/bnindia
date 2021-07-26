@@ -607,8 +607,8 @@ class CommonComponent extends Component {
       }
 
       function getUserGroupDetails($post, $user_id){
-          $GroupsTable = TableRegistry::get('u', ['table' => 'users']);
-          $query = $GroupsTable->find();     
+          $UsersTable = TableRegistry::get('u', ['table' => 'users']);
+          $query = $UsersTable->find();     
           $groups = $query->select(['g.group_code','g.chit_amount','g.total_number','g.premium',
                     'ug.branch_name',
                     'ug.address',
@@ -641,6 +641,25 @@ class CommonComponent extends Component {
               ->where(['u.id'=>$post['user_id'],'g.created_by'=>$user_id]) 
               ->first();  
           return $groups;    
+      }
+
+      function getGroupList($user_id)
+      {
+          $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
+          $query = $GroupsTable->find();     
+          $groups = $query->select(['g.group_code','g.chit_amount','g.total_number',
+                   'g.gov_reg_no','g.date','g.no_of_months','g.bank_deposite_date',
+                   'g.deposite_maturity_date','g.group_type',
+                   'group_status'=>"(
+                        CASE 
+                            WHEN g.is_all_auction_completed =0 THEN 'Active'
+                            WHEN g.is_all_auction_completed =1 THEN 'Close'
+                            ELSE '--'
+                        END)"
+                ]) 
+              ->where(['g.created_by'=>$user_id]) 
+              ->toArray();  
+          return $groups;   
       }
 }
 ?>
