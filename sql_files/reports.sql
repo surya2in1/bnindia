@@ -80,3 +80,57 @@ LEFT JOIN (SELECT
     
 WHERE g.id= 3 and g.created_by= 1
  
+============================================================================================================
+
+get all auctions where auction due date old greater than today
+
+
+SELECT a.id,a.group_id FROM auctions a WHERE a.auction_group_due_date < CURRENT_DATE() group by a.group_id ORDER BY a.group_id ASC
+
+============================================================================================================ 
+
+SELECT a.id,a.group_id,COUNT(p.pid)
+
+FROM auctions a 
+LEFT JOIN members_groups mg on mg.group_id =a.group_id
+LEFT JOIN (
+      SELECT id as pid,auction_id,group_id FROM payments 
+         WHERE  is_installment_complete = 1  
+
+          ) p on p.auction_id=a.id and p.group_id = a.group_id
+LEFT JOIN users u on u.id=mg.user_id
+WHERE a.auction_group_due_date < CURRENT_DATE()
+and a.group_id =3
+  ORDER BY a.group_id ASC
+
+
+  SELECT max(p.id) as pid
+FROM payments p 
+WHERE p.group_id = 3 and  
+p.auction_id =6
+
+group by p.user_id
+
+HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where  is_installment_complete = 1 and group_id = 3 and  auction_id =6 group by user_id) or pid is null
+
+
+SELECT COUNT(*) painding_instalments FROM ( SELECT max(p.id) as pid FROM payments p WHERE p.group_id = 3 and p.auction_id =6 group by p.user_id HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where is_installment_complete = 1 and group_id = 3 and auction_id =6 group by user_id) or pid is null ) AS painding_instalments
+
+
+SELECT a.id,a.group_id,
+( SELECT COUNT(id) FROM payments 
+         WHERE  is_installment_complete = 0  and group_id = a.group_id and auction_id=a.id) as pcount
+,p.id as pid    
+
+FROM auctions a 
+LEFT JOIN members_groups mg on mg.group_id =a.group_id
+LEFT JOIN users u on u.id=mg.user_id
+LEFT JOIN payments p ON p.auction_id=a.id AND
+            p.id = (SELECT MAX(id) pid FROM payments WHERE group_id = a.group_id GROUP BY p.user_id )
+            
+WHERE a.auction_group_due_date < CURRENT_DATE()
+and a.group_id =3
+
+group by a.id
+HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where is_installment_complete = 1 and group_id = a.group_id and auction_id =a.id group by user_id) or pid is null
+  ORDER BY a.group_id ASC
