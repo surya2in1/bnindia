@@ -661,5 +661,49 @@ class CommonComponent extends Component {
               ->toArray();  
           return $groups;   
       }
+
+      function getVacantMemberDetails($user_id){
+        $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+        $query = $MembersGroupsTable->find();  
+        $AuctionsTable = TableRegistry::get('Auctions');
+        $include = $AuctionsTable->find(
+                        'list',
+                        [ 'fields' =>['group_id'],
+                            'conditions' => ['auction_group_due_date < ' => 'CURRENT_DATE()'],
+                            'group' =>['group_id'],
+                            'order'=> ['group_id'=>'ASC']]
+                    );
+
+        $groups = $query->select([
+                    'gr_code_ticket'=>"concat(g.group_code,'-',mg.ticket_no)",
+                    'g.chit_amount','g.no_of_months','g.premium','mg.ticket_no'
+                    ,'member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+                    'no_of_installments' =>"(SELECT COUNT(id) FROM auctions WHERE group_id = mg.group_id)",
+                    'total_amt_payable'=>"(SELECT SUM(net_subscription_amount) FROM auctions WHERE group_id = mg.group_id)",
+                    'total_dividend'=>"(SELECT SUM(subscriber_dividend) FROM auctions WHERE group_id = mg.group_id)",
+                    'auction_winner'=>"(SELECT COUNT(id) FROM auctions WHERE group_id = mg.group_id AND auction_winner_member =mg.user_id)"
+                    ,'mg.group_id','mg.user_id'
+                    ,'pi'=>"Pending_Installments(mg.group_id,mg.user_id)"
+                ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g',
+                    // 'type' => 'JOIN',
+                    'conditions' =>'g.id = mg.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u',
+                    // 'type' => 'JOIN',
+                    'conditions' =>'mg.user_id = u.id',
+                ]) 
+              ->where(['g.created_by'=>$user_id]) 
+              ->where(['mg.group_id IN '=>$include])
+              // ->where(['mg.group_id IN '=>" (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC)"])
+              ->having(['pi >='=>3,'auction_winner'=>0])
+              ->order(['mg.group_id' => 'ASC','mg.user_id'=>'ASC'])->toArray();  
+          // echo '$groups <pre>';print_r($groups);exit;    
+          return $groups;    
+      }
 }
 ?>

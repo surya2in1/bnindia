@@ -204,4 +204,21 @@ class ReportsController extends AppController
         $this->set('branch_name', $this->Auth->user('branch_name'));
         $this->set(compact('report'));
     }
+
+    function vacuntMembersDetailsPdf(){
+        $report = $this->Common->getVacantMemberDetails($this->Auth->user('id'));    
+        $this->viewBuilder()->enableAutoLayout(false);    
+        $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
+        $this->viewBuilder()->setLayout('admin');
+        $this->viewBuilder()->setOption(
+            'pdfConfig',
+            [
+                'orientation' => 'portrait',
+                'download' => true, // This can be omitted if "filename" is specified.
+               'filename' => 'vaccant_member_report' .'.pdf' //// This can be omitted if you want file name based on URL.
+            ]
+        );
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+        $this->set(compact('report'));
+    }
 }

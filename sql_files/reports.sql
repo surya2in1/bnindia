@@ -134,3 +134,99 @@ and a.group_id =3
 group by a.id
 HAVING pid NOT IN ( SELECT IFNULL(MAX(id), 0) AS mId FROM payments where is_installment_complete = 1 and group_id = a.group_id and auction_id =a.id group by user_id) or pid is null
   ORDER BY a.group_id ASC
+
+
+  SELECT a.id,a.group_id,
+(SELECT COUNT(mg.id) FROM members_groups mg WHERE mg.group_id =a.group_id  and mg.id IN
+   (SELECT id from members_groups WHERE user_id NOT IN (SELECT user_id FROM completed_installments WHERE            group_id= a.group_id and auction_id = a.id) 
+) group by mg.group_id) as pending_installments
+
+FROM auctions a   
+WHERE a.auction_group_due_date < CURRENT_DATE()
+and a.group_id =3
+
+Group by a.id  
+
+ORDER BY a.group_id ASC
+
+
+SELECT a.id,a.group_id,
+(SELECT COUNT(mg.id) FROM members_groups mg WHERE mg.group_id =a.group_id  and mg.id IN
+   (SELECT id from members_groups WHERE user_id NOT IN (SELECT user_id FROM completed_installments WHERE            group_id= a.group_id and auction_id = a.id) 
+) group by mg.group_id) as pending_installments
+
+FROM auctions a   
+WHERE a.auction_group_due_date < CURRENT_DATE()
+and a.group_id =3
+
+Group by a.id  
+
+ORDER BY a.group_id ASC
+
+
+===================================================================================
+
+SELECT mg.group_id,mg.user_id,Pending_Installments(mg.group_id,mg.user_id) FROM members_groups mg WHERE mg.group_id IN (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC) ORDER by mg.group_id,mg.user_id ASC
+
+SELECT mg.group_id,mg.user_id ,(SELECT COUNT(id) as auction_winner FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) as auction_winner,Pending_Installments(mg.group_id,mg.user_id) as pi FROM members_groups mg WHERE mg.group_id IN (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC) HAVING pi > 3 and auction_winner =0 ORDER by mg.group_id,mg.user_id ASC
+
+SELECT mg.group_id,mg.user_id ,(SELECT COUNT(id) as auction_winner FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) as auction_winner,Pending_Installments(mg.group_id,mg.user_id) as pi FROM members_groups mg WHERE mg.group_id IN (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC) HAVING pi > 3 and auction_winner =0 ORDER by mg.group_id,mg.user_id ASC
+===============================================================================================
+
+SELECT group_id,COUNT(user_id) vaccant_members
+FROM (
+    SELECT mg.group_id,mg.user_id,  (SELECT COUNT(id) as auction_winner FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) as auction_winner,Pending_Installments(mg.group_id,mg.user_id) as pi 
+
+FROM members_groups mg
+WHERE mg.group_id IN (SELECT group_id  
+FROM auctions WHERE auction_group_due_date < CURRENT_DATE()
+group by group_id ORDER BY group_id ASC)
+
+HAVING pi > 3 and auction_winner =0 ORDER by mg.group_id,mg.user_id ASC
+) as t
+GROUP BY group_id
+
+
+================================================================================================
+
+-- Count of vaccant_members =>
+SELECT group_id,group_auctions,
+COUNT(user_id) vaccant_members FROM ( 
+   SELECT mg.group_id,mg.user_id 
+      ,(SELECT COUNT(id) as group_auctions FROM `auctions` WHERE `group_id` = mg.group_id) as group_auctions 
+      , (SELECT COUNT(id) as auction_winner FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) as auction_winner
+      ,Pending_Installments(mg.group_id,mg.user_id)  as pi 
+   FROM members_groups mg 
+   WHERE mg.group_id IN 
+     (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() 
+      group by group_id ORDER BY group_id ASC) 
+   HAVING pi >= 3 and auction_winner =0 
+   ORDER by mg.group_id,mg.user_id ASC 
+) as t GROUP BY group_id
+-----------------------------------------------------------------------------------------------------
+
+-- List of vacunt 
+SELECT mg.group_id,mg.user_id 
+   ,(SELECT COUNT(id) as group_auctions FROM `auctions` WHERE `group_id` = mg.group_id) as group_auctions 
+   ,(SELECT COUNT(id) as auction_winner FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) as auction_winner
+   ,Pending_Installments(mg.group_id,mg.user_id) as pi 
+FROM members_groups mg 
+WHERE mg.group_id IN (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC) 
+HAVING pi >= 3 and auction_winner =0 
+ORDER by mg.group_id,mg.user_id ASC
+
+SELECT concat(g.group_code,'-',mg.ticket_no) as gr_code_ticket
+   ,g.chit_amount,g.no_of_months,g.premium,mg.ticket_no
+    ,CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name)) member
+   ,(SELECT COUNT(id) FROM `auctions` WHERE `group_id` = mg.group_id) no_of_installments
+   ,(SELECT SUM(net_subscription_amount) FROM `auctions` WHERE `group_id` = mg.group_id) total_amt_payable
+   ,(SELECT SUM(subscriber_dividend) FROM `auctions` WHERE `group_id` = mg.group_id) total_dividend 
+   ,(SELECT COUNT(id) FROM `auctions` WHERE `group_id` = mg.group_id and auction_winner_member =mg.user_id) auction_winner
+    ,mg.group_id,mg.user_id 
+   ,Pending_Installments(mg.group_id,mg.user_id) as pi 
+FROM members_groups mg 
+JOIN groups as g on g.id=mg.group_id
+JOIN users as u on u.id=mg.user_id
+WHERE mg.group_id IN (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC) 
+HAVING pi >= 3 and auction_winner =0 
+ORDER by mg.group_id,mg.user_id ASC
