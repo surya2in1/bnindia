@@ -705,5 +705,37 @@ class CommonComponent extends Component {
           // echo '$groups <pre>';print_r($groups);exit;    
           return $groups;    
       }
+
+      function getFormanCommissionDetailsPdf($post,$user_id){
+        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : '';
+        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : ''; 
+
+        $PaymentVouchersTable = TableRegistry::get('pv', ['table' => 'payment_vouchers']);
+        $query = $PaymentVouchersTable->find();   
+        $payment_vouchers = $query->select([ 'pv.date','g.group_code','pv.auction_date','a.auction_no','member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+                    'g.chit_amount','pv.foreman_commission','pv.gst','a.priced_amount',
+                    'pv.cheque_dd_no'
+                ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g', 
+                    'conditions' =>'g.id = pv.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u', 
+                    'conditions' =>'pv.user_id = u.id',
+                ]) 
+                ->join([
+                    'table' => 'auctions',
+                    'alias' => 'a', 
+                    'conditions' =>'pv.auction_id = a.id',
+                ]) 
+              ->where(['g.created_by'=>$user_id])   
+              ->where(['pv.date >='=> $post['start'],'pv.date <='=> $post['end']]) 
+              ->order(['pv.group_id' => 'ASC'])->toArray();  
+          // echo '$pv <pre>';print_r($payment_vouchers);exit;    
+          return $payment_vouchers; 
+      }
 }
 ?>

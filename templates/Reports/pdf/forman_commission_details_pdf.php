@@ -54,23 +54,14 @@ tr:nth-child(even) {
        </tr>
        <tr>
          <td valign=middle>
-           Branch Name: <?= isset($group_details->ug['branch_name']) ? $group_details->ug['branch_name'] : '-' ?>
+           Branch Name: <?= isset($branch_name) ? $branch_name : '-' ?>
          </td>
        </tr>
-        <tr>
-         <td>
-           Group Code: <?= isset($group_details->group_code) ? $group_details->group_code : '-' ?>
-           &nbsp; &nbsp;
-           Denomination: (<?= isset($group_details->premium) ? $group_details->premium : '-' ?> * <?= isset($group_details->total_number) ? $group_details->total_number : '-' ?>)
-           &nbsp; &nbsp; 
-           Chit Value: <?= isset($group_details->chit_amount) ? $group_details->chit_amount : '0.00' ?>
-         </td>
-       </tr>
-        <tr>
+       <tr>
          <td valign=middle>
            Date Range: <?= $post_data['start'];?> - <?= $post_data['end'];?>
          </td>
-       </tr> 
+       </tr>
        <tr>
          <td valign=middle>
            Date: <?= date('m/d/Y');?>
@@ -78,25 +69,38 @@ tr:nth-child(even) {
        </tr>
      </table>
 
-      <h3>Auction Report</h3> 
+      <h3>Forman Commission/GST Received Report</h3> 
       <table>
          <thead>
            <tr> 
-             <th>Auction No.</th>
              <th>Date</th>
-             <th>Winner Subscriber Name</th> 
-             <th>Ticket No.</th>
-             <th>Priced Amount</th> 
-             <th>Total Dividend</th>
-             <th>Subscriber Dividend</th>
+             <th>Group Code</th>
+             <th>Auction Date</th> 
+             <th>Auction No.</th>
+             <th>Name of Subscriber</th>
+             <th>Chit Amount</th>
+             <th>Forman Commission</th>
+             <th>Received GST</th>
+             <th>Prized Amount Paid</th>
+             <th>Cheque Details</th>
             </tr>
          </thead>
          <tbody>
             <?php  
             if(!empty($report)){
                foreach ($report as $key => $value) {?>
-                   <tr> 
-                     <td><?= ($value->auction_no) ? $value->auction_no : '-'; ?></td>
+                   <tr>
+                    <td>
+                        <?php 
+                          if($value->date){
+                            $FrozenDateObj = new FrozenDate($value->date); 
+                                echo $FrozenDateObj->i18nFormat('MM/dd/yyyy'); 
+                          }else{
+                            echo '-';
+                          }
+                        ?>
+                     </td>
+                     <td><?= ($value->g['group_code']) ? $value->g['group_code'] : '-'; ?></td>
                      <td>
                         <?php 
                           if($value->auction_date){
@@ -107,15 +111,17 @@ tr:nth-child(even) {
                           }
                         ?>
                      </td>
+                     <td><?= ($value->a['auction_no']) ? $value->a['auction_no'] : '-'; ?></td>
                      <td><?= ($value->member) ? ucwords($value->member) : '-'; ?></td>
-                     <td><?= ($value->ticket_no) ? $value->ticket_no : '-'; ?></td> 
-                     <td><?= ($value->priced_amount) ? $value->priced_amount : '-'; ?></td> 
-                     <td><?= ($value->total_subscriber_dividend) ? $value->total_subscriber_dividend : '-'; ?></td> 
-                     <td><?= ($value->subscriber_dividend) ? $value->subscriber_dividend : '-'; ?></td> 
+                     <td><?= ($value->g['chit_amount']) ? $value->g['chit_amount'] : '-'; ?></td>
+                     <td><?= ($value->foreman_commission) ? $value->foreman_commission : '-'; ?></td>
+                     <td><?= ($value->gst) ? $value->gst : '-'; ?></td>
+                     <td><?= ($value->a['priced_amount']) ? $value->a['priced_amount'] : '-'; ?></td>
+                     <td><?= ($value->cheque_dd_no) ? $value->cheque_dd_no : '-'; ?></td>
                   </tr> 
                <?php }
             }else{ ?>
-               <tr><td colspan="7"><center>Records not found!!!</center></td></tr>
+               <tr><td colspan="10"><center>Records not found!!!</center></td></tr>
             <?php }
             ?>
          </tbody>
@@ -124,4 +130,3 @@ tr:nth-child(even) {
 </body>
 </html> 
 
-<?php //echo $this->Html->link(__('Download PDF'), ['action' => 'pdf', $report->id ]) ?>

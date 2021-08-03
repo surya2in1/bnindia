@@ -51,8 +51,13 @@ tr:nth-child(even) {
          <td>
            <?=Configure::read('CHITNAME'); ?>
          </td>
-         <td rowspan=3 width="50%">
+         <td rowspan=4 width="50%">
            <?= Configure::read('CHITINFO'); ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+           Date Range: <?= $post_data['start'];?> - <?= $post_data['end'];?>
          </td>
        </tr>
        <tr>
