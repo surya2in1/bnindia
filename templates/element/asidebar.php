@@ -374,6 +374,16 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'prizedPaymentSubscriberDetails') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">Prized Payment Subscriber Report</span>',
+                                                    array('controller'=>'Reports','action'=>'prizedPaymentSubscriberDetails'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>

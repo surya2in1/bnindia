@@ -714,7 +714,7 @@ class CommonComponent extends Component {
         $query = $PaymentVouchersTable->find();   
         $payment_vouchers = $query->select([ 'pv.date','g.group_code','pv.auction_date','a.auction_no','member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
                     'g.chit_amount','pv.foreman_commission','pv.gst','a.priced_amount',
-                    'pv.cheque_dd_no'
+                    'pv.cheque_dd_no','pv.total','a.ticket_no','g.gov_reg_no'
                 ])
                 ->join([
                     'table' => 'groups',

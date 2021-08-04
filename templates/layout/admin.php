@@ -214,6 +214,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('forman_commission_details.js') ?>
         <?php } ?>  
 
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'prizedPaymentSubscriberDetails') { ?> 
+            <?= $this->Html->script('forman_commission_details.js') ?>
+        <?php } ?>  
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>
