@@ -20,7 +20,9 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\View\Exception\MissingTemplateException;
-
+use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+use Cake\I18n\Date;
 
 /**
  * Static content controller
@@ -33,8 +35,13 @@ class DashboardController extends AppController
 {
     public function index()
     {
-    	$this->viewBuilder()->setLayout('admin');
-
-        // Output user image
+    	$this->viewBuilder()->setLayout('admin'); 
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+        if ($this->request->is('post')) { 
+            $GroupsTable = TableRegistry::get('Groups');
+            $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));
+            // echo '$output <pre>';print_r($output);exit;
+             echo json_encode($output);exit;
+        }
     }
 }

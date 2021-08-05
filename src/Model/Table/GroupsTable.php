@@ -370,4 +370,123 @@ class GroupsTable extends Table
         // echo '<pre>';print_r($result);exit;
         return isset($result[0]['group_code']) ? $result[0]['group_code'] : '';
     }
+
+    public function GetDashboardData($user_id) { 
+        $aColumns = array('g.chit_amount','g.no_of_months','g.premium', 
+                    "COUNT(a.id) as no_of_installments",
+                    "SUM(a.net_subscription_amount) as total_amt_payable",
+                    "SUM(a.subscriber_dividend) as total_dividend");
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "g.chit_amount";
+        /* DB table to use */
+        $sTable = "auctions a";
+       
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */
+        $sOrder = "";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                {
+                    $sOrder .= "".$aColumns[$_POST['order'][$i]['column']]." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }else{
+            //default order 
+            $sOrder = "ORDER BY g.id desc ";
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */
+        $sWhere = " WHERE g.created_by= '".$user_id."' ";
+        $having='';
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $having="Having (no_of_installments ='".( $_POST['search']['value'] )."'  or total_amt_payable='".( $_POST['search']['value'] )."'  or total_dividend='".( $_POST['search']['value'] )."' )";
+            $sWhere .= " OR (";
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    if(in_array($columns, ['COUNT(a.id)','SUM(a.net_subscription_amount)','SUM(a.subscriber_dividend)'])){
+                        continue;
+                    }
+                    // $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                    $sWhere .= "".$columns." = '".( $_POST['search']['value'] )."' OR ";
+                }
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." 
+        FROM   $sTable join groups g on g.id =a.group_id 
+        $sWhere
+        group by g.id
+        $having
+        $sOrder
+        $sLimit
+        ";
+        // echo $sQuery;exit;
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+       
+        /* Data set length after filtering */
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+
+        /* Total data set length */
+        $sQuery = "SELECT COUNT(*) as cnt from (
+        SELECT COUNT(".$sIndexColumn.") as cnt
+        FROM   $sTable join groups g on g.id =a.group_id where g.created_by = ".$user_id." group by g.id
+        ) cnt ";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+         // echo '$aResultTotal <pre>';print_r($aResultTotal);exit;
+        $iTotal = $aResultTotal[0]['cnt'];
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+        return $output;
+    }
 }
