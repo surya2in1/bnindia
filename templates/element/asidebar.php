@@ -122,6 +122,16 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'transferMembers') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                <?php echo  $this->Html->link(
+                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="kt-menu__link-text">Transfer Members</span>',
+                                                    array('controller'=>'Users','action'=>'transferMembers'),
+                                                    ['class' => 'kt-menu__link','escape'=>false]
+                                                ); ?>
+                                            </li>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'members') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">

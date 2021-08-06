@@ -167,8 +167,12 @@ $cakeDescription = 'Bnindia';
         <!-- Popup js -->
         
 
-        <?php if($this->request->getParam('controller') == 'Users') { ?> 
+        <?php if($this->request->getParam('controller') == 'Users'  && $this->request->getParam('action') == 'members') { ?> 
             <?= $this->Html->script('members.js') ?>
+        <?php } ?>
+
+        <?php if($this->request->getParam('controller') == 'Users'  && $this->request->getParam('action') == 'transferMembers') { ?> 
+            <?= $this->Html->script('transfer_members.js') ?>
         <?php } ?>
 
         <?php if($this->request->getParam('controller') == 'Groups' && $this->request->getParam('action') == 'index') { ?> 

@@ -705,6 +705,14 @@ class UsersController extends AppController
 
         echo false;exit;            
      }
- 
+    
+     function transferMembers(){
+        $this->viewBuilder()->setLayout('admin');    
+        if ($this->request->is('post')) {
+             $output = $this->Users->getVaccantUsers($this->Auth->user('id'));
+             // debug($output);exit;
+             echo json_encode($output);exit;
+        }
+     }
 }
 

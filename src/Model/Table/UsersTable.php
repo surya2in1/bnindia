@@ -327,4 +327,124 @@ class UsersTable extends Table
         );
         return $output;
     }
+
+    public function getVaccantUsers($user_id) {  
+        $aColumns = [
+                    "concat(g.group_code,'-',mg.ticket_no) as gr_code_ticket",
+                    'g.chit_amount','g.no_of_months','g.premium','mg.ticket_no'
+                     ,"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name)) as member",
+                     "(SELECT COUNT(id) FROM auctions WHERE group_id = mg.group_id) as no_of_installments",
+                    "(SELECT SUM(net_subscription_amount) FROM auctions WHERE group_id = mg.group_id) as total_amt_payable",
+                    "(SELECT SUM(subscriber_dividend) FROM auctions WHERE group_id = mg.group_id) as total_dividend" 
+                ];
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "g.id";
+        /* DB table to use */
+        $sTable = "members_groups mg";
+       
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */
+        $sOrder = " mg.group_id ASC, mg.user_id ASC ";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                { 
+                    //remove 'as' word if exist
+                    $ordercolumns = preg_replace('/ as.*/', '', $aColumns[$_POST['order'][$i]['column']]);
+                    $sOrder .= "".$ordercolumns." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */ 
+        $sWhere = "WHERE mg.group_id  IN (SELECT group_id  FROM auctions 
+         WHERE auction_group_due_date <  CURRENT_DATE() GROUP BY group_id  ORDER BY group_id ASC) and g.created_by= '".$user_id."' ";
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $sWhere .= " AND (";
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    //remove 'as' word if exist
+                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+                    $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR "; 
+                }
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." ,u.id as actions,
+        (SELECT COUNT(id) FROM auctions WHERE group_id = mg.group_id AND auction_winner_member =mg.user_id) as auction_winner,
+        mg.group_id,mg.user_id,Pending_Installments(mg.group_id,mg.user_id) as pi
+
+        FROM   $sTable 
+        INNER JOIN groups g ON g.id = mg.group_id 
+        INNER JOIN users u ON mg.user_id = u.id 
+ 
+        $sWhere
+        HAVING (pi >= 3 AND auction_winner = 0)
+        $sOrder
+        $sLimit
+        ";
+        // echo $sQuery;exit;
+        $stmt = $conn->execute($sQuery); 
+        $rResult = $stmt ->fetchAll('assoc');
+        /* Data set length after filtering */
+        // echo $sQuery;exit;
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+        /* Total data set length */
+        
+        $sQuery = "SELECT count(*) as cnt FROM(
+        SELECT mg.group_id , Pending_Installments(mg.group_id,mg.user_id) AS pi FROM members_groups mg INNER JOIN groups g ON g.id = mg.group_id INNER JOIN users u ON mg.user_id = u.id WHERE (g.created_by = 1 AND mg.group_id in (SELECT Auctions.group_id AS Auctions__group_id FROM auctions Auctions WHERE auction_group_due_date < CURRENT_DATE() GROUP BY group_id ORDER BY group_id ASC) ) HAVING (pi >= 3 ) ORDER BY mg.group_id ASC, mg.user_id ASC) as cnt";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        $iTotal = $aResultTotal[0]['cnt'];
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+        return $output;
+    }
 }
