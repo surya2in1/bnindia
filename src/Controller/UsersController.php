@@ -714,5 +714,16 @@ class UsersController extends AppController
              echo json_encode($output);exit;
         }
      }
+
+     function getGroupsUsers(){
+        if ($this->request->is('post')) {
+            $post = $this->request->getData();
+            
+        }
+     }
+
+     function transferGroupUser($user_id,$group_id){
+        $output = $this->Common->transferGroupUser($user_id,$group_id);
+     }
 }
 

@@ -56,7 +56,7 @@ $cakeDescription = 'Bnindia';
         <div class="kt-header-mobile__logo">
              <a href="<?php echo Router::url('/dashboard', true); ?>">
                 <!--<img alt="Logo" src="assets/media/logos/bn2.png" />-->
-                <img alt="Logo" src="http://staging.bnindia.co.in/css/logos/logo11.png" style="
+                <img alt="Logo" src="<?php echo Router::url('/', true); ?>/css/logos/logo11.png" style="
                     width: 61px;
                     height: 49px;
                 ">

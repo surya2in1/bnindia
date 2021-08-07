@@ -763,5 +763,14 @@ class CommonComponent extends Component {
           // echo '$groups <pre>';print_r($groups);exit;    
           return $groups;  
       }
+
+      function transferGroupUser($user_id,$group_id){
+        echo '$user_id '.$user_id,$group_id;exit;
+        if(!($user_id)  or !($group_id)){
+            return false;
+        }
+
+        
+      }
 }
 ?>

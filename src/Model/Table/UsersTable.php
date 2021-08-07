@@ -386,7 +386,7 @@ class UsersTable extends Table
         * on very large tables, and MySQL's regex functionality is very limited
         */ 
         $sWhere = "WHERE mg.group_id  IN (SELECT group_id  FROM auctions 
-         WHERE auction_group_due_date <  CURRENT_DATE() GROUP BY group_id  ORDER BY group_id ASC) and g.created_by= '".$user_id."' ";
+         WHERE auction_group_due_date <  CURRENT_DATE() GROUP BY group_id  ORDER BY group_id ASC) AND g.created_by= '".$user_id."' AND mg.is_transfer_user =0 ";
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
             $sWhere .= " AND (";
@@ -432,7 +432,8 @@ class UsersTable extends Table
         /* Total data set length */
         
         $sQuery = "SELECT count(*) as cnt FROM(
-        SELECT mg.group_id , Pending_Installments(mg.group_id,mg.user_id) AS pi FROM members_groups mg INNER JOIN groups g ON g.id = mg.group_id INNER JOIN users u ON mg.user_id = u.id WHERE (g.created_by = 1 AND mg.group_id in (SELECT Auctions.group_id AS Auctions__group_id FROM auctions Auctions WHERE auction_group_due_date < CURRENT_DATE() GROUP BY group_id ORDER BY group_id ASC) ) HAVING (pi >= 3 ) ORDER BY mg.group_id ASC, mg.user_id ASC) as cnt";
+        SELECT mg.group_id ,
+        (SELECT COUNT(id) FROM auctions WHERE group_id = mg.group_id AND auction_winner_member =mg.user_id) as auction_winner, Pending_Installments(mg.group_id,mg.user_id) AS pi FROM members_groups mg INNER JOIN groups g ON g.id = mg.group_id INNER JOIN users u ON mg.user_id = u.id WHERE (g.created_by = 1 AND mg.is_transfer_user =0  AND mg.group_id in (SELECT Auctions.group_id AS Auctions__group_id FROM auctions Auctions WHERE auction_group_due_date < CURRENT_DATE() GROUP BY group_id ORDER BY group_id ASC) ) HAVING (pi >= 3 AND auction_winner = 0) ORDER BY mg.group_id ASC, mg.user_id ASC) as cnt";
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         $iTotal = $aResultTotal[0]['cnt'];

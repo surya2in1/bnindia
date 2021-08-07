@@ -5,7 +5,11 @@
                                 <!-- <img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/logo-light.png" /> -->
                                 
                                 <!--<img alt="Logo" src="<?php echo Router::url('/', true); ?>assets/media/logos/bn2.png" />-->
-                                <img alt="Logo" src="http://staging.bnindia.co.in/css/logos/logo11.png" style="
+                               <!--  <img alt="Logo" src="http://staging.bnindia.co.in/css/logos/logo11.png" style="
+                                    width: 101px;
+                                    height: 63px;
+                                "> -->
+                                 <img alt="Logo" src="<?php echo Router::url('/', true); ?>/css/logos/logo11.png" style="
                                     width: 101px;
                                     height: 63px;
                                 ">

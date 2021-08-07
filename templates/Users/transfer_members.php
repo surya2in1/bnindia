@@ -63,3 +63,38 @@ use Cake\Core\Configure;
 </div>
 
 <!-- end:: Content -->
+
+<!--begin::Modal-->
+<div class="modal modal-stick-to-bottom fade" id="tr_user_modal" role="dialog" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transer User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                 <?= $this->Form->create(null, array(
+                       'class'=>'kt-form',
+                       'id'=>'transfer_member_form', 
+                       'method'=> 'Post'
+                     )); ?>
+                     <input type="hidden" id="group_id">
+                     <input type="hidden" id="user_id">
+                    <div class="form-group">
+                        <label class="form-control-label">New Users:</label>
+                        <select id="new_group_users_list">
+                        
+                        </select>
+                    </div> 
+                <?= $this->Form->end() ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--end::Modal-->
