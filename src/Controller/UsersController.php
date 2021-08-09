@@ -715,15 +715,37 @@ class UsersController extends AppController
         }
      }
 
-     function getGroupsUsers(){
-        if ($this->request->is('post')) {
+     function transferGroupUser(){
+        if ($this->request->is('post')) { 
+            $result = 0;
             $post = $this->request->getData();
-            
+            echo '$post<pre>';print_r($post);//exit;
+            if($post['group_id'] and $post['user_id'] and $post['new_group_users_list']){
+                 $this->loadModel('MembersGroups');
+                 //update as old or new painding
+                $group_record['user_id'] = $post['new_group_users_list'];
+                $group_record['group_id'] = $post['group_id'];
+                $group_record['old_user_id'] = $post['user_id'];
+                $group_records[] = $group_record;
+                $MembersGroups = $this->MembersGroups->newEntities($group_records);
+                $result = $this->MembersGroups->saveMany($MembersGroups);
+                echo 'mg inser <pre>';print_r($result);
+                if(isset($result[0]->id)){
+                    $query = $MembersGroups->query();
+                    $result = $query->update()
+                        ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                        ->where(['id' => $group_id,'user_id'=>$post['user_id']])
+                        ->execute();
+                        echo 'up '.$result;exit;
+                }
+            }
+            echo $result;exit;
         }
      }
 
-     function transferGroupUser($user_id,$group_id){
-        $output = $this->Common->transferGroupUser($user_id,$group_id);
+     function getTransferGroupUser($user_id,$group_id){
+        $output = $this->Common->getTransferGroupUser($user_id,$group_id);
+        echo json_encode($output);exit;
      }
 }
 

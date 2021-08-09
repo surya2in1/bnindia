@@ -764,13 +764,33 @@ class CommonComponent extends Component {
           return $groups;  
       }
 
-      function transferGroupUser($user_id,$group_id){
-        echo '$user_id '.$user_id,$group_id;exit;
+      function getTransferGroupUser($user_id,$group_id){
         if(!($user_id)  or !($group_id)){
             return false;
         }
-
-        
+        $PaymentsTable = TableRegistry::get('Payments');
+        $exclude = $PaymentsTable->find(
+                        'list',
+                        [ 'fields' =>['user_id'],
+                            'conditions' => ['group_id' => $group_id]]
+                    );
+        $MembersGroupsTable= TableRegistry::get('MembersGroups');
+        $query = $MembersGroupsTable->find('all'); 
+        $users =  $query->select([ 'u.id','member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))" 
+                    ])
+                    ->join([
+                    'table' => 'Users', 
+                        'alias' => 'u', 
+                        'conditions' =>'MembersGroups.user_id = u.id',
+                    ]) 
+                    ->join([
+                    'table' => 'Roles', 
+                        'conditions' =>'Roles.id = u.role_id',
+                    ]) 
+                ->where(['MembersGroups.user_id NOT IN '=>$exclude,'MembersGroups.group_id' => $group_id,'MembersGroups.is_transfer_user'=>0])
+                ->where(['u.status ' => 1,'u.id !='=>$user_id])->toArray();
+                 // echo 'users<pre>';print_r($users);exit;
+        return $users;
       }
 }
 ?>

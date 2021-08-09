@@ -34,11 +34,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 					targets: -1,
 					title: 'Actions',
 					orderable: false,
-					render: function(data, type, full, meta) {
-
-						console.log(full.group_id);
-						console.log(full);
-						console.log(meta);
+					render: function(data, type, full, meta) { 
 						return '\
 							<div class="dropdown">\
 								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
@@ -46,12 +42,6 @@ var KTDatatablesDataSourceAjaxServer = function() {
 								</a>\
 								<div class="dropdown-menu dropdown-menu-right">\
 									<ul class="kt-nav">\
-										<li class="kt-nav__item">\
-											<a href="#" class="kt-nav__link" onclick="transfer_group_user('+data+','+full.group_id+');">\
-										 		<i class="kt-nav__link-icon flaticon2-trash"></i>\
-										 		<span class="kt-nav__link-text">Transfer User</span>\
-										 	</a>\
-										</li>\
 										<li class="kt-nav__item">\
 											<button type="button" class="hide btn btn-bold btn-label-brand btn-sm" data-toggle="modal" data-target="#tr_user_modal" user_id='+data+' group_id='+full.group_id+'>Launch Modal</button>\
 											<a href="#tr_user_modal" class="kt-nav__link" data-toggle="modal" onclick="map_modal_data('+data+','+full.group_id+');" >\
@@ -62,25 +52,111 @@ var KTDatatablesDataSourceAjaxServer = function() {
 									</ul>\
 								</div>\
 							</div>\
-						';
-						//Commented temparary
-						// <li class="kt-nav__item">\
-						// 	<a href="#" class="kt-nav__link" onclick="deleteuser('+data+');">\
-						// 		<i class="kt-nav__link-icon flaticon2-trash"></i>\
-						// 		<span class="kt-nav__link-text">Delete</span>\
-						// 	</a>\
-						// </li>\
+						'; 
 					},
 				},
 			],
 		});
 	};
- 
+ 	
+ 	var transfer_member_form = function (){
+		var showErrorMsg = function(form, type, msg) {
+	        var alert = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert">\
+				<div class="alert-text">'+msg+'</div>\
+				<div class="alert-close">\
+	                <i class="flaticon2-cross kt-icon-sm" data-dismiss="alert"></i>\
+	            </div>\
+			</div>');
+
+	        form.find('.alert').remove(); 
+	        KTUtil.animateClass(alert[0], 'fadeIn animated'); 
+	    }
+	    $('#submit').click(function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $(this).closest('form');
+	        form.validate({
+	     		// define validation rules
+	            rules: {
+	                new_group_users_list: {
+	                        required: true 
+	                }, 
+	            },
+	            errorPlacement: function(error, element) {
+	                var group = element.closest('.input-group');
+	                if (group.length) {
+	                    group.after(error.addClass('invalid-feedback'));
+	                } else {
+	                    element.after(error.addClass('invalid-feedback'));
+	                }
+	                 element.addClass('is-invalid');
+	            },    
+	        });
+			
+			if (!form.valid()) {
+               swal.fire({
+                    "title": "",
+                    "text": "There are some errors in your submission. Please correct them.",
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary",
+                    "onClose": function(e) {
+                         $('html, body').animate({
+                            scrollTop: $("#kt_content").offset().top
+                        }, 1000);
+                        console.log('on close event fired!');
+                    }
+                });
+
+	       		return;
+            }	
+            btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
+		    // form.submit();
+            form.ajaxSubmit({
+                url:  $('#router_url').val()+"Users/transferGroupUser",
+                type:'POST',
+                // beforeSend: function (xhr) { // Add this line
+                //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                // },
+                success: function(response, status, xhr, $form) {
+                    if(response>0){
+                        swal.fire({
+                            "title": "",
+                            "text": "The member has been transferd successfully.",
+                            "type": "success",
+                            "confirmButtonClass": "btn btn-secondary",
+                            "onClose": function(e) {
+                                 $('html, body').animate({
+                                    scrollTop: $("#kt_content").offset().top
+                                }, 1000);
+                                console.log('on close event fired!');
+                            }
+                        });
+                        // similate 2s delay
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000); 
+
+                    }else{
+                    	var err = 'Some error has been occured. Please try again.'; 
+                    	// similate 2s delay
+                    	setTimeout(function() {
+    	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+    	                    showErrorMsg(form, 'danger', err);
+                        }, 2000);                        
+                    }
+                	$('html, body').animate({
+                        scrollTop: "0"
+                    }, 2000);
+                }
+            });	
+		});
+	}
 	return {
 
 		//main function to initiate the module
 		init: function() {
 			initTable1(); 
+			transfer_member_form();
 		},
 
 	};
@@ -93,18 +169,22 @@ jQuery(document).ready(function() {
 function map_modal_data(user_id,group_id){
 	$('#user_id').val(user_id);
 	$('#group_id').val(group_id);
+	var new_group_users_list = '<option value="">Select Member</option>';
 	$.ajax({
-		   "url": $('#router_url').val()+"Users/getGroupsUsers/"+user_id+"/"+group_id,
+		   "url": $('#router_url').val()+"Users/getTransferGroupUser/"+user_id+"/"+group_id,
             "type": "GET",
             beforeSend: function (xhr) { // Add this line
                 xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
             },
             success: function(response, status, xhr, $form) {
-                if(response>0){
-					 
-                }else{
-                	                       
+            	var result = JSON.parse(response);
+                if(result){ 
+					 $.each(result, function( key, value ) {  
+					  new_group_users_list += '<option value="'+value.u['id']+'">'+value.member+'</option>';
+					});
+					console.log(new_group_users_list);
                 } 
+				$('#new_group_users_list').html(new_group_users_list);
             }
 		}); 
 }
@@ -157,57 +237,4 @@ function transfer_group_user(user_id,group_id){
         }
     });
 } 
-
-function deleteuser(id){ 
-
-	swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
-    }).then(function(result){ 
-        if (result.value) {
-        	$.ajax({
-			   "url": "Users/delete/"+id,
-	            "type": "GET",
-	            beforeSend: function (xhr) { // Add this line
-                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
-                },
-                success: function(response, status, xhr, $form) {
-                	if(response == 'group_associated_with_members'){
-                		swal.fire(
-			                'Cancelled',
-			                'Sorry we can not be delete this group. This group is associated with members.',
-			                'error'
-			            );
-                	}else if(response>0){
-    					table.DataTable().ajax.reload();
-                    	
-                    	swal.fire(
-			                'Deleted!',
-			                'The member has been deleted.',
-			                'success'
-			            );
-                    }else{
-                    	swal.fire(
-			                'Cancelled',
-			                'The member could not be deleted. Please, try again.',
-			                'error'
-			            );                        
-                    } 
-                }
-			}); 
-            // result.dismiss can be 'cancel', 'overlay',
-            // 'close', and 'timer'
-        } else if (result.dismiss === 'cancel') {
-            swal.fire(
-                'Cancelled',
-                'Your data is safe :)',
-                'error'
-            )
-        }
-    });
-} 
+ 

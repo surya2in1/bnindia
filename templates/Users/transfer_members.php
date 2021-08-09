@@ -73,26 +73,26 @@ use Cake\Core\Configure;
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 </button>
             </div>
+             <?= $this->Form->create(null, array(
+                   'class'=>'kt-form',
+                   'id'=>'transfer_member_form', 
+                   'method'=> 'Post'
+                 )); ?>
             <div class="modal-body">
-                 <?= $this->Form->create(null, array(
-                       'class'=>'kt-form',
-                       'id'=>'transfer_member_form', 
-                       'method'=> 'Post'
-                     )); ?>
-                     <input type="hidden" id="group_id">
-                     <input type="hidden" id="user_id">
+                     <input type="hidden" id="group_id" name="group_id">
+                     <input type="hidden" id="user_id" name="user_id">
                     <div class="form-group">
                         <label class="form-control-label">New Users:</label>
-                        <select id="new_group_users_list">
+                        <select class="form-control" id="new_group_users_list" name="new_group_users_list">
                         
                         </select>
                     </div> 
-                <?= $this->Form->end() ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" id="submit" class="btn btn-primary">Save changes</button>
             </div>
+            <?= $this->Form->end() ?>
         </div>
     </div>
 </div>
