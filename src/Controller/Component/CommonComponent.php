@@ -662,7 +662,7 @@ class CommonComponent extends Component {
           return $groups;   
       }
 
-      function getVacantMemberDetails($user_id){
+      function getVacantMemberDetails($user_id,$group_id=0){
         $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
         $query = $MembersGroupsTable->find();  
         $AuctionsTable = TableRegistry::get('Auctions');
@@ -673,6 +673,10 @@ class CommonComponent extends Component {
                             'group' =>['group_id'],
                             'order'=> ['group_id'=>'ASC']]
                     );
+        $where_Conditions = [];
+        if($group_id>0){
+            $where_Conditions = ['mg.group_id'=>$group_id];
+        }
 
         $groups = $query->select([
                     'gr_code_ticket'=>"concat(g.group_code,'-',mg.ticket_no)",
@@ -697,8 +701,9 @@ class CommonComponent extends Component {
                     // 'type' => 'JOIN',
                     'conditions' =>'mg.user_id = u.id',
                 ]) 
-              ->where(['g.created_by'=>$user_id]) 
-              ->where(['mg.group_id IN '=>$include])
+              ->where(['g.created_by'=>$user_id])  
+               ->where(['mg.group_id IN '=>$include])  
+              ->where($where_Conditions)
               // ->where(['mg.group_id IN '=>" (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC)"])
               ->having(['pi >='=>3,'auction_winner'=>0])
               ->order(['mg.group_id' => 'ASC','mg.user_id'=>'ASC'])->toArray();  
@@ -764,8 +769,8 @@ class CommonComponent extends Component {
           return $groups;  
       }
 
-      function getTransferGroupUser($user_id,$group_id){
-        if(!($user_id)  or !($group_id)){
+      function getTransferGroupUser($user_ids,$group_id){
+        if(!($user_ids)  or !($group_id)){
             return false;
         }
         $PaymentsTable = TableRegistry::get('Payments');
@@ -774,22 +779,29 @@ class CommonComponent extends Component {
                         [ 'fields' =>['user_id'],
                             'conditions' => ['group_id' => $group_id]]
                     );
-        $MembersGroupsTable= TableRegistry::get('MembersGroups');
-        $query = $MembersGroupsTable->find('all'); 
+        $UsersTable= TableRegistry::get('u', ['table' => 'users']);
+        $query = $UsersTable->find('all'); 
+        $where_Conditions['OR'] = [
+                                    'mg.is_transfer_user'=>0,
+                                    'mg.is_transfer_user IS NULL'
+                                ];
         $users =  $query->select([ 'u.id','member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))" 
                     ])
                     ->join([
-                    'table' => 'Users', 
-                        'alias' => 'u', 
-                        'conditions' =>'MembersGroups.user_id = u.id',
+                    'table' => 'members_groups', 
+                        'alias' => 'mg', 
+                        'type' => 'LEFT',
+                        'conditions' =>'mg.user_id = u.id',
                     ]) 
                     ->join([
                     'table' => 'Roles', 
                         'conditions' =>'Roles.id = u.role_id',
                     ]) 
-                ->where(['MembersGroups.user_id NOT IN '=>$exclude,'MembersGroups.group_id' => $group_id,'MembersGroups.is_transfer_user'=>0])
-                ->where(['u.status ' => 1,'u.id !='=>$user_id])->toArray();
-                 // echo 'users<pre>';print_r($users);exit;
+                ->where(['u.id NOT IN '=>$exclude])
+                ->where($where_Conditions)
+                ->where(['u.status ' => 1,'u.id NOT IN '=>$user_ids,'Roles.name' => Configure::read('ROLE_MEMBER')])
+                ->group('u.id')->toArray();
+                // echo 'users<pre>';print_r($users);exit;
         return $users;
       }
 }

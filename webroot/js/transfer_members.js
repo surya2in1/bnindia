@@ -180,7 +180,7 @@ function map_modal_data(user_id,group_id){
             	var result = JSON.parse(response);
                 if(result){ 
 					 $.each(result, function( key, value ) {  
-					  new_group_users_list += '<option value="'+value.u['id']+'">'+value.member+'</option>';
+					  new_group_users_list += '<option value="'+value.id+'">'+ucfirst(value.member)+'</option>';
 					});
 					console.log(new_group_users_list);
                 } 
@@ -238,3 +238,9 @@ function transfer_group_user(user_id,group_id){
     });
 } 
  
+ function ucfirst(str){
+    var str = str.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+        return letter.toUpperCase();
+    }); 
+    return str;
+}

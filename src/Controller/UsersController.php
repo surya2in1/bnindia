@@ -721,22 +721,38 @@ class UsersController extends AppController
             $post = $this->request->getData();
             echo '$post<pre>';print_r($post);//exit;
             if($post['group_id'] and $post['user_id'] and $post['new_group_users_list']){
-                 $this->loadModel('MembersGroups');
-                 //update as old or new painding
-                $group_record['user_id'] = $post['new_group_users_list'];
-                $group_record['group_id'] = $post['group_id'];
-                $group_record['old_user_id'] = $post['user_id'];
-                $group_records[] = $group_record;
-                $MembersGroups = $this->MembersGroups->newEntities($group_records);
-                $result = $this->MembersGroups->saveMany($MembersGroups);
-                echo 'mg inser <pre>';print_r($result);
-                if(isset($result[0]->id)){
-                    $query = $MembersGroups->query();
+                $this->loadModel('MembersGroups');
+                $query = $this->MembersGroups->find()->where(['group_id' => $post['group_id'],'user_id'=>$post['new_group_users_list']]);
+                $member_group_count = $query->count();
+                echo '$member_group_count '.$member_group_count;
+
+                //update as old member
+                $query = $this->MembersGroups->query();
+                $result = $query->update()
+                    ->set(['new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                    ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
+                    ->execute();
+                echo 'mg update old <pre>';print_r($result); 
+                 //update as new member
+
+                //If group not assigned to new member then insert in members_groups
+                if($member_group_count < 1){
+                    $group_record['user_id'] = $post['new_group_users_list'];
+                    $group_record['group_id'] = $post['group_id'];
+                    $group_record['is_transfer_user'] = 1;
+                    $group_record['new_user_id'] = $post['new_group_users_list'];
+                    $group_record['old_user_id'] = $post['user_id'];
+                    $group_records[] = $group_record;
+                    $MembersGroups = $this->MembersGroups->newEntities($group_records);
+                    $result = $this->MembersGroups->saveMany($MembersGroups);
+                    echo 'insert mg result <pre>';print_r($result);
+                }else{
+                    $query = $this->MembersGroups->query();
                     $result = $query->update()
                         ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
-                        ->where(['id' => $group_id,'user_id'=>$post['user_id']])
+                        ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
                         ->execute();
-                        echo 'up '.$result;exit;
+                        echo 'up new '.$result;exit;
                 }
             }
             echo $result;exit;
@@ -744,7 +760,18 @@ class UsersController extends AppController
      }
 
      function getTransferGroupUser($user_id,$group_id){
-        $output = $this->Common->getTransferGroupUser($user_id,$group_id);
+        //Get vaccant group users
+        $vaccant_members = $this->Common->getVacantMemberDetails($this->Auth->user('id'));   
+        $user_ids=[];
+        if(!empty($vaccant_members)){
+            foreach ($vaccant_members as $key => $value){
+                $user_ids[] = $value->user_id;
+            }
+        }
+        $unique_user_ids = array_unique($user_ids);
+        //echo '$unique_user_ids<pre>';print_r($unique_user_ids);
+        $output = $this->Common->getTransferGroupUser($unique_user_ids,$group_id);
+
         echo json_encode($output);exit;
      }
 }
