@@ -69,7 +69,7 @@ use Cake\Core\Configure;
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Transer User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Transer Member</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 </button>
             </div>
@@ -82,14 +82,14 @@ use Cake\Core\Configure;
                      <input type="hidden" id="group_id" name="group_id">
                      <input type="hidden" id="user_id" name="user_id">
                     <div class="form-group">
-                        <label class="form-control-label">New Users:</label>
+                        <label class="form-control-label">New Members:</label>
                         <select class="form-control" id="new_group_users_list" name="new_group_users_list">
                         
                         </select>
                     </div> 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="tr_modal_cl" data-dismiss="modal">Close</button>
                 <button type="button" id="submit" class="btn btn-primary">Save changes</button>
             </div>
             <?= $this->Form->end() ?>

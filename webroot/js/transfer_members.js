@@ -110,45 +110,48 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	       		return;
             }	
             btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
-		    // form.submit();
-            form.ajaxSubmit({
-                url:  $('#router_url').val()+"Users/transferGroupUser",
-                type:'POST',
-                // beforeSend: function (xhr) { // Add this line
-                //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
-                // },
-                success: function(response, status, xhr, $form) {
-                    if(response>0){
-                        swal.fire({
-                            "title": "",
-                            "text": "The member has been transferd successfully.",
-                            "type": "success",
-                            "confirmButtonClass": "btn btn-secondary",
-                            "onClose": function(e) {
-                                 $('html, body').animate({
-                                    scrollTop: $("#kt_content").offset().top
-                                }, 1000);
-                                console.log('on close event fired!');
-                            }
-                        });
-                        // similate 2s delay
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 2000); 
+		    transfer_group_user();
 
-                    }else{
-                    	var err = 'Some error has been occured. Please try again.'; 
-                    	// similate 2s delay
-                    	setTimeout(function() {
-    	                    btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
-    	                    showErrorMsg(form, 'danger', err);
-                        }, 2000);                        
-                    }
-                	$('html, body').animate({
-                        scrollTop: "0"
-                    }, 2000);
-                }
-            });	
+            // form.ajaxSubmit({
+            //     url:  $('#router_url').val()+"Users/transferGroupUser",
+            //     type:'POST',
+            //     // beforeSend: function (xhr) { // Add this line
+            //     //     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+            //     // },
+            //     success: function(response, status, xhr, $form) {
+            //         if(response>0){
+            //             swal.fire({
+            //                 "title": "",
+            //                 "text": "The member has been transferd successfully.",
+            //                 "type": "success",
+            //                 "confirmButtonClass": "btn btn-secondary",
+            //                 "onClose": function(e) {
+            //                      $('html, body').animate({
+            //                         scrollTop: $("#kt_content").offset().top
+            //                     }, 1000);
+            //                     console.log('on close event fired!');
+            //                 }
+            //             });
+
+            //             // similate 2s delay
+            //             setTimeout(function() {
+            //             	$('#tr_modal_cl').trigger('click');
+            //                 //window.location.reload();
+            //             }, 2000); 
+
+            //         }else{
+            //         	var err = 'Some error has been occured. Please try again.'; 
+            //         	// similate 2s delay
+            //         	setTimeout(function() {
+    	       //              btn.removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+    	       //              showErrorMsg(form, 'danger', err);
+            //             }, 2000);                        
+            //         }
+            //     	$('html, body').animate({
+            //             scrollTop: "0"
+            //         }, 2000);
+            //     }
+            // });	
 		});
 	}
 	return {
@@ -182,7 +185,6 @@ function map_modal_data(user_id,group_id){
 					 $.each(result, function( key, value ) {  
 					  new_group_users_list += '<option value="'+value.id+'">'+ucfirst(value.member)+'</option>';
 					});
-					console.log(new_group_users_list);
                 } 
 				$('#new_group_users_list').html(new_group_users_list);
             }
@@ -191,7 +193,7 @@ function map_modal_data(user_id,group_id){
 function trigger_function(modal_id){
 	$('#'+modal_id).trigger('click');
 }
-function transfer_group_user(user_id,group_id){ 
+function transfer_group_user(){ 
 	swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -201,10 +203,11 @@ function transfer_group_user(user_id,group_id){
         cancelButtonText: 'No, cancel!',
         reverseButtons: true
     }).then(function(result){ 
-        if (result.value) {
+        if (result.value) { 
         	$.ajax({
-			   "url": $('#router_url').val()+"Users/transferGroupUser/"+user_id+"/"+group_id,
-	            "type": "GET",
+			   "url": $('#router_url').val()+"Users/transferGroupUser",
+	            "type": "POST",
+	            "data": $('#transfer_member_form').serialize(),
 	            beforeSend: function (xhr) { // Add this line
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
                 },
@@ -213,16 +216,18 @@ function transfer_group_user(user_id,group_id){
     					table.DataTable().ajax.reload();
                     	
                     	swal.fire(
-			                'Deleted!',
+			                'Transferd!',
 			                'The member has been transferd.',
 			                'success'
 			            );
+			            $('#tr_modal_cl').trigger('click');
                     }else{
                     	swal.fire(
 			                'Cancelled',
 			                'The member could not be transferd. Please, try again.',
 			                'error'
-			            );                        
+			            );   
+    	                $('#submit').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
                     } 
                 }
 			}); 
@@ -234,6 +239,7 @@ function transfer_group_user(user_id,group_id){
                 'Your data is safe :)',
                 'error'
             )
+            $('#submit').removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
         }
     });
 } 

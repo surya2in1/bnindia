@@ -717,45 +717,45 @@ class UsersController extends AppController
 
      function transferGroupUser(){
         if ($this->request->is('post')) { 
-            $result = 0;
             $post = $this->request->getData();
             echo '$post<pre>';print_r($post);//exit;
             if($post['group_id'] and $post['user_id'] and $post['new_group_users_list']){
+                $this->loadModel('Payments');
+                $query = $this->Payments->find()->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']]);
+                $old_member_payments = $query->toArray();
+                echo '$old_member_payments<pre>';print_r($old_member_payments);exit;
+
                 $this->loadModel('MembersGroups');
                 $query = $this->MembersGroups->find()->where(['group_id' => $post['group_id'],'user_id'=>$post['new_group_users_list']]);
                 $member_group_count = $query->count();
-                echo '$member_group_count '.$member_group_count;
-
-                //update as old member
-                $query = $this->MembersGroups->query();
-                $result = $query->update()
-                    ->set(['new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
-                    ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
-                    ->execute();
-                echo 'mg update old <pre>';print_r($result); 
-                 //update as new member
 
                 //If group not assigned to new member then insert in members_groups
                 if($member_group_count < 1){
                     $group_record['user_id'] = $post['new_group_users_list'];
                     $group_record['group_id'] = $post['group_id'];
-                    $group_record['is_transfer_user'] = 1;
                     $group_record['new_user_id'] = $post['new_group_users_list'];
                     $group_record['old_user_id'] = $post['user_id'];
                     $group_records[] = $group_record;
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
                     $result = $this->MembersGroups->saveMany($MembersGroups);
-                    echo 'insert mg result <pre>';print_r($result);
                 }else{
+                    //update as new member
                     $query = $this->MembersGroups->query();
                     $result = $query->update()
-                        ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                        ->set(['new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
                         ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
                         ->execute();
-                        echo 'up new '.$result;exit;
                 }
+                //update as old member
+                $query = $this->MembersGroups->query();
+                $update = $query->update()
+                    ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                    ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
+                    ->execute();
+                echo 1;exit;
+            }else{
+                echo 0;exit;
             }
-            echo $result;exit;
         }
      }
 

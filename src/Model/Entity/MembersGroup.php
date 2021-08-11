@@ -35,5 +35,8 @@ class MembersGroup extends Entity
         'modified_date' => true,
         'member' => true,
         'group' => true,
+        'is_transfer_user' => true,
+        'old_user_id' => true,
+        'new_user_id' => true,
     ];
 }
