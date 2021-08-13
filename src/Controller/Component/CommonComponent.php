@@ -95,7 +95,8 @@ class CommonComponent extends Component {
                                     ->where(['group_id'=>$group_id,'Users.status' => 1]);
                             },    
                          ],
-        ])->toArray(); 
+        ])->where(['MembersGroups.is_transfer_user'=>0])
+        ->toArray(); 
         // echo 'group_members<pre>';print_r($group_members);exit;
         if(!empty($group_members)){ 
             $groupmembers['ticket_no'] = isset($group_members[0]['ticket_no']) ? $group_members[0]['ticket_no'] : '';
@@ -531,6 +532,10 @@ class CommonComponent extends Component {
                             'member'=>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
                             'u.customer_id','u.area_code',
                             'p.paid_sub_amt','p.paid_instalments',
+                            'is_transfer_member_status'=>"( CASE WHEN (mg.is_transfer_user = 1 ) THEN 
+                                        'Transfered'
+                                      ELSE  '-'
+                                END)",
                             'ug.branch_name',
                           ])
                 ->join([

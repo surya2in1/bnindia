@@ -89,6 +89,7 @@ tr:nth-child(even) {
              <th>Agent Code</th> 
              <th>Sub. Amt. Paid</th>
              <th>Inst. Paid</th>
+             <th>Is member transfered</th>
             </tr>
          </thead>
          <tbody>
@@ -103,6 +104,7 @@ tr:nth-child(even) {
                      <td><?= ($value->u['area_code']) ? $value->u['area_code'] : '-'; ?></td>
                      <td><?= ($value->p['paid_sub_amt']) ? $value->p['paid_sub_amt'] : '-'; ?></td>
                      <td><?= ($value->p['paid_instalments']) ? $value->p['paid_instalments'] : '-'; ?></td>
+                     <td><?= ($value->is_transfer_member_status) ? $value->is_transfer_member_status : '-'; ?></td>
                   </tr> 
                <?php }
             }else{ ?>

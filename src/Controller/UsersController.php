@@ -718,13 +718,8 @@ class UsersController extends AppController
      function transferGroupUser(){
         if ($this->request->is('post')) { 
             $post = $this->request->getData();
-            echo '$post<pre>';print_r($post);//exit;
+            // echo '$post<pre>';print_r($post);//exit;
             if($post['group_id'] and $post['user_id'] and $post['new_group_users_list']){
-                $this->loadModel('Payments');
-                $query = $this->Payments->find()->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']]);
-                $old_member_payments = $query->toArray();
-                echo '$old_member_payments<pre>';print_r($old_member_payments);exit;
-
                 $this->loadModel('MembersGroups');
                 $query = $this->MembersGroups->find()->where(['group_id' => $post['group_id'],'user_id'=>$post['new_group_users_list']]);
                 $member_group_count = $query->count();
