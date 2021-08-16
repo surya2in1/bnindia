@@ -741,7 +741,7 @@ class CommonComponent extends Component {
                     'alias' => 'a', 
                     'conditions' =>'pv.auction_id = a.id',
                 ]) 
-              ->where(['g.created_by'=>$user_id])   
+              ->where(['g.created_by'=>$user_id,'g.id'=>$post['group_id']])   
               ->where(['pv.date >='=> $post['start'],'pv.date <='=> $post['end']]) 
               ->order(['pv.group_id' => 'ASC'])->toArray();  
           // echo '$pv <pre>';print_r($payment_vouchers);exit;    
@@ -814,6 +814,38 @@ class CommonComponent extends Component {
                 ->group('u.id')->toArray();
                 // echo 'users<pre>';print_r($users);exit;
         return $users;
+      }
+
+      function getTransferedSubscriberDetails($post,$user_id){
+        $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+        $query = $MembersGroupsTable->find();   
+        $transferedMembers = $query->select([ 
+            'g.group_code','mg.ticket_no'
+            ,'old_subscriber' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
+            'terminate_date' => "date_format(mg.created_date, '%m/%d/%Y')",
+            'g.gov_reg_no',
+            'new_subscriber' =>"CONCAT_WS(' ',IF(nu.first_name = '', NULL, nu.first_name),IF(nu.middle_name = '', NULL, nu.middle_name),IF(nu.last_name = '', NULL, nu.last_name))",
+            'address_new_member'=>'nu.address'
+                ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g', 
+                    'conditions' =>'g.id = mg.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u', 
+                    'conditions' =>'mg.user_id = u.id',
+                ]) 
+                 ->join([
+                    'table' => 'users',
+                    'alias' => 'nu', 
+                    'conditions' =>'mg.new_user_id = nu.id',
+                ]) 
+              ->where(['g.created_by'=>$user_id,'mg.is_transfer_user'=>1,'g.id'=>$post['group_id']])  
+              ->order(['mg.group_id' => 'ASC'])->toArray();  
+          // echo '$pv <pre>';print_r($transferedMembers);exit;    
+          return $transferedMembers; 
       }
 }
 ?>

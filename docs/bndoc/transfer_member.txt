@@ -1,0 +1,10 @@
+1. Show list of 3 primum due member group list
+
+2. Transfer subcriber to new member which has added to this group no instalments till
+
+3. Soft delete old member
+
+4. Add record in members_groups table with same ticket no and group no to old user 
+   and change status as 0
+
+5. Add payments till old user payments 

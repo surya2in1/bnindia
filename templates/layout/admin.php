@@ -222,6 +222,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('forman_commission_details.js') ?>
         <?php } ?>  
 
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'transferedSubscriberDetails') { ?> 
+            <?= $this->Html->script('transfered_subscriber_details.js') ?>
+        <?php } ?> 
+        
         <?php if($this->request->getParam('controller') == 'Dashboard' && $this->request->getParam('action') == 'index') { ?> 
             <?= $this->Html->script('dashboard.js') ?>
         <?php } ?>  

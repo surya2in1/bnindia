@@ -283,4 +283,39 @@ class ReportsController extends AppController
         $this->set('branch_name', $this->Auth->user('branch_name'));
         $this->set(compact('report','post_data'));
     }
+
+     function transferedSubscriberDetails()
+    { 
+        $this->viewBuilder()->setLayout('admin');  
+        $GroupsTable= TableRegistry::get('Groups');
+        $groups = $GroupsTable->find('list', [
+                                    'keyField' => 'id',
+                                    'valueField' => 'group_code'
+                                ])
+                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
+        $this->set(compact('groups')); 
+    } 
+
+    function transferedSubscriberDetailsPdf(){
+        $post_data=$this->request->getData();
+        $report = $this->Common->getTransferedSubscriberDetails($post_data,$this->Auth->user('id'));    
+        $this->viewBuilder()->enableAutoLayout(false);    
+        $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
+        $this->viewBuilder()->setLayout('admin');
+        $this->viewBuilder()->setOption(
+            'pdfConfig',
+            [
+                'orientation' => 'portrait',
+                'download' => true, // This can be omitted if "filename" is specified.
+               'filename' => 'transfered_subscriber_report' .'.pdf' //// This can be omitted if you want file name based on URL.
+            ]
+        );
+        $groupsTable= TableRegistry::get('Groups'); 
+        $groups_details = $groupsTable->find('all', [
+            'fields' => ['group_code'],
+        ])->where(['Groups.id'=>$post_data['group_id']])->first();
+        // echo 'groups_details<pre>';print_r($groups_details);exit;
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+        $this->set(compact('report','post_data','groups_details'));
+    }
 }
