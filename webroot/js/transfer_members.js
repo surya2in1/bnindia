@@ -199,7 +199,7 @@ function transfer_group_user(){
         text: "You won't be able to revert this!",
         type: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes, transfer it!',
         cancelButtonText: 'No, cancel!',
         reverseButtons: true
     }).then(function(result){ 

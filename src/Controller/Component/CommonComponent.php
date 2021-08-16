@@ -784,6 +784,12 @@ class CommonComponent extends Component {
                         [ 'fields' =>['user_id'],
                             'conditions' => ['group_id' => $group_id]]
                     );
+        $AuctionsTable = TableRegistry::get('Auctions');
+        $groupAuctionWinnerExclude = $AuctionsTable->find(
+                        'list',
+                        [ 'fields' =>['auction_winner_member'],
+                            'conditions' => ['group_id' => $group_id]]
+                    );
         $UsersTable= TableRegistry::get('u', ['table' => 'users']);
         $query = $UsersTable->find('all'); 
         $where_Conditions['OR'] = [
@@ -799,12 +805,12 @@ class CommonComponent extends Component {
                         'conditions' =>'mg.user_id = u.id',
                     ]) 
                     ->join([
-                    'table' => 'Roles', 
-                        'conditions' =>'Roles.id = u.role_id',
+                    'table' => 'roles', 
+                        'conditions' =>'roles.id = u.role_id',
                     ]) 
-                ->where(['u.id NOT IN '=>$exclude])
+                ->where(['u.id NOT IN '=>$exclude,'u.id NOT IN '=> $groupAuctionWinnerExclude])
                 ->where($where_Conditions)
-                ->where(['u.status ' => 1,'u.id NOT IN '=>$user_ids,'Roles.name' => Configure::read('ROLE_MEMBER')])
+                ->where(['u.status ' => 1,'u.id NOT IN '=>$user_ids,'roles.name' => Configure::read('ROLE_MEMBER')])
                 ->group('u.id')->toArray();
                 // echo 'users<pre>';print_r($users);exit;
         return $users;
