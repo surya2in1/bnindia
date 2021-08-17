@@ -72,8 +72,18 @@ class CommonComponent extends Component {
         return $selected_member_groups;
 	}
 
-  function getGroupMember($group_id){
+  function getGroupMember($group_id,$is_for_auction=0){
         $groupmembers =[];
+        $where[] =['MembersGroups.is_transfer_user'=>0];
+        if($is_for_auction==1){
+            $AuctionsTable = TableRegistry::get('Auctions');
+            $groupAuctionWinnerExclude = $AuctionsTable->find(
+                            'list',
+                            [ 'fields' =>['auction_winner_member'],
+                                'conditions' => ['group_id' => $group_id]]
+                        );
+            $where[] = ['MembersGroups.user_id NOT IN '=>$groupAuctionWinnerExclude];
+        }
         $group_members= TableRegistry::get('MembersGroups');
         $group_members = $group_members->find('all', [
             'contain' => [
@@ -95,7 +105,7 @@ class CommonComponent extends Component {
                                     ->where(['group_id'=>$group_id,'Users.status' => 1]);
                             },    
                          ],
-        ])->where(['MembersGroups.is_transfer_user'=>0])
+        ])->where($where)
         ->toArray(); 
         // echo 'group_members<pre>';print_r($group_members);exit;
         if(!empty($group_members)){ 

@@ -131,7 +131,7 @@ class AuctionsController extends AppController
         $group_id = isset($post['group_id']) && $post['group_id']>0  ? $post['group_id'] : 0;
         $selected_group_members = []; 
         if($group_id>0){ 
-            $selected_group_members = $this->Common->getGroupMember($group_id);
+            $selected_group_members = $this->Common->getGroupMember($group_id,1);
         }
         echo json_encode($selected_group_members);exit;
     }
