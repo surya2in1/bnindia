@@ -115,12 +115,19 @@ class PaymentsController extends AppController
           if($post['remark'] < 1){
             $post['is_installment_complete'] = 1;
           }
+          $mysql_version = $this->Payments->getMysqlVersion();
           //SELECT money_notes->'$."2000".val' as code4 FROM payments
-    
-          //=echo '<pre>';print_r($post);exit;
+          
+          if($mysql_version == '10.4.13-MariaDB' && isset($post['money_notes']) && !empty($post['money_notes']) ){
+            $post['money_notes'] = json_encode($post['money_notes']);
+          }  
+          // echo '<pre>';print_r($post);exit;
           $post['created_by'] = $this->Auth->user('id');
           $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
-          if ($this->Payments->save($payment)) {
+          $result = $this->Payments->save($payment);
+          // echo '<pre>';print_r($result);exit;
+
+          if ($result) {
                echo 1;exit;
           }else{
               $validationErrors = $payment->getErrors(); 

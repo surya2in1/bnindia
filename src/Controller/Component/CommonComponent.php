@@ -857,5 +857,13 @@ class CommonComponent extends Component {
           // echo '$pv <pre>';print_r($transferedMembers);exit;    
           return $transferedMembers; 
       }
+
+      function getAmountByReceivedBy($received_by,$user_id){
+        $conn = ConnectionManager::get('default');
+        $sQuery = "call CalculateMoneyNotes($received_by,$user_id);";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        return $aResultTotal; 
+      }
 }
 ?>

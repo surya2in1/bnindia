@@ -33,10 +33,28 @@ use Cake\I18n\Date;
  */
 class DashboardController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize(); 
+        $this->loadComponent('Common');
+    }
+
     public function index()
     {
     	$this->viewBuilder()->setLayout('admin'); 
         $this->set('branch_name', $this->Auth->user('branch_name'));
+
+        //get total cash
+        $total_cash = $this->Common->getAmountByReceivedBy(1,$this->Auth->user('id'));  
+        $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$this->Auth->user('id')); 
+        $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$this->Auth->user('id'));  
+        $total_amount = $this->Common->getAmountByReceivedBy(0,$this->Auth->user('id'));  
+        // echo '$total_cash <pre>';print_r($total_cash);
+        // echo '$total_cheque_amount <pre>';print_r($total_cheque_amount);
+        // echo '$total_dd_amount <pre>';print_r($total_dd_amount);
+        // echo '$total_amount <pre>';print_r($total_amount);
+        // exit;    
+        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
             $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));

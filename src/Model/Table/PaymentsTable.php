@@ -387,6 +387,14 @@ class PaymentsTable extends Table
         return $output;
     }
 
+    function getMysqlVersion(){
+        $conn = ConnectionManager::get('default');
+        $stmt = $conn->execute("Select version() v;");
+        $result = $stmt ->fetch('assoc');
+        return isset($result['v']) ? $result['v'] : '';
+        // echo '$result<pre>';print_r($result);exit;
+    }
+
     //get pending payments 
      public function getDuePayments($group_id=0,$member_id=0) {
         $aColumns = [ 
