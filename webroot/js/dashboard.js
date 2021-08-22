@@ -151,7 +151,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 		//main function to initiate the module
 		init: function() {
 			initTable1();
-			datatable();
+			// datatable();
 		},
 
 	};

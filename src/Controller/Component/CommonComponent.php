@@ -865,5 +865,19 @@ class CommonComponent extends Component {
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         return $aResultTotal; 
       }
+
+      function getAllMonthsCurrentYearPayments($user_id){
+        
+        $PaymentsTable = TableRegistry::get('Payments');
+        $query = $PaymentsTable->find();   
+        $data = $query->select([ 
+                    'month' =>"DATE_FORMAT(due_date, '%M')",
+                    'total_amount' => "SUM(total_amount)"
+                ]) 
+              ->where(['YEAR(due_date)'=> date("Y"),'created_by'=>$user_id])  
+              ->group(["DATE_FORMAT(due_date, '%M')"])->toArray();  
+          echo '$ddd <pre>';print_r($data);exit;    
+          return $transferedMembers; 
+      }
 }
 ?>

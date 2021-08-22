@@ -49,6 +49,8 @@ class DashboardController extends AppController
         $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$this->Auth->user('id')); 
         $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$this->Auth->user('id'));  
         $total_amount = $this->Common->getAmountByReceivedBy(0,$this->Auth->user('id'));  
+
+        $yearly_stats= $this->Common->getAllMonthsCurrentYearPayments($this->Auth->user('id'));  
         // echo '$total_cash <pre>';print_r($total_cash);
         // echo '$total_cheque_amount <pre>';print_r($total_cheque_amount);
         // echo '$total_dd_amount <pre>';print_r($total_dd_amount);

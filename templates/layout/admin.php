@@ -150,6 +150,9 @@ $cakeDescription = 'Bnindia';
         <!--end::Page Vendors -->
 
         <!--begin::Page Scripts(used by this page) -->
+        <?php if($this->request->getParam('controller') == 'Dashboard' && $this->request->getParam('action') == 'index') { ?> 
+            <?= $this->Html->script('dashboard.js') ?>
+        <?php } ?>  
         <?= $this->Html->script('assets/js/pages/dashboard.js') ?>
 
         <?= $this->Html->script('assets/js/pages/crud/forms/widgets/bootstrap-datepicker.js') ?>
@@ -225,10 +228,6 @@ $cakeDescription = 'Bnindia';
         <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'transferedSubscriberDetails') { ?> 
             <?= $this->Html->script('transfered_subscriber_details.js') ?>
         <?php } ?> 
-        
-        <?php if($this->request->getParam('controller') == 'Dashboard' && $this->request->getParam('action') == 'index') { ?> 
-            <?= $this->Html->script('dashboard.js') ?>
-        <?php } ?>  
 
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
