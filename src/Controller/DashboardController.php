@@ -56,7 +56,7 @@ class DashboardController extends AppController
         // echo '$total_dd_amount <pre>';print_r($total_dd_amount);
         // echo '$total_amount <pre>';print_r($total_amount);
         // exit;    
-        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount'));
+        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','yearly_stats'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
             $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));

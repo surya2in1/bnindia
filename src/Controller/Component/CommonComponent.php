@@ -867,17 +867,46 @@ class CommonComponent extends Component {
       }
 
       function getAllMonthsCurrentYearPayments($user_id){
+
+        $MonthsTable = TableRegistry::get('m', ['table' => 'months']);
+        $query = $MonthsTable->find();   
         
-        $PaymentsTable = TableRegistry::get('Payments');
-        $query = $PaymentsTable->find();   
+        $conditions = array(
+               'AND' => array( 
+                   array(
+                     'OR'=>array(
+                        ['YEAR(p.due_date)'=> date("Y")],
+                        ['YEAR(p.due_date) is '=> NULL]
+                     )
+                   ),
+                   array(
+                     'OR'=>array(
+                        ['p.created_by'=>$user_id],
+                        ['p.created_by is '=> NULL]
+                     )
+                  ),
+               )
+            );
+
         $data = $query->select([ 
-                    'month' =>"DATE_FORMAT(due_date, '%M')",
-                    'total_amount' => "SUM(total_amount)"
+                    //'m.month',
+                   // 'month' =>"DATE_FORMAT(due_date, '%M')",
+                    'total_amount' => "IFNULL(SUM(total_amount), 0 )"
                 ]) 
-              ->where(['YEAR(due_date)'=> date("Y"),'created_by'=>$user_id])  
-              ->group(["DATE_FORMAT(due_date, '%M')"])->toArray();  
-          echo '$ddd <pre>';print_r($data);exit;    
-          return $transferedMembers; 
+              ->join([
+                    'table' => 'payments',
+                    'alias' => 'p', 
+                    'type' => 'LEFT',
+                    'conditions' =>"m.month=DATE_FORMAT(p.due_date, '%M')",
+                ])  
+              ->where($conditions)  
+              ->group(["m.month"])
+              ->order(['m.id' => 'ASC'])->toArray();   
+          $result = json_encode(array_column($data, 'total_amount'));
+
+          // echo '$result <pre>';print_r(  $result);exit;   
+
+          return $result; 
       }
 }
 ?>

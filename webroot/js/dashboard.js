@@ -188,9 +188,12 @@ var KTDashboard = function() {
                     pointHoverBorderColor: Chart.helpers.color('#ffffff').alpha(0.1).rgbString(),
 
                     //fill: 'start',
+                    // data:$('#yearly_stats').val()
+                    
                     data: [
                         10, 14, 12, 16, 9, 11, 13, 9, 13, 15
                     ]
+                    // ["0.00","0.00","0.00","0.00","0.00","0.00","0.00","21900.00","10000.00","0.00","0.00","0.00"]
                 }]
             },
             options: {

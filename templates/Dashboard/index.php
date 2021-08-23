@@ -15,7 +15,7 @@
 </div>
 
 <!-- end:: Content Head -->
-
+<input type="hidden" name="yearly_stats" id="yearly_stats" value="<?=$yearly_stats;?>">
 <!-- begin:: Content -->
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
@@ -75,7 +75,7 @@
                     <div class="kt-widget17">
                         <div class="kt-widget17__visual kt-widget17__visual--chart kt-portlet-fit--top kt-portlet-fit--sides" style="background-color: #fd397a">
                             <div class="kt-widget17__chart" style="height:320px;">
-                                <canvas id="kt_chart_activities"></canvas>
+                                <canvas id="kt_chart_activitiess"></canvas>
                             </div>
                         </div>
                         <div class="kt-widget17__stats">

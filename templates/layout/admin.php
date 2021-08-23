@@ -170,7 +170,7 @@ $cakeDescription = 'Bnindia';
         <!-- Popup js -->
         
 
-        <?php if($this->request->getParam('controller') == 'Users'  && $this->request->getParam('action') == 'members') { ?> 
+        <?php if($this->request->getParam('controller') == 'Users'  && ($this->request->getParam('action') == 'members' || $this->request->getParam('action') == 'memberform')) { ?> 
             <?= $this->Html->script('members.js') ?>
         <?php } ?>
 
