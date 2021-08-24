@@ -193,6 +193,18 @@
   color:red;
   font-size: 80%;
 }
+
+.dashboard-div{
+  background: #A3EBE5;
+  height: 345px !important;
+}
+.d-height{
+  margin-top: -11px !important;
+}
+
+.h-auto{
+  height: auto;
+}
 @media print {
     .no-print, #kt_header_mobile{
         display: none;

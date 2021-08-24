@@ -443,8 +443,10 @@ class CommonComponent extends Component {
       $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
       $query = $PaymentsTable->find();     
       $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
-          ->where(['p.user_id'=>$user_id,'p.is_installment_complete'=>1]) 
-          ->first();  
+          ->where(['p.user_id'=>$user_id,'p.is_installment_complete'=>1]) ;
+          // ->first();  
+           echo '$total_amount <pre>';print_r($payments);
+        exit;
       return $payments->total_fully_paid_interest;    
   }
 
@@ -907,6 +909,15 @@ class CommonComponent extends Component {
           // echo '$result <pre>';print_r(  $result);exit;   
 
           return $result; 
+      }
+
+      function getAllSuccessfullTransaction($user_id){
+          $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+          $query = $PaymentsTable->find();     
+          $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
+              ->where(['p.created_by'=>$user_id,'p.is_installment_complete'=>1]) 
+              ->first();  
+          return $payments->total_fully_paid_interest;    
       }
 }
 ?>
