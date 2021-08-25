@@ -195,8 +195,8 @@
 }
 
 .dashboard-div{
-  background: #A3EBE5;
-  height: 345px !important;
+  background: #5D78FF;
+  height: auto !important;
 }
 .d-height{
   margin-top: -11px !important;
@@ -204,6 +204,9 @@
 
 .h-auto{
   height: auto;
+}
+.money-div{
+  margin: -0.3rem auto 0 auto !important;
 }
 @media print {
     .no-print, #kt_header_mobile{

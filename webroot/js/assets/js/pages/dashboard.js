@@ -870,6 +870,7 @@ var KTDashboard = function() {
     // Bandwidth Charts 1.
     // Based on Chartjs plugin - http://www.chartjs.org/
     var bandwidthChart1 = function() { 
+        console.log($('#yearly_stats').val());
         if ($('#kt_chart_bandwidth1').length == 0) {
             return;
         }
@@ -895,7 +896,7 @@ var KTDashboard = function() {
                     pointHoverBorderColor: Chart.helpers.color('#000000').alpha(0.1).rgbString(),
 
                     //fill: 'start',
-                    data: ["0.00","0.00","0.00","0.00","0.00","0.00","0.00","21900.00","10000.00","0.00","0.00","0.00"]
+                    data: $('#yearly_stats').val()
                 }]
             },
             options: {

@@ -18,18 +18,120 @@
 <input type="hidden" name="yearly_stats" id="yearly_stats" value="<?=$yearly_stats;?>">
 <!-- begin:: Content -->
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet">
+        <div class="kt-portlet__body  kt-portlet__body--fit">
+            <div class="row row-no-padding row-col-separator-lg">
+                <div class="col-md-12 col-lg-6 col-xl-3">
+
+                    <!--begin::Total Profit-->
+                    <div class="kt-widget24">
+                        <div class="kt-widget24__details">
+                            <div class="kt-widget24__info">
+                                <h4 class="kt-widget24__title">
+                                    Total Groups
+                                </h4>
+                                <span class="kt-widget24__desc">
+                                    New groups
+                                </span>
+                            </div>
+                            <span class="kt-widget24__stats kt-font-brand">
+                                <?= ($total_groups>0) ? $total_groups : 0;?>
+                            </span>
+                        </div>
+                        <div class="progress progress--sm">
+                            <div class="progress-bar kt-bg-brand" role="progressbar" style="width: 100%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!--end::Total Profit-->
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+
+                    <!--begin::New Feedbacks-->
+                    <div class="kt-widget24">
+                        <div class="kt-widget24__details">
+                            <div class="kt-widget24__info">
+                                <h4 class="kt-widget24__title">
+                                    New Members
+                                </h4>
+                                <span class="kt-widget24__desc">
+                                    Joined new members
+                                </span>
+                            </div>
+                            <span class="kt-widget24__stats kt-font-warning">
+                                <?= ($total_members>0) ? $total_members : 0;?>
+                            </span>
+                        </div>
+                        <div class="progress progress--sm">
+                            <div class="progress-bar kt-bg-warning" role="progressbar" style="width: 100%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!--end::New Feedbacks-->
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+
+                    <!--begin::New Orders-->
+                    <div class="kt-widget24">
+                        <div class="kt-widget24__details">
+                            <div class="kt-widget24__info">
+                                <h4 class="kt-widget24__title">
+                                    New Auctions
+                                </h4>
+                                <span class="kt-widget24__desc">
+                                    All auctions
+                                </span>
+                            </div>
+                            <span class="kt-widget24__stats kt-font-danger">
+                                <?= ($total_auctions>0) ? $total_auctions : 0;?>
+                            </span>
+                        </div>
+                        <div class="progress progress--sm">
+                            <div class="progress-bar kt-bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!--end::New Orders-->
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+
+                    <!--begin::New Users-->
+                    <div class="kt-widget24">
+                        <div class="kt-widget24__details">
+                            <div class="kt-widget24__info">
+                                <h4 class="kt-widget24__title">
+                                    New Payments
+                                </h4>
+                                <span class="kt-widget24__desc">
+                                    All transactions
+                                </span>
+                            </div>
+                            <span class="kt-widget24__stats kt-font-success">
+                                <?= ($total_payments>0) ? $total_payments : 0;?>
+                            </span>
+                        </div>
+                        <div class="progress progress--sm">
+                            <div class="progress-bar kt-bg-success" role="progressbar" style="width: 100%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!--end::New Users-->
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12 col-xl-12 order-lg-1 order-xl-1">
             <div class="kt-portlet kt-portlet--fit kt-portlet--head-lg kt-portlet--head-overlay kt-portlet--skin-solid kt-portlet--height-fluid dashboard-div">
                  <div class="kt-portlet__head kt-portlet__head--noborder kt-portlet__space-x">
                     <div class="kt-portlet__head-label">
-                        <h3 class="kt-portlet__head-title"></h3>
+                        <h3 class="kt-portlet__head-title">Money Details</h3>
                     </div>
                 </div>
                 <div class="kt-portlet__body kt-portlet__body--fit d-height">
                     <div class="kt-widget17">
                         
-                        <div class="kt-widget17__stats">
+                        <div class="kt-widget17__stats money-div">
                             <div class="kt-widget17__items">
                                 <div class="kt-widget17__item">
                                     <span class="kt-widget17__icon">
@@ -128,7 +230,7 @@
                     <i class="kt-font-brand flaticon-users-1"></i>
                 </span>
                 <h3 class="kt-portlet__head-title"> 
-                    Branch: <?= $branch_name;?>
+                    All groups in branch: <?= $branch_name;?>
                 </h3>
             </div>
         </div>

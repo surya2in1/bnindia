@@ -53,7 +53,12 @@ class DashboardController extends AppController
         $yearly_stats= $this->Common->getAllMonthsCurrentYearPayments($this->Auth->user('id'));  
         
         $succefull_transactions= $this->Common->getAllSuccessfullTransaction($this->Auth->user('id')); 
-        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','yearly_stats','succefull_transactions'));
+        $total_groups= $this->Common->getGroupCount($this->Auth->user('id')); 
+        $total_members= $this->Common->getMemberCount($this->Auth->user('id')); 
+        $total_auctions= $this->Common->getAuctionsCount($this->Auth->user('id')); 
+        $total_payments= $this->Common->getPaymentsCount($this->Auth->user('id')); 
+
+        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','yearly_stats','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
             $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));

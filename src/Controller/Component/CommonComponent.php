@@ -919,5 +919,46 @@ class CommonComponent extends Component {
               ->first();  
           return $payments->total_fully_paid_interest;    
       }
+
+      function getGroupCount($user_id){
+         $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
+          $query = $GroupsTable->find();     
+          $groups = $query->select(['total_groups'=>"count(g.id)"])
+              ->where(['g.created_by'=>$user_id]) 
+              ->first();  
+          return $groups->total_groups;
+      }
+
+       function getMemberCount($user_id){
+         $UsersTable = TableRegistry::get('u', ['table' => 'users']);
+          $query = $UsersTable->find();     
+          $members = $query->select(['total_members'=>"count(u.id)"])
+                 ->join([
+                    'table' => 'roles',
+                    'alias' => 'r', 
+                    'type' => 'LEFT',
+                    'conditions' =>"r.id=u.role_id",
+                ]) 
+              ->where(['u.created_by'=>$user_id,'r.name'=>Configure::read('ROLE_MEMBER')]) 
+              ->first();  
+          return $members->total_members;
+      }
+
+       function getAuctionsCount($user_id){
+          $AuctionsTable = TableRegistry::get('a', ['table' => 'auctions']);
+          $query = $AuctionsTable->find();     
+          $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
+              ->where(['a.created_by'=>$user_id]) 
+              ->first();  
+          return $auctions->total_auctions;
+      }
+      function getPaymentsCount($user_id){
+          $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+          $query = $PaymentsTable->find();     
+          $payments = $query->select(['total_payments'=>"count(p.id)"]) 
+              ->where(['p.created_by'=>$user_id]) 
+              ->first();  
+          return $payments->total_payments;
+      }
 }
 ?>
