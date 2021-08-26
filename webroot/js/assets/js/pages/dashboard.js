@@ -869,8 +869,7 @@ var KTDashboard = function() {
 
     // Bandwidth Charts 1.
     // Based on Chartjs plugin - http://www.chartjs.org/
-    var bandwidthChart1 = function() { 
-        console.log($('#yearly_stats').val());
+    var bandwidthChart1 = function() {  
         if ($('#kt_chart_bandwidth1').length == 0) {
             return;
         }
@@ -886,7 +885,7 @@ var KTDashboard = function() {
             data: {
                 labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October"],
                 datasets: [{
-                    label: "Bandwidth Stats",
+                    label: "Total Amount",
                     backgroundColor: gradient,
                     borderColor: KTApp.getStateColor('success'),
 
@@ -896,7 +895,8 @@ var KTDashboard = function() {
                     pointHoverBorderColor: Chart.helpers.color('#000000').alpha(0.1).rgbString(),
 
                     //fill: 'start',
-                    data: $('#yearly_stats').val()
+                    data:[]
+                    // data: $('#yearly_stats').val()
                 }]
             },
             options: {
@@ -958,8 +958,18 @@ var KTDashboard = function() {
         };
 
         var chart = new Chart(ctx, config);
+         ajax_chart(chart, $('#router_url').val()+'dashboard/getpaymentdata');
     }
+    // function to update our chart
+    function ajax_chart(chart, url, data) {
+        var data = data || {};
 
+        $.getJSON(url, data).done(function(response) {
+            // chart.data.labels = response.labels;
+            chart.data.datasets[0].data = response; // or you can iterate for multiple datasets
+            chart.update(); // finally update our chart
+        });
+    }
     // Bandwidth Charts 2.
     // Based on Chartjs plugin - http://www.chartjs.org/
     var bandwidthChart2 = function() {

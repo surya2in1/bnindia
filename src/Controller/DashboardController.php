@@ -50,20 +50,23 @@ class DashboardController extends AppController
         $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$this->Auth->user('id'));  
         $total_amount = $this->Common->getAmountByReceivedBy(0,$this->Auth->user('id'));  
 
-        $yearly_stats= $this->Common->getAllMonthsCurrentYearPayments($this->Auth->user('id'));  
-        
         $succefull_transactions= $this->Common->getAllSuccessfullTransaction($this->Auth->user('id')); 
         $total_groups= $this->Common->getGroupCount($this->Auth->user('id')); 
         $total_members= $this->Common->getMemberCount($this->Auth->user('id')); 
         $total_auctions= $this->Common->getAuctionsCount($this->Auth->user('id')); 
         $total_payments= $this->Common->getPaymentsCount($this->Auth->user('id')); 
 
-        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','yearly_stats','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
+        $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
             $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));
             // echo '$output <pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }
+    }
+
+    function getpaymentdata(){
+      $yearly_stats= $this->Common->getAllMonthsCurrentYearPayments($this->Auth->user('id')); 
+      echo $yearly_stats;exit;
     }
 }

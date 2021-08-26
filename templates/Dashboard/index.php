@@ -1,3 +1,6 @@
+<?php
+use Cake\Routing\Router;
+?>
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
@@ -15,7 +18,7 @@
 </div>
 
 <!-- end:: Content Head -->
-<input type="hidden" name="yearly_stats" id="yearly_stats" value="<?=$yearly_stats;?>">
+<input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
 <!-- begin:: Content -->
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="kt-portlet">
@@ -199,7 +202,7 @@
                 <div class="kt-portlet__head kt-portlet__space-x">
                     <div class="kt-portlet__head-label">
                         <h3 class="kt-portlet__head-title">
-                            Monthly Transactions
+                            Monthly Transactions Of <?= date("Y"); ?>
                         </h3>
                     </div>
                     <div class="kt-portlet__head-toolbar">
