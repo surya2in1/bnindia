@@ -939,7 +939,7 @@ class CommonComponent extends Component {
                     'type' => 'LEFT',
                     'conditions' =>"r.id=u.role_id",
                 ]) 
-              ->where(['u.created_by'=>$user_id,'r.name'=>Configure::read('ROLE_MEMBER')]) 
+              ->where(['u.created_by'=>$user_id,'u.status'=> 1,'r.name'=>Configure::read('ROLE_MEMBER')]) 
               ->first();  
           return $members->total_members;
       }

@@ -21,7 +21,7 @@
   position: relative;
   transition: all 0.3s;
   vertical-align: middle;
-  
+  /*
   &:hover {
     background-color: darken(#f15d22, 10%);
   }
@@ -50,7 +50,7 @@
       &::before {
         right: 75%;
       }
-    }
+    }*/
   }
 }
 
