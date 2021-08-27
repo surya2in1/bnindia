@@ -73,7 +73,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">First Name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true">
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true" onchange="get_agent_code()">
                                     </div>
                                 </div>
                                  <div class="form-group row">
@@ -216,7 +216,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Agent Code</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" type="number" value="<?= $user->area_code; ?>" name="area_code">
+                                        <input class="form-control" type="text" value="<?= $user->area_code; ?>" name="area_code" id="area_code" readonly>
                                     </div>
                                 </div>
                                 <div class="row">

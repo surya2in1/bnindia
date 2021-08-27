@@ -769,5 +769,11 @@ class UsersController extends AppController
 
         echo json_encode($output);exit;
      }
+
+     function getAgentCode($member_name){
+        $user_data = $this->Auth->user();
+        $agent_code = $this->Users->get_agent_code($user_data['id'],$member_name,$user_data['branch_name']);
+        echo $agent_code;exit;
+     }
 }
 

@@ -226,12 +226,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                other_document: { extension: "png|jpe?g|pdf" },
 	                date_of_birth:{
 	                	minAge: 18
-	                },
-	                area_code:{
-                        number: true,
-                        maxlength: 5,
-                        minlength: 2
-                    },
+	                }, 
                     pin_code:{
                         required: true,
                         number: true,
@@ -403,3 +398,20 @@ function deleteuser(id){
         }
     });
 } 
+
+function get_agent_code(){
+	var first_name = $('#first_name').val();
+	$('#area_code').val('');
+	if(first_name.trim()){
+		$.ajax({
+			   "url": "Users/get_agent_code/"+first_name,
+	            "type": "GET",
+	            beforeSend: function (xhr) { // Add this line
+                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+                },
+                success: function(response, status, xhr, $form) { 
+                	$('#area_code').val(response);
+                }
+			}); 
+	}
+}

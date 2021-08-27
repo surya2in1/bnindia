@@ -9,7 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\Configure;
-
+use Cake\ORM\TableRegistry;
 /**
  * Users Model
  *
@@ -448,4 +448,33 @@ class UsersTable extends Table
         );
         return $output;
     }
+
+    function get_agent_code($current_user_id,$member_name,$branch_name){ 
+        $RolesTable = TableRegistry::get('Roles');
+        $role = $RolesTable->find('all')->where(['name'=>Configure::read('ROLE_MEMBER')])->first();
+        $member_role_id = $role->id; 
+        $conn = ConnectionManager::get('default');
+        $stmt = $conn->execute("call CreateCustomerId($member_role_id,$current_user_id,@p3)");
+        $stmt = $conn->execute("SELECT @p3 AS customer_id");
+        
+        $result = $stmt ->fetchAll('assoc');
+        // echo '<pre>';print_r($result); 
+        $customer_id =isset($result[0]['customer_id']) && ($result[0]['customer_id']>0) ? $result[0]['customer_id'] : 0;
+        $first_later_member = ucfirst(substr($member_name, 0, 1));
+        $first_later_branch = ucfirst(substr($branch_name, 0, 1));
+        $customer_id_length = strlen((string)$customer_id);
+        if($customer_id_length < 4){
+             $cust_no ='000';
+            for($i=1;$i<$customer_id_length;$i++){
+                $cust_no =substr($cust_no, 1);
+                
+            }
+            $customer_no  = $cust_no.$customer_id;  
+        }else{
+            $customer_no  =$customer_id;
+        }
+        // echo $member_role_id.' - '.$current_user_id.' - '.$member_name.' - '.$branch_name."<br/>";
+        return $first_later_branch.$first_later_member.$customer_no;
+    }
+
 }
