@@ -192,7 +192,7 @@ class UsersTable extends Table
             ->allowEmptyFile('profile_picture');
 
         $validator
-            ->integer('area_code')
+            ->scalar('area_code')
             ->allowEmptyString('area_code');
 
         $validator
@@ -449,17 +449,21 @@ class UsersTable extends Table
         return $output;
     }
 
-    function get_agent_code($current_user_id,$member_name,$branch_name){ 
-        $RolesTable = TableRegistry::get('Roles');
-        $role = $RolesTable->find('all')->where(['name'=>Configure::read('ROLE_MEMBER')])->first();
-        $member_role_id = $role->id; 
-        $conn = ConnectionManager::get('default');
-        $stmt = $conn->execute("call CreateCustomerId($member_role_id,$current_user_id,@p3)");
-        $stmt = $conn->execute("SELECT @p3 AS customer_id");
-        
-        $result = $stmt ->fetchAll('assoc');
-        // echo '<pre>';print_r($result); 
-        $customer_id =isset($result[0]['customer_id']) && ($result[0]['customer_id']>0) ? $result[0]['customer_id'] : 0;
+    function get_agent_code($current_user_id,$member_name,$branch_name,$existing_member_id=0){ 
+        if($existing_member_id<1){
+            $RolesTable = TableRegistry::get('Roles');
+            $role = $RolesTable->find('all')->where(['name'=>Configure::read('ROLE_MEMBER')])->first();
+            $member_role_id = $role->id; 
+            $conn = ConnectionManager::get('default');
+            $stmt = $conn->execute("call CreateCustomerId($member_role_id,$current_user_id,@p3)");
+            $stmt = $conn->execute("SELECT @p3 AS customer_id");
+            
+            $result = $stmt ->fetchAll('assoc');
+            // echo '<pre>';print_r($result); 
+            $customer_id =isset($result[0]['customer_id']) && ($result[0]['customer_id']>0) ? $result[0]['customer_id'] : 0;
+        }else{
+            $customer_id = $existing_member_id;
+        }
         $first_later_member = ucfirst(substr($member_name, 0, 1));
         $first_later_branch = ucfirst(substr($branch_name, 0, 1));
         $customer_id_length = strlen((string)$customer_id);

@@ -770,9 +770,9 @@ class UsersController extends AppController
         echo json_encode($output);exit;
      }
 
-     function getAgentCode($member_name){
+     function getAgentCode($member_name,$existing_member_id){ 
         $user_data = $this->Auth->user();
-        $agent_code = $this->Users->get_agent_code($user_data['id'],$member_name,$user_data['branch_name']);
+        $agent_code = $this->Users->get_agent_code($user_data['id'],$member_name,$user_data['branch_name'],$existing_member_id);
         echo $agent_code;exit;
      }
 }

@@ -17,6 +17,8 @@ a<?php use Cake\Routing\Router; ?>
 </div>
 <!-- end:: Content Head -->
 <!-- begin:: Content -->
+ <input type="hidden" name="router_url" id="router_url" value="<?php echo Router::url('/', true); ?>" />
+
 <?php $userid = isset($user->id) && ($user->id > 0) ? $user->id : 0;?>
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
@@ -73,7 +75,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">First Name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true" onchange="get_agent_code()">
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true" onchange="get_agent_code(<?= $userid; ?>)">
                                     </div>
                                 </div>
                                  <div class="form-group row">

@@ -140,6 +140,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
            }, "This field is required.");
            
          $.validator.addMethod("minAge", function(value, element, min) {
+         	if(!value){
+         		return true;
+         	}
 		    var today = new Date();
 		    var birthDate = new Date(value);
 		    var age = today.getFullYear() - birthDate.getFullYear();
@@ -225,6 +228,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                photo_proof: { extension: "png|jpe?g|pdf" },
 	                other_document: { extension: "png|jpe?g|pdf" },
 	                date_of_birth:{
+	                	required: false,
 	                	minAge: 18
 	                }, 
                     pin_code:{
@@ -399,12 +403,12 @@ function deleteuser(id){
     });
 } 
 
-function get_agent_code(){
+function get_agent_code(user_id){
 	var first_name = $('#first_name').val();
 	$('#area_code').val('');
 	if(first_name.trim()){
 		$.ajax({
-			   "url": "Users/get_agent_code/"+first_name,
+			   "url": $('#router_url').val()+"Users/getAgentCode/"+first_name+"/"+user_id,
 	            "type": "GET",
 	            beforeSend: function (xhr) { // Add this line
                     xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
