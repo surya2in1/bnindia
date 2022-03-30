@@ -30,19 +30,7 @@ Add member
 1. Replace Area code to Agent code  
 2. Move to last
 3. Pin Code manditory
-----------------------------------------------------------------
-Remaining
 
-************************Later*********************************
-Move resaon from payment voucher to other payment
-
-Add member
-1. Replace Area code to Agent code db field
-
-Print receipt:
-Show amount in word
-add reg no
-**********************************************************
 
 Dashboard:
 Add Daily repots:
@@ -50,6 +38,22 @@ Add Daily repots:
 2. How many cheque : Cheque no and cheque
 3. DD no, amount
 Total amount
+----------------------------------------------------------------
+Remaining
+
+************************Later*********************************
+Move resaon from payment voucher to other payment
+
+Add member=> new change
+1. Add crud for agents 
+2. Replace Area code to Agent code in member form and db field
+3. Add dropdown for agents
+
+Print receipt:
+Show amount in word
+add reg no
+**********************************************************
+
 
 Group:
 2. Changes on Calulation of late fee as per group type collection date overall
