@@ -86,6 +86,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/add-group-members', ['controller' => 'Groups', 'action' => 'addGroupMembers']);
 
     $builder->connect('/member-form/*', ['controller' => 'Users', 'action' => 'memberform']);
+
+     $builder->connect('/agent-form/*', ['controller' => 'Agents', 'action' => 'agentform']);
     
     $builder->connect('/error404', ['controller' => 'Error', 'action' => 'error404']);
     

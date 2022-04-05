@@ -1,0 +1,81 @@
+Remaining
+
+************************Later*********************************
+Move resaon from payment voucher to other payment
+
+In Add member menu add agent crud => new change
+1. Add crud for agents 
+2. Replace Area code to Agent code in member form and db field
+3. Add dropdown for agents
+
+Print receipt:
+Show amount in word
+add reg no
+**********************************************************
+
+
+Group:
+2. Changes on Calulation of late fee as per group type collection date overall
+
+Role Access:
+1. Super Admin List of moudules of All Branch 
+2. Admin: only self branch All tabs
+3. Users:
+Add receipt
+Add member
+4.Customer:
+Profile
+List,View
+
+Reports
+
+prized and non prized for payments
+-----------------------------------------------------------------------------------------------------------
+ISSUES:
+in group form date datepicker
+Group auction date use in auction form as auction date after change group /edit
+In payment form money_notes required validation
+
+Check wherever used CreateDateFromDay function in code
+Save due date after save auction 
+Change in fron end for group form for collection date and auction except monthly type
+group form validation for acuction and collection and submit
+
+
+
+auction weekly    date for eaxting auction dte
+Check auction edit (If any of one payment done then not allow to edit auction ),edit for only superadmin
+
+redirect auction edit if not superadmin in index page add  action
+
+=========================================================================================
+
+
+Below Changes are done for Calulation of late fee as per group type collection date and auction date overall
+1. Group: Added auction date field as per selected group type.
+
+    Group Type					Auction Date 
+    -----------------------------------------------
+ 	 Monthly               1-31 => single dropdown	
+ 	 Forthnight			 1-15 & 16-31 => 2 dropdown	
+ 	 Weekly				        Monday - Sunday	
+	 Daily						Daily        
+
+2. Group: Added Collection date field as per selected group type.
+
+    Group Type					Collection Date 
+    -----------------------------------------------
+ 	 Monthly               1-31 => single dropdown	
+ 	 Forthnight			 1-15 & 16-31 => 2 dropdown	
+ 	 Weekly				        Monday - Sunday	
+	 Daily						Daily        	 
+
+3. Group: Added validations for auction date and collection date as per group type
+
+4. In Add Auction form, selected auction date as per group selection and last auction date
+	 
+5. In payment form, changes affect on payment due date
+
+6. Allow Auction date change from auction form to superadmin only
+
+7. Displayed auction edit to superadmin

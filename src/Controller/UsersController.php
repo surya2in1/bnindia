@@ -484,10 +484,10 @@ class UsersController extends AppController
             // echo $id.'<pre>';print_r($post);exit;
 
             //convert dates to db field format
-            if(strtotime($post['date_of_birth']) > 0){
+            if(strtotime($post['date_of_birth'])){
                 $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
             }
-            if(strtotime($post['nominee_dob']) > 0){
+            if(strtotime($post['nominee_dob'])){
                 $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
             }
             //upload docs
