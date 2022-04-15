@@ -229,6 +229,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('transfered_subscriber_details.js') ?>
         <?php } ?> 
 
+        <?php if($this->request->getParam('controller') == 'Agents') { ?> 
+            <?= $this->Html->script('agents.js') ?>
+        <?php } ?> 
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>

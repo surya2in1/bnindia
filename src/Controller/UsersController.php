@@ -602,7 +602,19 @@ class UsersController extends AppController
             exit;
         }
         //echo '<pre>';print_r($user);exit();
-        $this->set(compact('user'));
+
+        //get agents list 
+        $this->loadModel('Agents');
+
+
+        // $GroupsTable = TableRegistry::get('Groups');
+        $agent_list = $this->Agents->find('list', [
+                                        'keyField' => 'id',
+                                        'valueField' => 'agent_code' 
+                                    ])
+                    ->where(['status '=>0,'created_by'=>$this->Auth->user('id')])->toArray();
+
+        $this->set(compact('user','agent_list'));
      }
 
      function getMembers($query_string,$group_id=0,$selected_member_ids=0){
@@ -768,12 +780,6 @@ class UsersController extends AppController
         $output = $this->Common->getTransferGroupUser($unique_user_ids,$group_id);
 
         echo json_encode($output);exit;
-     }
-
-     function getAgentCode($member_name,$existing_member_id){ 
-        $user_data = $this->Auth->user();
-        $agent_code = $this->Users->get_agent_code($user_data['id'],$member_name,$user_data['branch_name'],$existing_member_id);
-        echo $agent_code;exit;
      }
 }
 

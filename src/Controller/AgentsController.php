@@ -12,6 +12,12 @@ use Cake\ORM\TableRegistry;
  */
 class AgentsController extends AppController
 {
+     public function initialize(): void
+    {
+        parent::initialize(); 
+        $this->loadComponent('Common');
+    }
+
     /**
      * Add or edit agent details
      * */
@@ -32,94 +38,63 @@ class AgentsController extends AppController
             $agent = $this->Agents->newEmptyEntity();
         }
         //echo  '<pre>';print_r($agent);exit; 
+
+      
         $this->set(compact('agent'));
 
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $post = $this->request->getData();
-            // echo $id.'<pre>';print_r($post);exit;
+            //echo $id.'<pre>';print_r($post);//exit;
 
-            //convert dates to db field format
-            if(strtotime($post['date_of_birth'])){
-                $post['date_of_birth'] = date('Y-m-d',strtotime($post['date_of_birth']));
-            }
-            if(strtotime($post['nominee_dob'])){
-                $post['nominee_dob'] = date('Y-m-d',strtotime($post['nominee_dob']));
-            }
             //upload docs
-            $profile_picture_data = $post['profile_picture']; 
-            $address_proof = $post['address_proof'];
-            $photo_proof = $post['photo_proof'];
-            $other_document = $post['other_document'];
+            $address_proof = $post['address_proof']; 
+            $pan_card = $post['pan_card'];
+            $photo = $post['photo'];
+            $educational_proof = $post['educational_proof'];
 
             //remove unnecessary data for db validation
-            unset($post['profile_picture']);
             unset($post['address_proof']);
-            unset($post['photo_proof']);
-            unset($post['other_document']);
-            //create random password
-            $post['password'] = $this->Common->randomPassword();
-
-            //find member role id
-            $RolesTable = TableRegistry::get('Roles');
-            $role = $RolesTable->find('all')->where(['name'=>'member'])->first();
-            $post['role_id'] = $role->id;
+            unset($post['pan_card']);
+            unset($post['photo']);
+            unset($post['educational_proof']); 
+ 
             $post['created_by'] = $this->Auth->user('id');
-            // echo '<pre>';print_r($post);exit;
-            $user = $this->Users->patchEntity($user, $post);
-            if ($result = $this->Users->save($user)) {  
-                $profile_picture = $profile_picture_data;
-                if($profile_picture_data && $profile_picture_data->getClientFilename()){
-                   $updateuser['profile_picture'] = $this->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id); 
+            //echo '<pre>';print_r($post);
+            $agent = $this->Agents->patchEntity($agent, $post);
+            if ($result = $this->Agents->save($agent)) {   
+                if($address_proof && $address_proof->getClientFilename()){
+                   $updateuser['address_proof'] = $this->Common->userDocUpload('address_proof', $address_proof,WWW_ROOT.'agents_docs'.DS."address_proof",$result->id); 
                 }
                           
                 //upload documnts\
-                if($address_proof && $address_proof->getClientFilename()){
-                    $updateuser['address_proof'] = $this->userDocUpload('address_proof',$address_proof,'', $result->id);
+                if($pan_card && $pan_card->getClientFilename()){
+                    $updateuser['pan_card'] = $this->Common->userDocUpload('pan_card',$pan_card,WWW_ROOT.'agents_docs'.DS."pan_card", $result->id);
                 }
 
-                if($photo_proof &&  $photo_proof->getClientFilename()){
-                    $updateuser['photo_proof'] = $this->userDocUpload('photo_proof',$photo_proof,'', $result->id);
+                if($photo &&  $photo->getClientFilename()){
+                    $updateuser['photo'] = $this->Common->userDocUpload('photo',$photo,WWW_ROOT.'agents_docs'.DS."photo", $result->id);
                 }
-                if($other_document &&  $other_document->getClientFilename()){
-                    $updateuser['other_document'] = $this->userDocUpload('other_document',$other_document,'', $result->id);
+                if($educational_proof &&  $educational_proof->getClientFilename()){
+                    $updateuser['educational_proof'] = $this->Common->userDocUpload('educational_proof',$educational_proof,WWW_ROOT.'agents_docs'.DS."educational_proof", $result->id);
                 } 
                 //update user docs
                 if(isset($updateuser)){
                     //update/add customer id
                     // $updateuser['customer_id'] = '00'.$result->id;
-                    $usertable = TableRegistry::get("Users");
+                    $usertable = TableRegistry::get("agents");
                     $query = $usertable->query();
                     $query->update()
                             ->set($updateuser)
                             ->where(['id' => $result->id])
                             ->execute();
                 }
-
-                if($id<1){
-                    // send password to user
-                    $msg ="Hello ".$post['first_name']."\r\n";
-                    $msg .="Welcome to Bnindia application, your newly genereted password is below,"."\r\n";
-                    $msg .= "Password: ". $post['password']."\r\n";
-                    $msg .= 'Thank you,'."\r\n".'Bnindia team';
-                    //temparary comment send mail
-                    $send = $this->Common->sendmail($post['email'],'Bnindia application password',$msg);
-                    if($send){
-                        echo 1;
-                    }else{
-                        echo 2;
-                    }
-                }else{
-                    echo 1;
-                }
+                 //echo '<pre>';print_r($result);exit;
+                echo 1;
             }else{
-                 $validationErrors = $user->getErrors();
-                //echo '<pre>';print_r($user->getErrors());
-                if(isset($validationErrors['email']['_isUnique']) && !empty($validationErrors['email']['_isUnique'])){
-                    echo 'email_unique';
-                }else{
-                    echo 0;
-                } 
+                 $validationErrors = $agent->getErrors();
+                //echo '<pre>';print_r($agent->getErrors());
+                echo 0;
             }
             exit;
         }
@@ -134,9 +109,11 @@ class AgentsController extends AppController
      */
     public function index()
     {
-        $agents = $this->paginate($this->Agents);
-
-        $this->set(compact('agents'));
+        $this->viewBuilder()->setLayout('admin');    
+        if ($this->request->is('post')) {
+             $output = $this->Agents->GetData($this->Auth->user('id')); 
+             echo json_encode($output);exit;
+        }
     }
 
     /**
@@ -148,56 +125,15 @@ class AgentsController extends AppController
      */
     public function view($id = null)
     {
+        $this->viewBuilder()->setLayout('admin');    
         $agent = $this->Agents->get($id, [
             'contain' => [],
+            'conditions'=>['status'=>0]
         ]);
 
         $this->set(compact('agent'));
     }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $agent = $this->Agents->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $agent = $this->Agents->patchEntity($agent, $this->request->getData());
-            if ($this->Agents->save($agent)) {
-                $this->Flash->success(__('The agent has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The agent could not be saved. Please, try again.'));
-        }
-        $this->set(compact('agent'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Agent id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $agent = $this->Agents->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $agent = $this->Agents->patchEntity($agent, $this->request->getData());
-            if ($this->Agents->save($agent)) {
-                $this->Flash->success(__('The agent has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The agent could not be saved. Please, try again.'));
-        }
-        $this->set(compact('agent'));
-    }
+ 
 
     /**
      * Delete method
@@ -206,16 +142,36 @@ class AgentsController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function deleteAgent($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $agent = $this->Agents->get($id);
-        if ($this->Agents->delete($agent)) {
-            $this->Flash->success(__('The agent has been deleted.'));
-        } else {
-            $this->Flash->error(__('The agent could not be deleted. Please, try again.'));
+        $this->request->allowMethod(['get', 'delete']);
+        $UsersTable = TableRegistry::get('Users');
+        $userAgent= $UsersTable->find('all')->where(['agent_id'=>$id])->first();
+        if($userAgent){
+            echo 'agent_associated_with_members';
+        }else{
+            $agentstable = TableRegistry::get("agents");
+            $query = $agentstable->query();
+            $query->update()
+                    ->set(['status' => 1])
+                    ->where(['id' => $id])
+                    ->execute();
+             echo 1;               
+            // $agent = $this->Agents->get($id);
+            // if ($this->Agents->delete($agent)) {
+            //     echo 1;
+            // } else {
+            //     echo 0;
+            // }
         }
-
-        return $this->redirect(['action' => 'index']);
+        exit;
     }
+
+    function getAgentCode(){ 
+        $post = $this->request->getData();
+        $user_data = $this->Auth->user(); 
+        // echo 'user_data<pre>';print_r($user_data);exit;
+        $agent_code = $this->Agents->get_agent_code($user_data['id'],$post['name'],$user_data['branch_name'],$post['id']);
+        echo $agent_code;exit;
+     }
 }

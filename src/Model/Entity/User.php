@@ -54,7 +54,7 @@ class User extends Entity
         'address' => true,
         'city' => true,
         'state' => true,
-        'area_code' => true,
+        'agent_id' => true,
         'pin_code' => true,
         'gender' => true,
         'maritial_status' => true,

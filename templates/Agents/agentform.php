@@ -1,4 +1,4 @@
-a<?php use Cake\Routing\Router; ?>
+<?php use Cake\Routing\Router; ?>
 
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
@@ -39,7 +39,7 @@ a<?php use Cake\Routing\Router; ?>
                        'enctype' => 'multipart/form-data',
                        'method'=> 'Post'
                      )); ?>
-                    <input type="hidden" name="id" id="id" value="<?= $agent; ?>">
+                    <input type="hidden" name="id" id="id" value="<?= $agentid; ?>">
                     <div class="kt-portlet__body">
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
@@ -52,7 +52,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Name:</label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" value="<?= isset($agent->name) ? $agent->name : '';?>" autofocus="true" onchange="get_agent_code(<?= $agent; ?>)">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" <?php if($agentid>0){?>readonly title="You can not edit this field."<?php }; ?> value="<?= isset($agent->name) ? $agent->name : '';?>" autofocus="true" onchange="get_agent_code(<?= $agentid; ?>)">
                                     </div>
                                 </div>
                                  
@@ -107,13 +107,15 @@ a<?php use Cake\Routing\Router; ?>
                                             </div>
                                             <div class="new-address-doc hide">
                                                 <input class="file-input" id="address_proof" type="file" name="address_proof"> 
-                                                <label for="address_proof" class="file-input-btn">Choose a file</label>
+                                                 <input type="hidden" id="check_upload_addr" name="check_upload_addr" value="<?= $agent->address_proof; ?>" />
                                                 <label class="file-name"></label>
+                                                <label for="address_proof" class="file-input-btn">Choose a file</label>
                                             </div>
                                             <?php }else{ ?>
                                              <input class="file-input" type="file" id="address_proof" name="address_proof">
                                              <label for="address_proof" class="file-input-btn">Choose a file</label>
                                             <label class="file-name"></label> 
+                                             <input type="hidden" id="check_upload_addr" name="check_upload_addr" value="<?= $agent->address_proof; ?>" />
                                             <?php } ?> 
                                         </div>
                                     </div>
@@ -125,7 +127,7 @@ a<?php use Cake\Routing\Router; ?>
                                             <?php if($agent->pan_card){ ?>
                                             <div class="existing-other-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/pan_card_document/<?= $agent->pan_card; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>"width="25%" alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -135,14 +137,16 @@ a<?php use Cake\Routing\Router; ?>
                                                 })();return false;">Change</button>
                                             </div>
                                             <div class="new-other-doc hide">
-                                                <input class="file-input" id="pan_card_document" type="file" name="pan_card_document"> 
-                                                <label for="pan_card_document" class="file-input-btn">Choose a file</label>
+                                                <input class="file-input" id="pan_card" type="file" name="pan_card"> 
+                                                <label for="pan_card" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
+                                                <input type="hidden" id="check_upload_pan" name="check_upload_pan" value="<?= $agent->pan_card; ?>" />
                                             </div>
                                             <?php }else{ ?>
-                                             <input class="file-input" type="file" id="pan_card_document" name="pan_card_document"> 
-                                            <label for="pan_card_document" class="file-input-btn">Choose a file</label>
-                                                <label class="file-name"></label>
+                                             <input class="file-input" type="file" id="pan_card" name="pan_card"> 
+                                             <label for="pan_card" class="file-input-btn">Choose a file</label>
+                                             <label class="file-name"></label>
+                                             <input type="hidden" id="check_upload_pan" name="check_upload_pan" value="<?= $agent->pan_card; ?>" />
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -151,10 +155,10 @@ a<?php use Cake\Routing\Router; ?>
                                     <label class="col-xl-3 col-lg-3 col-form-label">Photo Proof</label>
                                     <div class="col-lg-6 col-xl-6">
                                         <div class="input-group">
-                                            <?php if($agent->photo_proof){ ?>
+                                            <?php if($agent->photo){ ?>
                                             <div class="existing-photo-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/photo_proof/<?= $agent->photo_proof; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>"width="25%" alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -164,15 +168,17 @@ a<?php use Cake\Routing\Router; ?>
                                                 })();return false;">Change</button>
                                             </div>
                                             <div class="new-photo-doc hide">
-                                                <input class="file-input" id="photo_proof" type="file" name="photo_proof"> 
-                                                <label for="photo_proof" class="file-input-btn">Choose a file</label>
+                                                <input class="file-input" id="photo" type="file" name="photo"> 
+                                                <label for="photo" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
+                                                 <input type="hidden" id="check_upload_photo" name="check_upload_photo" value="<?= $agent->photo; ?>" />
 
                                             </div>
                                             <?php }else{ ?>
-                                             <input class="file-input" type="file" id="photo_proof" name="photo_proof"> 
-                                             <label for="photo_proof" class="file-input-btn">Choose a file</label>
+                                             <input class="file-input" type="file" id="photo" name="photo"> 
+                                             <label for="photo" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
+                                             <input type="hidden" id="check_upload_photo" name="check_upload_photo" value="<?= $agent->photo; ?>" />
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -199,12 +205,14 @@ a<?php use Cake\Routing\Router; ?>
                                                 <input class="file-input" id="educational_proof" type="file" name="educational_proof"> 
                                                 <label for="educational_proof" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
+                                                <input type="hidden" id="check_upload_edu" name="check_upload_edu" value="<?= $agent->educational_proof; ?>" />
 
                                             </div>
                                             <?php }else{ ?>
                                              <input class="file-input" type="file" id="educational_proof" name="educational_proof"> 
                                              <label for="educational_proof" class="file-input-btn">Choose a file</label>
                                                 <label class="file-name"></label>
+                                             <input type="hidden" id="check_upload_edu" name="check_upload_edu" value="<?= $agent->educational_proof; ?>" />
                                             <?php } ?>
                                         </div>
                                     </div>
@@ -225,7 +233,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 col-form-label">Account Number</label>
                                     <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" type="text" value="<?= isset($agent->account_no) ? $agent->account_no : '';?>" name="account_no">
+                                        <input class="form-control" type="number" value="<?= isset($agent->account_no) ? $agent->account_no : '';?>" name="account_no">
                                     </div>
                                 </div> 
                                 <div class="form-group row">
@@ -256,7 +264,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
                                     <button type="button" id="submit" class="btn btn-success">Submit</button>
-                                    <a href="members" class="btn btn-secondary">Cancel</a>
+                                    <a href="agents" class="btn btn-secondary">Cancel</a>
                                 </div>
                             </div>
                         </div>

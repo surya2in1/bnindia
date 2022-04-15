@@ -402,20 +402,3 @@ function deleteuser(id){
         }
     });
 } 
-
-function get_agent_code(user_id){
-	var first_name = $('#first_name').val();
-	$('#area_code').val('');
-	if(first_name.trim()){
-		$.ajax({
-			   "url": $('#router_url').val()+"Users/getAgentCode/"+first_name+"/"+user_id,
-	            "type": "GET",
-	            beforeSend: function (xhr) { // Add this line
-                    xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
-                },
-                success: function(response, status, xhr, $form) { 
-                	$('#area_code').val(response);
-                }
-			}); 
-	}
-}

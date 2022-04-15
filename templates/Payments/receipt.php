@@ -45,7 +45,7 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-3 max-width-25" >
-                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code: <?= isset($memberInfo->area_code) && ($memberInfo->area_code>0) ? $memberInfo->area_code : '----'; ?></label>
+                                    <label class="col-lg-12 col-form-label border-lbl1">Area Code: <?= isset($memberInfo->agent->agent_code) && ($memberInfo->agent->agent_code!='') ? $memberInfo->agent->agent_code : '----'; ?></label>
                                     <label class="col-lg-12 col-form-label border-lbl2">Cust Code: <?= isset($receipt_data->members_group->temp_customer_id) ? $receipt_data->members_group->temp_customer_id : ''; ?></label>
                                 </div>
                             </div> 

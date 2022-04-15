@@ -316,8 +316,8 @@ class CommonComponent extends Component {
  }
 
   function get_last_auction_date($group_id){
-    $last_auction_date =  '';
-    if($group_id>0){
+    $last_auction_date =  ''
+;    if($group_id>0){
       $auctionTable= TableRegistry::get('Auctions'); 
       $last_acution =  $auctionTable->find()
               ->select(['auction_date'])
@@ -960,5 +960,46 @@ class CommonComponent extends Component {
               ->first();  
           return $payments->total_payments;
       }
+
+    /**
+    * this function ussed for image and user documents upload
+    * fun used for profile inf and member add edit
+    */
+    public function userDocUpload($db_upload_field, $post, $path = '', $id=0){
+        $name = $post->getClientFilename();
+        $filename = '';
+        if($name){
+            $name = preg_replace('/[(){}]/', '', $name);
+            $name = str_replace(' ', '', $name);
+
+            $sffledStr= str_shuffle('encrypt');
+            $uniqueString = md5(time().$sffledStr);
+             
+            //get existing file name
+            $AgentsTable = TableRegistry::get('a', ['table' => 'agents']);
+            $query = $AgentsTable->find();     
+            $agents = $query->select("a.".$db_upload_field) 
+                  ->where(['a.id'=>$id]) 
+                  ->first();   
+
+            //create path
+            if(empty($path)){
+                $path = WWW_ROOT.DS.'users_docs'.DS.$db_upload_field;
+            }
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            //get exsiting doc from db 
+            $existing_doc = $agents->$db_upload_field;
+            if (($existing_doc) && file_exists($path.DS.$existing_doc)){
+                unlink( $path.DS.$existing_doc);
+            }
+            
+            $filename = $id.'_'.$uniqueString.'_'.$name;
+            $targetPath = $path.DS.$filename;
+            $post->moveTo($targetPath);
+        }
+        return $filename;
+    }
 }
 ?>

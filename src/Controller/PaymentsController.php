@@ -330,7 +330,11 @@ class PaymentsController extends AppController
       $member =  $UsersTable->find();
       $memberInfo = $member->select(['name' => $member->func()->concat(['first_name' => 'identifier', ' ','middle_name' => 'identifier', ' ', 'last_name' => 'identifier']),
         'Users.area_code'  
-        ])->where(['id' => $receipt_data->user_id])->first();  
+        ])->contain(['Agents' => function ($q) {
+                                return $q
+                                    ->select(['agent_code']);
+                            }     
+                    ])->where(['Users.id' => $receipt_data->user_id])->first();  
 
        // echo '<pre>';print_r($memberInfo);exit;   
 

@@ -1,4 +1,4 @@
-a<?php use Cake\Routing\Router; ?>
+<?php use Cake\Routing\Router; ?>
 
 <!-- begin:: Content Head -->
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
@@ -75,7 +75,7 @@ a<?php use Cake\Routing\Router; ?>
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">First Name:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true" onchange="get_agent_code(<?= $userid; ?>)">
+                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter First Name" value="<?= isset($user->first_name) ? $user->first_name : '';?>" autofocus="true">
                                     </div>
                                 </div>
                                  <div class="form-group row">
@@ -216,10 +216,19 @@ a<?php use Cake\Routing\Router; ?>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-xl-3 col-lg-3 col-form-label">Agent Code</label>
-                                    <div class="col-lg-6 col-xl-6">
-                                        <input class="form-control" type="text" value="<?= $user->area_code; ?>" name="area_code" id="area_code" readonly>
+                                    <label class="col-lg-3 col-form-label">Agent:<span class="required" aria-required="true"> * </span></label>
+                                    <div class="col-lg-6"> 
+                                        <select id="agent_id" name="agent_id" class="form-control">
+                                            <option value="0">Select Agent</option>
+                                             <?php   $selected_agent =  isset($user->agent_id) ? $user->agent_id : 0; 
+                                             if($agent_list){ 
+                                                foreach ($agent_list as $key => $agent) {?>
+                                                    <option <?php if($key == $selected_agent){?> selected='selected' <?php } ?> value="<?= $key; ?>"><?=$agent?></option>
+                                               <?php } 
+                                            } ?> 
+                                        </select> 
                                     </div>
+                                    <div class="kt-spinner kt-spinner--v2 kt-spinner--md kt-spinner--danger hide bnspinner"></div>
                                 </div>
                                 <div class="row">
                                     <label class="col-xl-3"></label>
