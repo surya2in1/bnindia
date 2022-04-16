@@ -76,7 +76,7 @@ tr:nth-child(even) {
       <table>
          <tr>
             <td>Branch: <?= isset($user_details->ug['branch_name']) ? $user_details->ug['branch_name'] : '-' ?></td>
-            <td>Agent Code: <?= isset($user_details->ug['area_code']) ? $user_details->ug['area_code'] : '-' ?></td>
+            <td>Agent Code: <?= isset($user_details->a['agent_code']) ? $user_details->a['agent_code'] : '-' ?></td>
          </tr>
          <tr>
             <td>Name: <?= isset($user_details->member) ? ucwords($user_details->member) : '-' ?></td>

@@ -443,10 +443,10 @@ class CommonComponent extends Component {
       $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
       $query = $PaymentsTable->find();     
       $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
-          ->where(['p.user_id'=>$user_id,'p.is_installment_complete'=>1]) ;
+          ->where(['p.user_id'=>$user_id,'p.is_installment_complete'=>1])->first() ;
           // ->first();  
-           echo '$total_amount <pre>';print_r($payments);
-        exit;
+    // echo '$total_amount <pre>';print_r($payments);
+       //exit;
       return $payments->total_fully_paid_interest;    
   }
 
@@ -542,7 +542,7 @@ class CommonComponent extends Component {
                             'g.group_code','g.chit_amount','g.total_number','g.premium',
                             'mg.temp_customer_id','mg.ticket_no',
                             'member'=>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
-                            'u.customer_id','u.area_code',
+                            'u.customer_id','a.agent_code',
                             'p.paid_sub_amt','p.paid_instalments',
                             'is_transfer_member_status'=>"( CASE WHEN (mg.is_transfer_user = 1 ) THEN 
                                         'Transfered'
@@ -561,6 +561,12 @@ class CommonComponent extends Component {
                     'alias' => 'u',
                     'type' => 'LEFT',
                     'conditions' =>'mg.user_id = u.id',
+                ])  
+                ->join([
+                    'table' => 'agents',
+                    'alias' => 'a',
+                    'type' => 'LEFT',
+                    'conditions' =>'u.agent_id = a.id',
                 ])  
                ->join([
                     'table' => 'users',
@@ -610,13 +616,19 @@ class CommonComponent extends Component {
                     'ug.address',
                     'ug.city',
                     'ug.state',
-                    'ug.area_code',
+                    'a.agent_code',
                 ])
                 ->join([
                     'table' => 'users',
                     'alias' => 'ug',
                     'type' => 'LEFT',
                     'conditions' =>'g.created_by = ug.id',
+                ]) 
+                ->join([
+                    'table' => 'agents',
+                    'alias' => 'a',
+                    'type' => 'LEFT',
+                    'conditions' =>'a.id = ug.agent_id',
                 ]) 
               ->where(['g.id'=>$post['group_id'],'g.created_by'=>$user_id]) 
               ->first();  
@@ -631,11 +643,11 @@ class CommonComponent extends Component {
                     'ug.address',
                     'ug.city',
                     'ug.state',
-                    'ug.area_code',
+                    'u.area_code',
                     'member' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
                     'address_u' =>"CONCAT_WS(', ',IF(u.address = '', NULL, u.address),IF(u.city = '', NULL, u.city),IF(u.state = '', NULL, u.state))",
                     'u.pin_code',
-                    'u.area_code',
+                    'a.agent_code',
                 ])
                 ->join([
                     'table' => 'members_groups',
@@ -654,6 +666,12 @@ class CommonComponent extends Component {
                     'alias' => 'ug',
                     'type' => 'LEFT',
                     'conditions' =>'g.created_by = ug.id',
+                ]) 
+                 ->join([
+                    'table' => 'agents',
+                    'alias' => 'a',
+                    'type' => 'LEFT',
+                    'conditions' =>'a.id = ug.agent_id',
                 ]) 
               ->where(['u.id'=>$post['user_id'],'g.created_by'=>$user_id]) 
               ->first();  

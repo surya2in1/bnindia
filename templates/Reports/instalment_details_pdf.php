@@ -70,7 +70,7 @@ tr:nth-child(even) {
       <table>
          <tr>
             <td>Branch: <?= isset($report['payments'][0]->ug['branch_name']) ? $report['payments'][0]->ug['branch_name'] : '-' ?></td>
-            <td>Agent Code: <?= isset($report['payments'][0]->ug['area_code']) ? $report['payments'][0]->ug['area_code'] : '-' ?></td>
+            <td>Agent Code: <?= isset($report['payments'][0]->a['agent_code']) ? $report['payments'][0]->a['agent_code'] : '-' ?></td>
          </tr>
          <tr>
             <td>Name: <?= isset($report['payments'][0]->member) ? ucwords($report['payments'][0]->member) : '-' ?></td>
@@ -82,7 +82,7 @@ tr:nth-child(even) {
             <td>Interest Fully Paid: <?= isset($report['total_fully_paid_interest']) ? number_format((float)$report['total_fully_paid_interest'], 2, '.', '') : '0.00' ?></td>
          </tr>
          <tr>
-            <td>Pincode: <?= isset($report['payments'][0]->u['pin_code']) ? $report['payments'][0]->u['area_code'] : '-' ?></td>
+            <td>Pincode: <?= isset($report['payments'][0]->u['pin_code']) ? $report['payments'][0]->u['pin_code'] : '-' ?></td>
             <td></td>
          </tr>
       </table>
