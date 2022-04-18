@@ -90,6 +90,11 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	        alert.find('span').html(msg);
 	    }  
 		
+		$.validator.addMethod("letterswithspace", function(value, element) {
+	    	   return this.optional(element) || /^[a-z][a-z\s]*$/i.test(value); 
+           }, "Letters only please");
+           
+
 		 $('#submit').click(function(e) {
             e.preventDefault();
             var btn = $(this);
@@ -103,7 +108,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                },
 	                name: {
 	                    required: true,
-	                    lettersonly: true,
+	                    letterswithspace: true,
 	                    maxlength: 200
 	                },
 	                address:{
@@ -126,14 +131,14 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                educational_proof: { required: '#check_upload_edu:blank',extension: "png|jpe?g|pdf" },
 	                bank_name:{
 	                	required: true,
-	                    lettersonly: true,
+	                    letterswithspace: true,
 	                    maxlength: 500
 	                },
 	                account_no:{
 	                    required: true,
                         number: true,
-                        maxlength: 13,
-                        minlength:13
+                        maxlength: 30,
+                        minlength:1
 	                },
 	                ifsc_code:{
 	                	required: true,

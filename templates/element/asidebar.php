@@ -103,7 +103,7 @@
                                 <?php }?>
 
                                 <!-- Add agetns start---> 
-                                <?php if($member_side_menu == '1111'){?>
+                                <?php if($agent_side_menu == '1111'){?>
                                 <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Users') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
