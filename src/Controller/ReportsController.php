@@ -311,9 +311,14 @@ class ReportsController extends AppController
             ]
         );
         $groupsTable= TableRegistry::get('Groups'); 
-        $groups_details = $groupsTable->find('all', [
-            'fields' => ['group_code'],
-        ])->where(['Groups.id'=>$post_data['group_id']])->first();
+        if($post_data['group_id']=='all'){
+            $groups_details ='all';
+        }else{
+            $groups_details = $groupsTable->find('all', [
+                'fields' => ['group_code'],
+            ])->where(['Groups.id'=>$post_data['group_id']])->first();
+
+        }
         // echo 'groups_details<pre>';print_r($groups_details);exit;
         $this->set('branch_name', $this->Auth->user('branch_name'));
         $this->set(compact('report','post_data','groups_details'));

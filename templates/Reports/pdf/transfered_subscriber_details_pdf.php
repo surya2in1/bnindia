@@ -58,7 +58,12 @@ tr:nth-child(even) {
        </tr>
        <tr>
          <td valign=middle>
-           Group  Code: <?= isset($groups_details) ? $groups_details->group_code : '-' ?>
+              <?php $group_code = isset($groups_details) && ($groups_details!='all') ? $groups_details->group_code : '-';
+                if($groups_details =='all'){
+                    $group_code = 'All Groups';
+                }
+            ?>
+           Group  Code: <?= $group_code;?>
          </td>
        </tr>
        <tr>

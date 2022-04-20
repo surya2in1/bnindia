@@ -5,6 +5,10 @@ namespace App\Controller;
 
 use Cake\ORM\TableRegistry;
 
+use Cake\Mailer\Email;
+use Cake\Mailer\TransportFactory;
+use Cake\Mailer\Transport;
+
 /**
  * Agents Controller
  *
@@ -90,10 +94,42 @@ class AgentsController extends AppController
                             ->execute();
                 }
                  //echo '<pre>';print_r($result);exit;
+
+                // send mail to agent
+                // Please specify your Mail Server - Example: mail.example.com.
+                ini_set("SMTP","riyajaya692@gmail.com");
+        
+                // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
+                ini_set("smtp_port","25");
+        
+                // Please specify the return address to use
+                ini_set('sendmail_from', 'riyajaya692@gmail.com');
+                
+                TransportFactory::setConfig('gmail', [
+                  'host' => 'ssl://smtp.gmail.com',
+                  'port' => 25,
+                  'username' => 'riyajaya692@gmail.com',
+                  'password' => 'etgtxblbsftaupzd',
+                  'className' => 'Smtp'
+                ]);
+                
+                $agent_name = explode(' ', trim($post['name']))[0];
+                $msg ="Hello ".$agent_name."\r\n";
+                $msg .="Welcome to Bnindia application, your name successfully added."."\r\n";
+                $msg .= "Agent code: ". $post['agent_code']."\r\n";
+                $msg .= 'Thank you,'."\r\n".'Bnindia team';
+                //temparary comment send mail
+                //$send = $this->Common->sendmail($post['email'],'Bnindia application',$msg);
+                try {
+                    Email::deliver($post['email'], 'Bnindia application', $msg, ['from' => 'riyajaya692@gmail.com']);
+                    $response = 1;
+                } catch (Exception $e) {
+                    $response = 0; 
+                }
                 echo 1;
             }else{
                  $validationErrors = $agent->getErrors();
-                //echo '<pre>';print_r($agent->getErrors());
+                 //echo '<pre>';print_r($agent->getErrors());
                 echo 0;
             }
             exit;

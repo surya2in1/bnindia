@@ -200,9 +200,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 type:'POST', 
                 success: function(response, status, xhr, $form) {
                     if(response>0){
+                    	var agent_code = $('#agent_code').val();
                     	swal.fire({
 		                    "title": "",
-		                    "text": "The agent has been saved successfully.",
+		                    "text": "The agent "+agent_code+" has been saved successfully.",
 		                    "type": "success",
 		                    "confirmButtonClass": "btn btn-secondary",
 		                    "onClose": function(e) {

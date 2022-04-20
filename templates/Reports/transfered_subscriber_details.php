@@ -53,6 +53,7 @@ use Cake\Routing\Router;
                                                     <option value="<?= $key; ?>"><?=($group);?></option>
                                                <?php } 
                                             } ?> 
+                                             <option value="all">ALL</option>
                                         </select> 
                                     </div>   
                                 </div> 

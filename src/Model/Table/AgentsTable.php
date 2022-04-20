@@ -127,7 +127,7 @@ class AgentsTable extends Table
 
         $validator
             ->scalar('account_no')
-            ->maxLength('account_no', 13)
+            ->maxLength('account_no', 30)
             ->requirePresence('account_no', 'create')
             ->notEmptyString('account_no');
 

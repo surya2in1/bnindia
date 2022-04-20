@@ -849,6 +849,13 @@ class CommonComponent extends Component {
       function getTransferedSubscriberDetails($post,$user_id){
         $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
         $query = $MembersGroupsTable->find();   
+
+        $where_Conditions = ['g.created_by'=>$user_id,'mg.is_transfer_user'=>1];
+
+        if($post['group_id'] != 'all'){
+            $where_Conditions = ['g.id'=>$post['group_id']];
+        } 
+
         $transferedMembers = $query->select([ 
             'g.group_code','mg.ticket_no'
             ,'old_subscriber' =>"CONCAT_WS(' ',IF(u.first_name = '', NULL, u.first_name),IF(u.middle_name = '', NULL, u.middle_name),IF(u.last_name = '', NULL, u.last_name))",
@@ -872,7 +879,7 @@ class CommonComponent extends Component {
                     'alias' => 'nu', 
                     'conditions' =>'mg.new_user_id = nu.id',
                 ]) 
-              ->where(['g.created_by'=>$user_id,'mg.is_transfer_user'=>1,'g.id'=>$post['group_id']])  
+              ->where($where_Conditions)  
               ->order(['mg.group_id' => 'ASC'])->toArray();  
           // echo '$pv <pre>';print_r($transferedMembers);exit;    
           return $transferedMembers; 
