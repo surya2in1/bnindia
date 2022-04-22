@@ -190,6 +190,14 @@ var KTBootstrapDatepicker = function () {
             templates: arrows, 
             autoclose: true,
         }); 
+
+        $('#date_of_removal').datepicker({
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            todayHighlight: true,
+            templates: arrows, 
+            autoclose: true,
+        });
     }
 
     return {

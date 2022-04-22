@@ -742,6 +742,9 @@ class UsersController extends AppController
                     $group_record['group_id'] = $post['group_id'];
                     $group_record['new_user_id'] = $post['new_group_users_list'];
                     $group_record['old_user_id'] = $post['user_id'];
+                    $group_record['removal_resaon'] = $post['removal_resaon'];
+                    $group_record['remark'] = $post['remark'];
+                    $group_record['date_of_removal'] =date('Y-m-d',strtotime($post['date_of_removal']));
                     $group_records[] = $group_record;
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
                     $result = $this->MembersGroups->saveMany($MembersGroups);
@@ -749,14 +752,22 @@ class UsersController extends AppController
                     //update as new member
                     $query = $this->MembersGroups->query();
                     $result = $query->update()
-                        ->set(['new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                        ->set(['new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id'],
+                             'removal_resaon' => $post['removal_resaon'],
+                            'remark' => $post['remark'],
+                            'date_of_removal'=>date('Y-m-d',strtotime($post['date_of_removal']))
+                        ])
                         ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
                         ->execute();
                 }
                 //update as old member
                 $query = $this->MembersGroups->query();
                 $update = $query->update()
-                    ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id']])
+                    ->set(['is_transfer_user' => 1,'new_user_id'=> $post['new_group_users_list'],'old_user_id' => $post['user_id'],
+                        'removal_resaon' => $post['removal_resaon'],
+                        'remark' => $post['remark'],
+                        'date_of_removal'=>date('Y-m-d',strtotime($post['date_of_removal']))
+                        ])
                     ->where(['group_id' => $post['group_id'],'user_id'=>$post['user_id']])
                     ->execute();
                 echo 1;exit;

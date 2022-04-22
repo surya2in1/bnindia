@@ -83,9 +83,25 @@ use Cake\Core\Configure;
                      <input type="hidden" id="user_id" name="user_id">
                     <div class="form-group">
                         <label class="form-control-label">New Members:</label>
-                        <select class="form-control" id="new_group_users_list" name="new_group_users_list">
-                        
+                        <select  class="form-control" id="new_group_users_list" name="new_group_users_list">
                         </select>
+                        
+                    </div> 
+                     <div class="form-group">
+                        <label class="form-control-label">Removal Resaon    :</label>
+                        <input type="text"  class="form-control" id="removal_resaon" name="removal_resaon">
+                        
+                    </div> 
+                     <div class="form-group">
+                        <label class="form-control-label">Remark:</label>
+                        <input type="text"  class="form-control" id="remark" name="remark">
+                        
+                    </div> 
+                     <div class="form-group">
+                        <label class="form-control-label">Date of removal:</label> 
+                        <div class="input-group date">
+                            <input type="text" class="form-control" readonly="" id="date_of_removal" name="date_of_removal"> 
+                        </div>
                     </div> 
             </div>
             <div class="modal-footer">

@@ -1,12 +1,17 @@
 Remaining
 
-************************Later*********************************
-Move resaon from payment voucher to other payment
+Reports
+Create report, register of subscriber as per govt.
 
-In Add member menu add agent crud => new change
-1. Add crud for agents 
-2. Replace Area code to Agent code in member form and db field
-3. Add dropdown for agents
+1. Create report, register of subscriber as per govt.
+2. Create report as per govt rule, Day Book
+3. prized and non prized for payments
+
+Changes for transfer member:
+removal resoan,remark , date of removal
+************************Later*********************************
+
+Move resaon from payment voucher to other payment
 
 Print receipt:
 Show amount in word
@@ -27,9 +32,7 @@ Add member
 Profile
 List,View
 
-Reports
 
-prized and non prized for payments
 -----------------------------------------------------------------------------------------------------------
 ISSUES:
 in group form date datepicker
@@ -49,6 +52,13 @@ Check auction edit (If any of one payment done then not allow to edit auction ),
 redirect auction edit if not superadmin in index page add  action
 
 =========================================================================================
+
+Done points in april 2022
+
+In Add member menu add agent crud => new change
+1. Add crud for agents 
+2. Replace Area code to Agent code in member form and db field
+3. Add dropdown for agents
 
 
 Below Changes are done for Calulation of late fee as per group type collection date and auction date overall

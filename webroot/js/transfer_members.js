@@ -81,6 +81,15 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                new_group_users_list: {
 	                        required: true 
 	                }, 
+	                removal_resaon: {
+	                        required: true 
+	                }, 
+	                remark: {
+	                        required: true 
+	                }, 
+	                date_of_removal: {
+	                        required: true 
+	                }, 
 	            },
 	            errorPlacement: function(error, element) {
 	                var group = element.closest('.input-group');

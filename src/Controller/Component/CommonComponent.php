@@ -1026,5 +1026,43 @@ class CommonComponent extends Component {
         }
         return $filename;
     }
+
+    function getSubscribersLists($post, $user_id){
+          $UsersTable = TableRegistry::get('u', ['table' => 'users']);
+          $query = $UsersTable->find();     
+          $users = $query->select(['name' => $q->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier']),
+                    'u.address',
+                     'date' => "DATE_FORMAT(u.created_date,'%m/%d/%Y')",
+                     'mg.ticket_no',
+                     'g.chit_amount',
+                     'branch_name' => $q->func()->concat(['UPPER(SUBSTRING(branch.first_name, 1, 1)), LOWER(SUBSTRING(branch.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(branch.middle_name, 1, 1)), LOWER(SUBSTRING(branch.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(branch.last_name, 1, 1)), LOWER(SUBSTRING(branch.last_name, 2))' => 'identifier']),
+                     'branch.address',
+                     'branch_date' => "DATE_FORMAT(branch.created_date,'%m/%d/%Y')",
+                     'mg.is_transfer_user',
+                     "DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
+                ]
+                )
+              ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg', 
+                    'type' => 'LEFT',
+                    'conditions' =>"u.id=mg.user_id",
+                ])  
+              ->join([
+                    'table' => 'groups',
+                    'alias' => 'g', 
+                    'type' => 'LEFT',
+                    'conditions' =>"mg.group_id=g.id",
+                ])  
+              ->join([
+                    'table' => 'users',
+                    'alias' => 'branch', 
+                    'type' => 'LEFT',
+                    'conditions' =>"u.created_by=u.id",
+                ])  
+              ->where(['u.created_by'=>$user_id,'u.created_date>='=>$post['start'],'u.created_date<='=>$post['end']]) 
+              ->toArray();  
+          return $users;    
+      }
 }
 ?>
