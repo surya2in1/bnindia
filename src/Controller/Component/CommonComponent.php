@@ -1030,16 +1030,19 @@ class CommonComponent extends Component {
     function getSubscribersLists($post, $user_id){
           $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
-          $users = $query->select(['name' => $q->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier']),
-                    'u.address',
-                     'date' => "DATE_FORMAT(u.created_date,'%m/%d/%Y')",
+          $users = $query->select(['name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier', ' , ','u.address'=> 'identifier']), 
+                     'date' => "DATE_FORMAT(g.created_date,'%m/%d/%Y')",
                      'mg.ticket_no',
                      'g.chit_amount',
-                     'branch_name' => $q->func()->concat(['UPPER(SUBSTRING(branch.first_name, 1, 1)), LOWER(SUBSTRING(branch.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(branch.middle_name, 1, 1)), LOWER(SUBSTRING(branch.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(branch.last_name, 1, 1)), LOWER(SUBSTRING(branch.last_name, 2))' => 'identifier']),
-                     'branch.address',
-                     'branch_date' => "DATE_FORMAT(branch.created_date,'%m/%d/%Y')",
+                   'trans_name' => $query->func()->concat(['UPPER(SUBSTRING(trans_u.first_name, 1, 1)), LOWER(SUBSTRING(trans_u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(trans_u.middle_name, 1, 1)), LOWER(SUBSTRING(trans_u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(trans_u.last_name, 2))' => 'identifier', ', ','trans_u.address'=>'identifier']),
+                        'trans_date' => "DATE_FORMAT(trans_g.created_date,'%m/%d/%Y')",
+                         'trans_g.chit_amount',
+                         'trans_mg.ticket_no',
+                     // 'branch_name' => $q->func()->concat(['UPPER(SUBSTRING(branch.first_name, 1, 1)), LOWER(SUBSTRING(branch.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(branch.middle_name, 1, 1)), LOWER(SUBSTRING(branch.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(branch.last_name, 1, 1)), LOWER(SUBSTRING(branch.last_name, 2))' => 'identifier']),
+                     // 'branch.address',
+                     // 'branch_date' => "DATE_FORMAT(branch.created_date,'%m/%d/%Y')",
                      'mg.is_transfer_user',
-                     "DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
+                     // 'date_of_removal'=>"DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
                 ]
                 )
               ->join([
@@ -1054,13 +1057,35 @@ class CommonComponent extends Component {
                     'type' => 'LEFT',
                     'conditions' =>"mg.group_id=g.id",
                 ])  
-              ->join([
+               ->join([
                     'table' => 'users',
-                    'alias' => 'branch', 
+                    'alias' => 'trans_u', 
                     'type' => 'LEFT',
-                    'conditions' =>"u.created_by=u.id",
+                    'conditions' =>"mg.new_user_id=trans_u.id and mg.is_transfer_user=1",
                 ])  
-              ->where(['u.created_by'=>$user_id,'u.created_date>='=>$post['start'],'u.created_date<='=>$post['end']]) 
+               ->join([
+                    'table' => 'groups',
+                    'alias' => 'trans_g', 
+                    'type' => 'LEFT',
+                    'conditions' =>"mg.group_id=trans_g.id and mg.is_transfer_user=1",
+                ])  
+               ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'trans_mg', 
+                    'type' => 'LEFT',
+                    'conditions' =>"mg.group_id=trans_mg.group_id and mg.new_user_id=trans_mg.user_id  and mg.is_transfer_user=1",
+                ])  
+              // ->join([
+              //       'table' => 'users',
+              //       'alias' => 'branch', 
+              //       'type' => 'LEFT',
+              //       'conditions' =>"u.created_by=u.id",
+              //   ])  
+              ->where([
+                    'u.created_by'=>$user_id,
+                    'g.created_date >= '=>date('Y-m-d',strtotime($post['start'])),
+                    'g.created_date <= '=>date('Y-m-d',strtotime($post['end']))
+                ]) 
               ->toArray();  
           return $users;    
       }

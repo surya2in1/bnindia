@@ -324,6 +324,11 @@ class ReportsController extends AppController
         $this->set(compact('report','post_data','groups_details'));
     }
 
+    public function subscribersLists()
+    { 
+        $this->viewBuilder()->setLayout('admin');  
+    } 
+
      function subscriberListsPdf(){
         $report =[];
         if ($this->request->is(['patch', 'post', 'put'])) {

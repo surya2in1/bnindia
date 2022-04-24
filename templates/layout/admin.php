@@ -233,6 +233,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('agents.js') ?>
         <?php } ?> 
 
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'subscribersLists') { ?> 
+            <?= $this->Html->script('subscriber_lists.js') ?>
+        <?php } ?> 
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>
