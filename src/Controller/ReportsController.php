@@ -334,14 +334,14 @@ class ReportsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();   
             $report = $this->Common->getSubscribersLists($post,$this->Auth->user('id'));  
-            echo '$report<pre>';print_r($report);  exit;
+            // echo '$report<pre>';print_r($report);  exit;
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');
             $this->viewBuilder()->setOption(
                 'pdfConfig',
                 [
-                    'orientation' => 'portrait',
+                    'orientation' => 'landscape',
                     // 'render' => 'browser',
                     'download' => true, // This can be omitted if "filename" is specified.
                    'filename' => 'subscribers_details' .'.pdf' //// This can be omitted if you want file name based on URL.
@@ -349,6 +349,7 @@ class ReportsController extends AppController
             );
 
         }
-        $this->set(compact('report'));
+        $this->set('branch_name', $this->Auth->user('branch_name'));
+        $this->set(compact('report','post'));
     }
 }

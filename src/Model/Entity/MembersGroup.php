@@ -41,5 +41,6 @@ class MembersGroup extends Entity
         'removal_resaon' => true,
         'remark' => true,
         'date_of_removal' => true,
+        'created_by'=>true
     ];
 }

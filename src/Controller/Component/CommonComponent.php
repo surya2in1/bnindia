@@ -1038,11 +1038,12 @@ class CommonComponent extends Component {
                         'trans_date' => "DATE_FORMAT(trans_g.created_date,'%m/%d/%Y')",
                          'trans_g.chit_amount',
                          'trans_mg.ticket_no',
+                         'trans_mg.removal_resaon',
                      // 'branch_name' => $q->func()->concat(['UPPER(SUBSTRING(branch.first_name, 1, 1)), LOWER(SUBSTRING(branch.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(branch.middle_name, 1, 1)), LOWER(SUBSTRING(branch.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(branch.last_name, 1, 1)), LOWER(SUBSTRING(branch.last_name, 2))' => 'identifier']),
                      // 'branch.address',
                      // 'branch_date' => "DATE_FORMAT(branch.created_date,'%m/%d/%Y')",
                      'mg.is_transfer_user',
-                     // 'date_of_removal'=>"DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
+                     'date_of_removal'=>"DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
                 ]
                 )
               ->join([

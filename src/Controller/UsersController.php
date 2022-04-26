@@ -686,6 +686,7 @@ class UsersController extends AppController
 
             $group_record['user_id'] = $post['user_id'];
             $group_record['group_id'] = $post['group_id'];
+            $group_record['created_by'] =$this->Auth->user('id');
             $group_records[] = $group_record;
             $MembersGroups = $this->MembersGroups->newEntities($group_records);
             $result = $this->MembersGroups->saveMany($MembersGroups);
@@ -744,6 +745,7 @@ class UsersController extends AppController
                     $group_record['old_user_id'] = $post['user_id'];
                     $group_record['removal_resaon'] = $post['removal_resaon'];
                     $group_record['remark'] = $post['remark'];
+                    $group_record['created_by'] =$this->Auth->user('id');
                     $group_record['date_of_removal'] =date('Y-m-d',strtotime($post['date_of_removal']));
                     $group_records[] = $group_record;
                     $MembersGroups = $this->MembersGroups->newEntities($group_records);
