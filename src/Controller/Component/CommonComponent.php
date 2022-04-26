@@ -1030,7 +1030,7 @@ class CommonComponent extends Component {
     function getSubscribersLists($post, $user_id){
           $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
-          $users = $query->select(['name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier', ' , ','u.address'=> 'identifier']), 
+          $users = $query->select(['mg.id','mg.old_user_id','name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier', ' , ','u.address'=> 'identifier']), 
                      'date' => "DATE_FORMAT(g.created_date,'%m/%d/%Y')",
                      'mg.ticket_no',
                      'g.chit_amount',
@@ -1044,6 +1044,7 @@ class CommonComponent extends Component {
                      // 'branch_date' => "DATE_FORMAT(branch.created_date,'%m/%d/%Y')",
                      'mg.is_transfer_user',
                      'date_of_removal'=>"DATE_FORMAT(mg.date_of_removal,'%m/%d/%Y')",
+                     'trans_mg.remark',
                 ]
                 )
               ->join([
@@ -1086,8 +1087,8 @@ class CommonComponent extends Component {
                     'u.created_by'=>$user_id,
                     'g.created_date >= '=>date('Y-m-d',strtotime($post['start'])),
                     'g.created_date <= '=>date('Y-m-d',strtotime($post['end']))
-                ]) 
-              ->toArray();  
+                ]) ->toArray();  
+              // echo $users;exit;
           return $users;    
       }
 }
