@@ -36,6 +36,7 @@ class PaymentVouchersController extends AppController
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
         }
+        $payment_voucher_no = 1;
         if($id>0){
             $payment = $this->PaymentVouchers->get($id, [
                 'contain' => ['Groups'],
@@ -46,6 +47,9 @@ class PaymentVouchersController extends AppController
                                     'Auctions.created_by'=>$this->Auth->user('id')
                                 ];
         }else{
+            $PaymentVouchersNo = $this->PaymentVouchers->find()->count();
+            $payment_voucher_no = $PaymentVouchersNo +1;
+
             $payment = $this->PaymentVouchers->newEmptyEntity();
             $where_Conditions= ['Auctions.is_payment_done'=>0,'Auctions.created_by'=>$this->Auth->user('id')];
         }
@@ -77,7 +81,7 @@ class PaymentVouchersController extends AppController
             }
         }    
         
-        $this->set(compact('payment','groups'));
+        $this->set(compact('payment','groups','payment_voucher_no'));
         
         //Submit payment voucher data
         if ($this->request->is('post')) {

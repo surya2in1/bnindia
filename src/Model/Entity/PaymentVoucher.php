@@ -21,6 +21,8 @@ class PaymentVoucher extends Entity
      * @var array
      */
     protected $_accessible = [ 
+          'payment_voucher_no' => true,
+          'remark' => true,
           'date'=>true,
           'user_id'=>true,
           'group_id'=>true,

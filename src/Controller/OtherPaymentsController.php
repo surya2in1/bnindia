@@ -57,11 +57,15 @@ class OtherPaymentsController extends AppController
         if(isset($_POST['id']) && ($_POST['id'] > 0)){
             $id =  $_POST['id'];
         }
+        $other_payment_no = 1;
         if($id>0){
             $payment = $this->OtherPayments->get($id, [
                 'contain' => ['PaymentHeads'],
             ]);
         }else{
+            $OtherPaymentNo = $this->OtherPayments->find()->count();
+            $other_payment_no = $OtherPaymentNo +1;
+
             $payment = $this->OtherPayments->newEmptyEntity();
         }
         
@@ -73,7 +77,7 @@ class OtherPaymentsController extends AppController
                                     ])->toArray();
        
         //echo '<pre>';print_r($payment);exit;
-        $this->set(compact('payment','payment_heads'));
+        $this->set(compact('payment','payment_heads','other_payment_no'));
         
         //Submit payment voucher data
         if ($this->request->is('post')) {

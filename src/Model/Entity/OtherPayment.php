@@ -35,6 +35,8 @@ class OtherPayment extends Entity
      * @var array
      */
     protected $_accessible = [
+        'other_payment_no' => true,
+        'remark' => true,
         'payment_head_id' => true,
         'date' => true,
         'paid_to_name' => true,

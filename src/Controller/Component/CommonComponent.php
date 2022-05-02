@@ -1091,5 +1091,102 @@ class CommonComponent extends Component {
               // echo $users;exit;
           return $users;    
       }
+
+      function getDayBookLists($post, $user_id){
+        //get receipt data
+        $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
+        $query = $PaymentsTable->find();   
+
+        $where_Conditions = ['g.created_by'=>$user_id,'p.date'=>date('Y-m-d',strtotime($post['start']))]; 
+
+        $receipts = $query->select([ 
+            'pid' =>'p.id',
+            'receipt_date'=>"DATE_FORMAT(p.date,'%m/%d/%Y')",
+            'receipt_name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier']),
+            'receipt_subcription' => 'p.subscription_amount',
+            'receipt_interest' => 'p.late_fee',
+            'receipt_total' => 'p.total_amount',
+            'receipt_no',
+            'p.received_by',
+                ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g', 
+                    'conditions' =>'g.id = p.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u', 
+                    'conditions' =>'p.user_id = u.id',
+                ]) 
+              ->where($where_Conditions)  
+              ->order(['p.id' => 'ASC'])->toArray();  
+          // echo '$receipts <pre>';print_r($receipts);//exit;    
+
+          //Deposit in the bank
+          $deposit_in_bank = [];
+          if(!empty($receipts)){
+            $received_by_const = Configure::read('received_by');    
+            foreach($receipts as $key=> $receipt){
+                $deposit_in_bank[$key]['receipt_name'] = $receipt['receipt_name'];
+                $deposit_in_bank[$key]['deposit_in_bank_amount'] = $receipt['receipt_total'];
+                $deposit_in_bank[$key]['pv_total'] = $receipt['receipt_total'];
+                $deposit_in_bank[$key]['remark'] = $received_by_const[$receipt['received_by']];;
+            }
+          }
+
+          //get payment voucher data
+          $PaymentVouchersTable = TableRegistry::get('pv', ['table' => 'payment_vouchers']);
+          $query = $PaymentVouchersTable->find();   
+
+          $where_Conditions_pv = ['g.created_by'=>$user_id,'pv.date'=>date('Y-m-d',strtotime($post['start']))]; 
+
+          $payment_vouchers = $query->select([ 
+            'pvid' =>'pv.id',
+            'pv_date'=>"DATE_FORMAT(pv.date,'%m/%d/%Y')",
+            'receipt_name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier']),
+            'pv_total' => 'pv.total',
+            'expenditure_foremans_commission' =>'pv.foreman_commission',
+            'referece_no'=>'pv.payment_voucher_no',
+            'pv.remark'
+                ])
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g', 
+                    'conditions' =>'g.id = pv.group_id',
+                ]) 
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u', 
+                    'conditions' =>'pv.user_id = u.id',
+                ]) 
+              ->where($where_Conditions_pv)  
+              ->order(['pv.id' => 'ASC'])->toArray();  
+          // echo '$payment_vouchers <pre>';print_r($payment_vouchers);//exit;
+
+          $OtherPaymentsTable = TableRegistry::get('op', ['table' => 'other_payments']);
+          $query = $OtherPaymentsTable->find();   
+
+          $where_Conditions_op = ['op.created_by'=>$user_id,'op.date'=>date('Y-m-d',strtotime($post['start']))]; 
+
+          $other_payments = $query->select([ 
+            'opid' =>'op.id',
+            'op_date'=>"DATE_FORMAT(op.date,'%m/%d/%Y')",
+            'receipt_name' => 'op.paid_to_name',
+            'pv_total' => 'op.total_amount_paid_rs',
+            'referece_no'=>'op.other_payment_no',
+            'op.remark'
+                ]) 
+              ->where($where_Conditions_op)  
+              ->order(['op.id' => 'ASC'])->toArray();  
+          // echo '$other_payments <pre>';print_r($other_payments);//exit;
+
+
+          //merge all data
+          $final_data = array_merge($receipts,$deposit_in_bank,$payment_vouchers,$other_payments);
+          // echo '$final_data <pre>';print_r($final_data);exit;
+
+          return $final_data; 
+      }
 }
 ?>

@@ -237,6 +237,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('subscriber_lists.js') ?>
         <?php } ?> 
 
+        <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'dayBook') { ?> 
+            <?= $this->Html->script('day_book.js') ?>
+        <?php } ?>
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>

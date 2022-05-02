@@ -43,6 +43,13 @@ use Cake\Routing\Router;
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Payment Voucher No:</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="payment_voucher_no" placeholder="Enter Payment Voucher No" value="<?= isset($payment->payment_voucher_no) ? $payment->payment_voucher_no : $payment_voucher_no;?>" autofocus="true" readonly title="You can not change this value.">
+                                    </div>
+                                </div> 
+
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Date:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <div class="input-group date">
@@ -151,6 +158,13 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Particular Resaon:</label>
                                     <div class="col-lg-6">
                                         <input type="text" maxlength="100" class="form-control  border-black" name="resaon" id="resaon"  placeholder="Enter Particular Resaon" value="<?= isset($payment->resaon) ? $payment->resaon : '';?>">
+                                    </div>
+                                </div>
+                                     
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Remark</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?=  $payment->remark; ?>"> 
                                     </div>
                                 </div>
                                      

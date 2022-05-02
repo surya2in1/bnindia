@@ -43,6 +43,13 @@ use Cake\Routing\Router;
                         <div class="kt-section kt-section--first">
                             <div class="kt-section__body">
                                 <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Other Payment No:</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="other_payment_no" placeholder="Enter Other Payment No" value="<?= isset($payment->other_payment_no) ? $payment->other_payment_no : $other_payment_no;?>" autofocus="true" readonly title="You can not change this value.">
+                                    </div>
+                                </div> 
+
+                                <div class="form-group row">
                                     <label class="col-lg-3 col-form-label">Payment Head:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <?php $payment_head_id =  isset($payment->payment_head_id) ? $payment->payment_head_id : 0;?>
@@ -113,6 +120,13 @@ use Cake\Routing\Router;
                                     <label class="col-lg-3 col-form-label">Cheque No./ Transaction No.:<span class="required" aria-required="true"> * </span></label>
                                     <div class="col-lg-6">
                                         <input type="number" min="1" class="form-control  border-black" name="cheque_transaction_no" id="cheque_transaction_no" maxlength="20" placeholder="Enter Cheque No./ Transaction No." value="<?= isset($payment->cheque_transaction_no) ? $payment->cheque_transaction_no : '';?>">
+                                    </div>
+                                </div>
+                                     
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Remark</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark" value="<?=  $payment->remark; ?>"> 
                                     </div>
                                 </div>
                                      

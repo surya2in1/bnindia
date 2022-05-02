@@ -451,16 +451,46 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
-                                            <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'subscribersLists') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
-                                                <?php echo  $this->Html->link(
-                                                     '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+
+                                            <!-- goverment report start -->
+                                            <li class="kt-menu__item  kt-menu__item--submenu <?php if(($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'subscribersLists') || ($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'dayBook')) { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
+                                                <a href="javascript:;" class="kt-menu__link kt-menu__toggle">
+                                                    <i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="kt-menu__link-text">Register Of Subscriber</span>',
-                                                    array('controller'=>'Reports','action'=>'subscribersLists'),
-                                                    ['class' => 'kt-menu__link','escape'=>false]
-                                                ); ?>
+                                                    <span class="kt-menu__link-text">Goverment Reports</span><i class="kt-menu__ver-arrow la la-angle-right"></i>
+                                                </a>
+                                                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                                                    <ul class="kt-menu__subnav kt-menu__item--active">
+                                                        <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
+                                                        <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'subscribersLists') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                            <?php echo  $this->Html->link(
+                                                                 '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="kt-menu__link-text">Register Of Subscriber</span>',
+                                                                array('controller'=>'Reports','action'=>'subscribersLists'),
+                                                                ['class' => 'kt-menu__link','escape'=>false]
+                                                            ); ?>
+                                                        </li>
+
+                                                        
+                                                        <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Reports' && $this->request->getParam('action') == 'dayBook') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
+                                                            <?php echo  $this->Html->link(
+                                                                 '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="kt-menu__link-text">Day Book</span>',
+                                                                array('controller'=>'Reports','action'=>'dayBook'),
+                                                                ['class' => 'kt-menu__link','escape'=>false]
+                                                            ); ?>
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
                                             </li>
+                                            <!-- goverment report end --> 
+
                                         </ul>
                                     </div>
                                 </li>
