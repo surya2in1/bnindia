@@ -1108,6 +1108,7 @@ class CommonComponent extends Component {
             'receipt_total' => 'p.total_amount',
             'receipt_no',
             'p.received_by',
+            'p.remark'
                 ])
                 ->join([
                     'table' => 'groups',
@@ -1131,7 +1132,8 @@ class CommonComponent extends Component {
                 $deposit_in_bank[$key]['receipt_name'] = $receipt['receipt_name'];
                 $deposit_in_bank[$key]['deposit_in_bank_amount'] = $receipt['receipt_total'];
                 $deposit_in_bank[$key]['pv_total'] = $receipt['receipt_total'];
-                $deposit_in_bank[$key]['remark'] = $received_by_const[$receipt['received_by']];;
+                $deposit_in_bank[$key]['remark'] = $received_by_const[$receipt['received_by']];
+                $deposit_in_bank[$key]['referece_no'] = $receipt['receipt_no'];
             }
           }
 
