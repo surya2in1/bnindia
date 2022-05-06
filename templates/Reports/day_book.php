@@ -43,10 +43,10 @@ use Cake\Routing\Router;
                             <div class="kt-section__body">  
 
                                  <div class="form-group row">
-                                    <label class="col-lg-2 col-form-label">Select Date:<span class="required" aria-required="true"> * </span></label>
+                                    <label class="col-lg-2 col-form-label">Date Range:<span class="required" aria-required="true"> * </span></label>
                                     <div class="">
                                         <div class="input-daterange input-group" id="kt_datepicker_5">
-                                            <div class="col-lg-12"> 
+                                            <div class="col-lg-6"> 
                                                 <div class="input-group date">
                                                     <input type="text" class="form-control" name="start" placeholder="Start Date" autocomplete="off">
                                                     <div class="input-group-append">
@@ -56,9 +56,24 @@ use Cake\Routing\Router;
                                                     </div>
                                                 </div>
                                             </div> 
+
+                                            <div class="col-lg-6"> 
+                                                <div class="input-group date">
+                                                    <input type="text" class="form-control" name="end" placeholder="End Date" autocomplete="off">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">
+                                                            <i class="la la-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div> 
+                                            </div> 
+
                                         </div>
                                     </div>
                                 </div>
+ 
+
+
                             </div>
                         </div>
                     </div> 

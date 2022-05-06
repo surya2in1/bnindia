@@ -64,7 +64,12 @@ tr:nth-child(even) {
        </tr>
         <tr>
          <td>
-          Selected date: <?= $post['start']; ?> 
+          Start date: <?= $post['start']; ?> 
+         </td>
+       </tr>
+       <tr>
+         <td>
+           End date: <?= $post['end']; ?> 
          </td>
        </tr>
        <tr>
@@ -108,26 +113,52 @@ tr:nth-child(even) {
               $sr_no=1;
               $total =0 ;
               $total_expenditure =0;
+
+              $total_receipt = 0;
+              $total_interest = 0;
+              $total_withdrawal = 0;
+
+              $total_paid_to_subscriber = 0;
+              $total_forman=0;
+              $total_deposite_in_the_bank = 0;
+
                foreach ($report as $key => $value) {?>
                 <?php
                 $total = $total + (isset($value['receipt_total']) && ($value['receipt_total']>0) ? $value['receipt_total'] : 0 ); 
-               $total_expenditure = $total_expenditure + (isset($value['pv_total']) && ($value['pv_total']>0) ? $value['pv_total'] : 0 );
-                ?>
+                $total_expenditure = $total_expenditure + (isset($value['pv_total']) && ($value['pv_total']>0) ? $value['pv_total'] : 0 );
+               
+                $total_receipt = $total_receipt + (isset($value['receipt_subcription']) && ($value['receipt_subcription']>0) ? $value['receipt_subcription'] : 0 );
+                $total_interest = $total_interest + (isset($value['receipt_interest']) && ($value['receipt_interest']>0) ? $value['receipt_interest'] : 0 );
+                $total_withdrawal = 0;
+
+                $total_paid_to_subscriber =$total_paid_to_subscriber + (isset($value['pv_total']) && ($value['pv_total']>0) ? $value['pv_total'] : 0 );
+                $total_forman=$total_forman + (isset($value['expenditure_foremans_commission']) && ($value['expenditure_foremans_commission']>0) ? $value['expenditure_foremans_commission'] : 0 );
+                $total_deposite_in_the_bank = $total_deposite_in_the_bank + (isset($value['deposit_in_bank_amount']) && ($value['deposit_in_bank_amount']>0) ? $value['deposit_in_bank_amount'] : 0 );
+
+                $receipt_total = (isset($value['receipt_subcription']) && ($value['receipt_subcription']>0) ?  $value['receipt_subcription'] : 0)
+                +(isset($value['receipt_interest']) && ($value['receipt_interest']>0)  ?  $value['receipt_interest'] : 0) ;
+
+                $pv_total = (isset($value['pv_total']) && ($value['pv_total']>0) ?  $value['pv_total'] : 0)
+                +(isset($value['expenditure_foremans_commission']) && ($value['expenditure_foremans_commission']>0)  ?  $value['expenditure_foremans_commission'] : 0)
+                 +(isset($value['deposit_in_bank_amount']) && ($value['deposit_in_bank_amount']>0)  ?  $value['deposit_in_bank_amount'] : 0)
+                  +(isset($value['other']) && ($value['other']>0)  ?  $value['other'] : 0) ;
+              ?>
+
                    <tr>
-                     <td><?= $post['start']; ?></td>
+                     <td><?= $value['receipt_date']; ?></td>
                      <td><?= $sr_no; ?></td>
                      <td><?= isset($value['receipt_name']) ?  $value['receipt_name'] :'--'; ?></td>
                      <td><?= isset($value['receipt_subcription']) ?  $value['receipt_subcription'] :'--'; ?></td>
                      <td><?= isset($value['receipt_interest']) ?  $value['receipt_interest'] :'--'; ?></td>
                      <td></td>
                      <td></td>
-                     <td><?= isset($value['receipt_total']) ?  $value['receipt_total'] :'--'; ?></td>
+                     <td><?= $receipt_total; ?></td>
                      <td><?= isset($value['receipt_no']) ?  $value['receipt_no'] :'--'; ?></td>
                      <td><?= isset($value['pv_total']) ?  $value['pv_total'] :'--'; ?></td>
                      <td><?= isset($value['expenditure_foremans_commission']) ?  $value['expenditure_foremans_commission'] :'--'; ?></td>
                      <td><?= isset($value['deposit_in_bank_amount']) ?  $value['deposit_in_bank_amount'] :'--'; ?></td>
-                     <td></td>
-                     <td><?= isset($value['pv_total']) ?  $value['pv_total'] :'--'; ?></td>
+                     <td><?= isset($value['other']) ?  $value['other'] :'--'; ?></td>
+                     <td><?= $pv_total; ?></td>
                      <td></td>
                      <td><?= isset($value['referece_no']) ?  $value['referece_no'] :'--'; ?></td>
                      <td></td>
@@ -163,6 +194,56 @@ tr:nth-child(even) {
             ?>
          </tbody>
       </table>
+
+      <h3>Totals:</h3>
+      <table class="tbl-header">
+       <tr>
+         <td>
+           Receipts Subscriptions: <?=$total_receipt; ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+           Interest: <?=$total_interest; ?>
+         </td>
+       </tr>
+       <tr>
+         <td>
+           Withdrawal: <?=$total_withdrawal; ?>
+         </td>
+       </tr>
+        <tr>
+         <td>
+         Total: <?=$total; ?>
+         </td>
+       </tr>
+       <tr>
+         <td>
+          Amount paid to subscriber: <?=$total_paid_to_subscriber; ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+          Expenditure Foremans Commission: <?=$total_forman; ?>
+         </td>
+       </tr>
+       <tr>
+         <td>
+          Deposit in the bank: <?=$total_deposite_in_the_bank; ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+          Total Expenditure: <?=$total_expenditure; ?>
+         </td>
+       </tr>
+       <tr>
+         <td valign=middle>
+          Balance: <?=$balance; ?>
+         </td>
+       </tr>
+     </table>
+
    </div>
 </body>
 </html> 

@@ -7,6 +7,9 @@ var KTFormControls = function() {
 	                start:{
 	                	required:true
 	                },  
+                    end:{
+                        required:true
+                    }, 
 	            },
 	            errorPlacement: function(error, element) {
                     var group = element.closest('.input-group');

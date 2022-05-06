@@ -1097,7 +1097,10 @@ class CommonComponent extends Component {
         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         $query = $PaymentsTable->find();   
 
-        $where_Conditions = ['g.created_by'=>$user_id,'p.date'=>date('Y-m-d',strtotime($post['start']))]; 
+        $where_Conditions = ['g.created_by'=>$user_id,
+                              'p.date >='=>date('Y-m-d',strtotime($post['start'])),
+                              'p.date <='=>date('Y-m-d',strtotime($post['end']))
+                            ]; 
 
         $receipts = $query->select([ 
             'pid' =>'p.id',
@@ -1122,13 +1125,14 @@ class CommonComponent extends Component {
                 ]) 
               ->where($where_Conditions)  
               ->order(['p.id' => 'ASC'])->toArray();  
-          // echo '$receipts <pre>';print_r($receipts);//exit;    
+          // echo '$receipts <pre>';print_r($receipts);exit;    
 
           //Deposit in the bank
           $deposit_in_bank = [];
           if(!empty($receipts)){
             $received_by_const = Configure::read('received_by');    
             foreach($receipts as $key=> $receipt){
+                 $deposit_in_bank[$key]['receipt_date'] = $receipt['receipt_date'];
                 $deposit_in_bank[$key]['receipt_name'] = $receipt['receipt_name'];
                 $deposit_in_bank[$key]['deposit_in_bank_amount'] = $receipt['receipt_total'];
                 $deposit_in_bank[$key]['pv_total'] = $receipt['receipt_total'];
@@ -1141,16 +1145,20 @@ class CommonComponent extends Component {
           $PaymentVouchersTable = TableRegistry::get('pv', ['table' => 'payment_vouchers']);
           $query = $PaymentVouchersTable->find();   
 
-          $where_Conditions_pv = ['g.created_by'=>$user_id,'pv.date'=>date('Y-m-d',strtotime($post['start']))]; 
+          $where_Conditions_pv = ['g.created_by'=>$user_id,
+                                  'pv.date >='=>date('Y-m-d',strtotime($post['start'])),
+                                  'pv.date <='=>date('Y-m-d',strtotime($post['end']))
+                                ]; 
 
           $payment_vouchers = $query->select([ 
             'pvid' =>'pv.id',
-            'pv_date'=>"DATE_FORMAT(pv.date,'%m/%d/%Y')",
+            'receipt_date'=>"DATE_FORMAT(pv.date,'%m/%d/%Y')",
             'receipt_name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier']),
             'pv_total' => 'pv.total',
             'expenditure_foremans_commission' =>'pv.foreman_commission',
             'referece_no'=>'pv.payment_voucher_no',
-            'pv.remark'
+            'pv.remark',
+            'other'=>'pv.gst'
                 ])
                 ->join([
                     'table' => 'groups',
@@ -1169,15 +1177,19 @@ class CommonComponent extends Component {
           $OtherPaymentsTable = TableRegistry::get('op', ['table' => 'other_payments']);
           $query = $OtherPaymentsTable->find();   
 
-          $where_Conditions_op = ['op.created_by'=>$user_id,'op.date'=>date('Y-m-d',strtotime($post['start']))]; 
+          $where_Conditions_op = ['op.created_by'=>$user_id,
+                                   'op.date >='=>date('Y-m-d',strtotime($post['start'])),
+                                   'op.date <='=>date('Y-m-d',strtotime($post['end']))
+                                ]; 
 
           $other_payments = $query->select([ 
             'opid' =>'op.id',
-            'op_date'=>"DATE_FORMAT(op.date,'%m/%d/%Y')",
+            'receipt_date'=>"DATE_FORMAT(op.date,'%m/%d/%Y')",
             'receipt_name' => 'op.paid_to_name',
             'pv_total' => 'op.total_amount_paid_rs',
             'referece_no'=>'op.other_payment_no',
-            'op.remark'
+            'op.remark',
+            'other'=>'op.gst'
                 ]) 
               ->where($where_Conditions_op)  
               ->order(['op.id' => 'ASC'])->toArray();  
@@ -1186,9 +1198,29 @@ class CommonComponent extends Component {
 
           //merge all data
           $final_data = array_merge($receipts,$deposit_in_bank,$payment_vouchers,$other_payments);
-          // echo '$final_data <pre>';print_r($final_data);exit;
+          // echo '$final_data <pre>';print_r($final_data); 
 
+          // $totalsByDate = [];
+          //   foreach ($array as $element) if (($date = strtotime($element->thedate)) and is_numeric($element->theadults)) {
+          //       $totalsByDate[$date] += $element->theadults;
+          //   }
+          //   ksort($totalsByDate);
+          //   foreach ($totalsByDate as $date => $total) {
+          //       echo "On " . date("Y-m-d", $date) . " there were " . $total " adults.\n";
+          //   }
+
+          // Sort the array 
+            usort($final_data,function($a, $b) {
+                $datetime1 = strtotime($a['receipt_date']);
+                $datetime2 = strtotime($b['receipt_date']);
+                return $datetime1 - $datetime2;
+            });
+
+           // echo '$final_data ff <pre>';print_r($final_data);exit; 
           return $final_data; 
       }
+
+
 }
+     
 ?>
