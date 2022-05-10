@@ -1215,8 +1215,75 @@ class CommonComponent extends Component {
                 $datetime2 = strtotime($b['receipt_date']);
                 return $datetime1 - $datetime2;
             });
+            //echo '$final_data bef <pre>';print_r($final_data);
+           $totalsByDate = [];
+           $date = ''; 
+           $date_wise_total_index_cnt = 0;
+            foreach ($final_data as $key=> $element) { 
+                $date_wise_total_index = 0;
+               
+                if (($date == strtotime($element['receipt_date']))) {
+                        $subscription = $subscription + (isset($element['receipt_subcription']) && ($element['receipt_subcription']>0) ?  $element['receipt_subcription'] : 0);  
+                         $pv_sum = (isset($element['pv_total']) && ($element['pv_total']>0) ?  $element['pv_total'] : 0)
+                    +(isset($element['expenditure_foremans_commission']) && ($element['expenditure_foremans_commission']>0)  ?  $element['expenditure_foremans_commission'] : 0)
+                     +(isset($element['deposit_in_bank_amount']) && ($element['deposit_in_bank_amount']>0)  ?  $element['deposit_in_bank_amount'] : 0)
+                      +(isset($element['other']) && ($element['other']>0)  ?  $element['other'] : 0) ; 
 
-           // echo '$final_data ff <pre>';print_r($final_data);exit; 
+                        $pv_total = $pv_total +  $pv_sum; 
+                }else{
+                    if($key >0 || $date ==''){
+                        $subscription = isset($element['receipt_subcription']) && ($element['receipt_subcription']>0) ?  $element['receipt_subcription'] : 0;
+                        $pv_total = (isset($element['pv_total']) && ($element['pv_total']>0) ?  $element['pv_total'] : 0)
+                    +(isset($element['expenditure_foremans_commission']) && ($element['expenditure_foremans_commission']>0)  ?  $element['expenditure_foremans_commission'] : 0)
+                     +(isset($element['deposit_in_bank_amount']) && ($element['deposit_in_bank_amount']>0)  ?  $element['deposit_in_bank_amount'] : 0)
+                      +(isset($element['other']) && ($element['other']>0)  ?  $element['other'] : 0) ; 
+                    }
+
+                    if(($key>0) && $date!='')
+                    {
+                        $date_wise_total_index = $key;
+                        $date_wise_total_index_cnt++;
+                    }
+                } 
+  //echo '<br/>======================<br/> '.$date_wise_total_index .($key+1). '== '.count($final_data).'$element <pre>';print_r($element);
+                if($date_wise_total_index > 0){ 
+
+                      if($date_wise_total_index_cnt>1){
+                         $date_wise_total_index = $date_wise_total_index +  ($date_wise_total_index_cnt-1);
+                      }
+                    $totalsByDate[$date]['date_wise_total_index']  =$date_wise_total_index; 
+                }
+                if(($key+1) == count($final_data)){
+                    $totalsByDate[strtotime($element['receipt_date'])]['date_wise_total_index']  = 'last';
+                }
+                
+                $totalsByDate[strtotime($element['receipt_date'])]['subscription'] = $subscription;
+                $totalsByDate[strtotime($element['receipt_date'])]['pv_totals'] = $pv_total; 
+                $totalsByDate[strtotime($element['receipt_date'])]['date_wise_total'] = 1; 
+                
+
+               // echo' totalsByDate <pre>';print_r($totalsByDate);  
+                $date = strtotime($element['receipt_date']);
+            }
+            ksort($totalsByDate);
+            if(isset($totalsByDate ) && !empty($totalsByDate)){
+                foreach($totalsByDate as $val){ 
+                    $data=[];
+                    if(isset($val['date_wise_total_index'])){
+                        if($val['date_wise_total_index'] == 'last'){
+                            $data[count($final_data)] = $val;
+                            $val['date_wise_total_index'] = count($final_data);
+                        }else{
+                            $data[$val['date_wise_total_index']] = $val;
+                        }
+                        array_splice( $final_data, $val['date_wise_total_index'], 0, $data);    
+                    }
+                }   
+            }
+            //echo '$totalsByDate ff <pre>';print_r($totalsByDate);
+            //echo '$final_data ff <pre>';print_r($final_data);
+            //exit; 
+            
           return $final_data; 
       }
 
