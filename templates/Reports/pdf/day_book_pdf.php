@@ -88,7 +88,7 @@ tr:nth-child(even) {
              <th rowspan="2">On what account received or Paid</th>
              <th colspan="5">Receipts</th> 
              <th rowspan="2">Reference Receipt in the Receipt book</th>
-             <th colspan="5">Expenditure</th>  
+             <th colspan="4">Expenditure</th>  
              <th rowspan="2">Balance</th>  
              <th rowspan="2">Reference to the page number of the voucher in the file of vouchers</th>  
              <th rowspan="2">Signature of foreman</th>  
@@ -102,8 +102,7 @@ tr:nth-child(even) {
                 <th>Total</th>
                 <th>Amount paid to subscriber</th>
                 <th>Expenditure Foremans Commission</th>
-                <th>Deposit in the bank</th>
-                <th>Other Items</th>
+                <th>Deposit in the bank</th> 
                 <th>Total Expenditure</th>
             </tr>
          </thead>
@@ -123,10 +122,7 @@ tr:nth-child(even) {
               $total_deposite_in_the_bank = 0;
 
                foreach ($report as $key => $value) {?>
-                <?php
-                $total = $total + (isset($value['receipt_total']) && ($value['receipt_total']>0) ? $value['receipt_total'] : 0 ); 
-               
-               
+                <?php  
                 $total_receipt = $total_receipt + (isset($value['receipt_subcription']) && ($value['receipt_subcription']>0) ? $value['receipt_subcription'] : 0 );
                 $total_interest = $total_interest + (isset($value['receipt_interest']) && ($value['receipt_interest']>0) ? $value['receipt_interest'] : 0 );
                 $total_withdrawal = 0;
@@ -136,13 +132,16 @@ tr:nth-child(even) {
                 $total_deposite_in_the_bank = $total_deposite_in_the_bank + (isset($value['deposit_in_bank_amount']) && ($value['deposit_in_bank_amount']>0) ? $value['deposit_in_bank_amount'] : 0 );
  
                 $receipt_total = (isset($value['receipt_subcription']) && ($value['receipt_subcription']>0) ?  $value['receipt_subcription'] : 0)
-                +(isset($value['receipt_interest']) && ($value['receipt_interest']>0)  ?  $value['receipt_interest'] : 0) ;
+                +(isset($value['receipt_interest']) && ($value['receipt_interest']>0)  ?  $value['receipt_interest'] : 0) 
+                  +(isset($value['other']) && ($value['other']>0)  ?  $value['other'] : 0);
 
                 $pv_total = (isset($value['pv_total']) && ($value['pv_total']>0) ?  $value['pv_total'] : 0)
                 +(isset($value['expenditure_foremans_commission']) && ($value['expenditure_foremans_commission']>0)  ?  $value['expenditure_foremans_commission'] : 0)
-                 +(isset($value['deposit_in_bank_amount']) && ($value['deposit_in_bank_amount']>0)  ?  $value['deposit_in_bank_amount'] : 0)
-                  +(isset($value['other']) && ($value['other']>0)  ?  $value['other'] : 0) ;
-                  $total_expenditure = $total_expenditure + $pv_total;
+                 +(isset($value['deposit_in_bank_amount']) && ($value['deposit_in_bank_amount']>0)  ?  $value['deposit_in_bank_amount'] : 0) ;
+
+                $total_expenditure = $total_expenditure + $pv_total;
+
+                $total = $total + $receipt_total; 
               ?>
                 <?php
                    if(isset($value['date_wise_total']) && $value['date_wise_total'] ==1){ ?>
@@ -158,8 +157,7 @@ tr:nth-child(even) {
                          <td></td>
                          <td></td>
                          <td></td>
-                         <td></td>
-                         <td></td>
+                         <td></td> 
                          <td><b><?= isset($value['pv_totals']) && ($value['pv_totals']>0) ?  $value['pv_totals'] : 0; ?><b></td>
                          <td></td>
                          <td></td>
@@ -175,13 +173,12 @@ tr:nth-child(even) {
                          <td><?= isset($value['receipt_subcription']) ?  $value['receipt_subcription'] :'--'; ?></td>
                          <td><?= isset($value['receipt_interest']) ?  $value['receipt_interest'] :'--'; ?></td>
                          <td></td>
-                         <td></td>
+                         <td><?= isset($value['other']) ?  $value['other'] :'--'; ?></td>
                          <td><?= $receipt_total; ?></td>
                          <td><?= isset($value['receipt_no']) ?  $value['receipt_no'] :'--'; ?></td>
                          <td><?= isset($value['pv_total']) ?  $value['pv_total'] :'--'; ?></td>
                          <td><?= isset($value['expenditure_foremans_commission']) ?  $value['expenditure_foremans_commission'] :'--'; ?></td>
-                         <td><?= isset($value['deposit_in_bank_amount']) ?  $value['deposit_in_bank_amount'] :'--'; ?></td>
-                         <td><?= isset($value['other']) ?  $value['other'] :'--'; ?></td>
+                         <td><?= isset($value['deposit_in_bank_amount']) ?  $value['deposit_in_bank_amount'] :'--'; ?></td> 
                          <td><?= $pv_total; ?></td>
                          <td></td>
                          <td><?= isset($value['referece_no']) ?  $value['referece_no'] :'--'; ?></td>
@@ -192,7 +189,7 @@ tr:nth-child(even) {
                   <?php }
                 ?> 
 
-              <?php }?>
+              <?php } ?>
                <?php  
                $balance = $total - $total_expenditure;
                ?>
@@ -208,8 +205,7 @@ tr:nth-child(even) {
                      <td></td>
                      <td></td>
                      <td></td>
-                     <td></td>
-                     <td></td>
+                     <td></td> 
                      <td><b><?= $total_expenditure; ?><b></td>
                      <td><b><?= $balance; ?><b></td>
                      <td></td>

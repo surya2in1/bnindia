@@ -1215,29 +1215,30 @@ class CommonComponent extends Component {
                 $datetime2 = strtotime($b['receipt_date']);
                 return $datetime1 - $datetime2;
             });
-            //echo '$final_data bef <pre>';print_r($final_data);
+            //echo '$final_data bef <pre>';print_r($final_data);exit;
            $totalsByDate = [];
            $date = ''; 
            $date_wise_total_index_cnt = 0;
+            $subscription  =0;
+            $pv_total  =0;
             foreach ($final_data as $key=> $element) { 
                 $date_wise_total_index = 0;
-               
-                if (($date == strtotime($element['receipt_date']))) {
-                        $subscription = $subscription + (isset($element['receipt_subcription']) && ($element['receipt_subcription']>0) ?  $element['receipt_subcription'] : 0);  
-                         $pv_sum = (isset($element['pv_total']) && ($element['pv_total']>0) ?  $element['pv_total'] : 0)
-                    +(isset($element['expenditure_foremans_commission']) && ($element['expenditure_foremans_commission']>0)  ?  $element['expenditure_foremans_commission'] : 0)
-                     +(isset($element['deposit_in_bank_amount']) && ($element['deposit_in_bank_amount']>0)  ?  $element['deposit_in_bank_amount'] : 0)
-                      +(isset($element['other']) && ($element['other']>0)  ?  $element['other'] : 0) ; 
+                $subscription_sum = ((isset($element['receipt_subcription']) && ($element['receipt_subcription']>0) ?  $element['receipt_subcription'] : 0)
+                        + (isset($element['receipt_interest']) && ($element['receipt_interest']>0) ?  $element['receipt_interest'] : 0)
+                            +(isset($element['other']) && ($element['other']>0) ?  $element['other'] : 0));
 
+                 $pv_sum = (isset($element['pv_total']) && ($element['pv_total']>0) ?  $element['pv_total'] : 0)
+                    +(isset($element['expenditure_foremans_commission']) && ($element['expenditure_foremans_commission']>0)  ?  $element['expenditure_foremans_commission'] : 0)
+                     +(isset($element['deposit_in_bank_amount']) && ($element['deposit_in_bank_amount']>0)  ?  $element['deposit_in_bank_amount'] : 0); 
+
+                if (($date == strtotime($element['receipt_date']))) {
+                        $subscription = $subscription + $subscription_sum;  
                         $pv_total = $pv_total +  $pv_sum; 
                 }else{
                     if($key >0 || $date ==''){
-                        $subscription = isset($element['receipt_subcription']) && ($element['receipt_subcription']>0) ?  $element['receipt_subcription'] : 0;
-                        $pv_total = (isset($element['pv_total']) && ($element['pv_total']>0) ?  $element['pv_total'] : 0)
-                    +(isset($element['expenditure_foremans_commission']) && ($element['expenditure_foremans_commission']>0)  ?  $element['expenditure_foremans_commission'] : 0)
-                     +(isset($element['deposit_in_bank_amount']) && ($element['deposit_in_bank_amount']>0)  ?  $element['deposit_in_bank_amount'] : 0)
-                      +(isset($element['other']) && ($element['other']>0)  ?  $element['other'] : 0) ; 
-                    }
+                        $subscription = $subscription_sum;
+                        $pv_total =$pv_sum ; 
+                    }   
 
                     if(($key>0) && $date!='')
                     {

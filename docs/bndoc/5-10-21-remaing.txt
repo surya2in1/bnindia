@@ -1,14 +1,9 @@
 Remaining
 
 Reports
-Create report, register of subscriber as per govt.
 
-1. Create report, register of subscriber as per govt.
-2. Create report as per govt rule, Day Book
 3. prized and non prized for payments
 
-Changes for transfer member:
-removal resoan,remark , date of removal
 ************************Later*********************************
 
 Move resaon from payment voucher to other payment
@@ -16,6 +11,10 @@ Move resaon from payment voucher to other payment
 Print receipt:
 Show amount in word
 add reg no
+
+increase report font
+
+
 **********************************************************
 
 
@@ -32,7 +31,7 @@ Add member
 Profile
 List,View
 
-
+Agent किंवा members नी कुठलीही document/photo upload केल्यानंतर आपल्याला ते download करून प्रिंट काढता यावी
 -----------------------------------------------------------------------------------------------------------
 ISSUES:
 in group form date datepicker
@@ -53,6 +52,14 @@ redirect auction edit if not superadmin in index page add  action
 
 =========================================================================================
 
+Done points in may 2022
+Create report, register of subscriber as per govt.
+
+1. Create report, register of subscriber as per govt.
+2. Create report as per govt rule, Day Book
+
+Changes for transfer member:
+removal resoan,remark , date of removal
 Done points in april 2022
 
 In Add member menu add agent crud => new change

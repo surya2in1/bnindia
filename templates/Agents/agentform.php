@@ -96,7 +96,7 @@
                                             <?php if($agent->address_proof){ ?>
                                             <div class="existing-address-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>" width="120px" height="100px"  alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -104,12 +104,17 @@
                                                     $('.new-address-doc').removeClass('hide');
                                                     return false;
                                                 })();return false;">Change</button>
+                                                
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
+                                             
                                             </div>
                                             <div class="new-address-doc hide">
                                                 <input class="file-input" id="address_proof" type="file" name="address_proof"> 
-                                                 <input type="hidden" id="check_upload_addr" name="check_upload_addr" value="<?= $agent->address_proof; ?>" />
-                                                <label class="file-name"></label>
                                                 <label for="address_proof" class="file-input-btn">Choose a file</label>
+                                                <label class="file-name"></label>
+                                                 <input type="hidden" id="check_upload_addr" name="check_upload_addr" value="<?= $agent->address_proof; ?>" />
                                             </div>
                                             <?php }else{ ?>
                                              <input class="file-input" type="file" id="address_proof" name="address_proof">
@@ -127,7 +132,7 @@
                                             <?php if($agent->pan_card){ ?>
                                             <div class="existing-other-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>" width="120px" height="100px"  alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -135,6 +140,9 @@
                                                     $('.new-other-doc').removeClass('hide');
                                                     return false;
                                                 })();return false;">Change</button>
+                                                 <a href="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                             <div class="new-other-doc hide">
                                                 <input class="file-input" id="pan_card" type="file" name="pan_card"> 
@@ -158,7 +166,7 @@
                                             <?php if($agent->photo){ ?>
                                             <div class="existing-photo-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>" width="120px" height="100px"  alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -166,6 +174,9 @@
                                                     $('.new-photo-doc').removeClass('hide');
                                                     return false;
                                                 })();return false;">Change</button>
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                             <div class="new-photo-doc hide">
                                                 <input class="file-input" id="photo" type="file" name="photo"> 
@@ -192,7 +203,7 @@
                                             <?php if($agent->educational_proof){ ?>
                                             <div class="existing-photo-doc" >
                                                 <div class="kt-widget__media">
-                                                    <img src="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>"width="25%" alt="image">
+                                                    <img src="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>" width="120px" height="100px"  alt="image">
                                                 </div>
                                                 <br/>
                                                 <button type="button" class="btn btn-success btn-sm" onClick="(function(){
@@ -200,6 +211,9 @@
                                                     $('.new-photo-doc').removeClass('hide');
                                                     return false;
                                                 })();return false;">Change</button>
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                             <div class="new-photo-doc hide">
                                                 <input class="file-input" id="educational_proof" type="file" name="educational_proof"> 

@@ -75,7 +75,10 @@
                                         <?php if($agent->address_proof){ ?>
                                         <div class="existing-address-doc" >
                                             <div class="kt-widget__media">
-                                                <img src="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>"width="25%" alt="image">
+                                                <img src="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>"  width="120px" height="100px" alt="image">
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/address_proof/<?= $agent->address_proof; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                         </div>
                                         <?php } ?> 
@@ -89,7 +92,10 @@
                                         <?php if($agent->photo){ ?>
                                         <div class="existing-photo-doc" >
                                             <div class="kt-widget__media">
-                                                <img src="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>"width="25%" alt="image">
+                                                <img src="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>"  width="120px" height="100px"  alt="image">
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/photo/<?= $agent->photo; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                         </div>
                                         <?php } ?>
@@ -103,7 +109,10 @@
                                         <?php if($agent->pan_card){ ?>
                                         <div class="existing-photo-doc" >
                                             <div class="kt-widget__media">
-                                                <img src="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>"width="25%" alt="image">
+                                                <img src="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>" width="120px" height="100px" alt="image">
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/pan_card/<?= $agent->pan_card; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                         </div>
                                         <?php } ?>
@@ -117,7 +126,10 @@
                                         <?php if($agent->educational_proof){ ?>
                                         <div class="existing-other-doc" >
                                             <div class="kt-widget__media">
-                                                <img src="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>"width="25%" alt="image">
+                                                <img src="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>" width="120px" height="100px" alt="image">
+                                                <a href="<?= Router::url('/', true); ?>agents_docs/educational_proof/<?= $agent->educational_proof; ?>" download>
+                                                    <img   src="<?= Router::url('/', true); ?>assets/media/icons/svg/Files/DownloadedFile.svg" alt="Download" width="40px" title="Download">
+                                                </a>
                                             </div>
                                         </div>
                                         <?php } ?>
