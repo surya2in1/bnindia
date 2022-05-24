@@ -42,24 +42,49 @@ class DashboardController extends AppController
     public function index()
     {
     	$this->viewBuilder()->setLayout('admin'); 
-        $this->set('branch_name', $this->Auth->user('branch_name'));
 
         //get total cash
-        $total_cash = $this->Common->getAmountByReceivedBy(1,$this->Auth->user('id'));  
-        $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$this->Auth->user('id')); 
-        $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$this->Auth->user('id'));  
-        $total_amount = $this->Common->getAmountByReceivedBy(0,$this->Auth->user('id'));  
+        //echo '<pre>';print_r($this->Auth->user());exit;
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+        //erro for New Members getMemberCount for role member
 
-        $succefull_transactions= $this->Common->getAllSuccessfullTransaction($this->Auth->user('id')); 
-        $total_groups= $this->Common->getGroupCount($this->Auth->user('id')); 
-        $total_members= $this->Common->getMemberCount($this->Auth->user('id')); 
-        $total_auctions= $this->Common->getAuctionsCount($this->Auth->user('id')); 
-        $total_payments= $this->Common->getPaymentsCount($this->Auth->user('id')); 
+        //For Member Check auth role is member then join to members_groups with auth id and created by as user_id
+        /*********** getAllSuccessfullTransaction pending******/
+        //For user,agent,branch_head and assistant head, get created_by id as branch then use as user_id
+
+        $is_member =0;
+        $user_id_param = 0;
+        $branch_name = $this->Auth->user('branch_name');
+        if($user_role == Configure::read('ROLE_SUPERADMIN')){
+            $use_id = -1;
+            $branch_name = 'All Branch';
+        }else if($user_role == Configure::read('ROLE_MEMBER')){
+            $is_member =1;
+            $user_id_param = $this->Auth->user('id');
+            $use_id = $this->Auth->user('created_by');
+        }else if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+            
+        }else{
+            $use_id = $this->Auth->user('id');
+        }
+        $this->set('branch_name', $branch_name);
+
+        $total_cash = $this->Common->getAmountByReceivedBy(1,$use_id,$user_id_param);  
+        $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$use_id,$user_id_param); 
+        $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$use_id,$user_id_param);  
+        $total_amount = $this->Common->getAmountByReceivedBy(0,$use_id,$user_id_param);  
+
+        $succefull_transactions= $this->Common->getAllSuccessfullTransaction($use_id,$user_id_param); 
+        $total_groups= $this->Common->getGroupCount($use_id,$user_id_param); 
+        $total_members= $this->Common->getMemberCount($use_id,$user_id_param); 
+        $total_auctions= $this->Common->getAuctionsCount($use_id,$user_id_param); 
+        $total_payments= $this->Common->getPaymentsCount($use_id,$user_id_param); 
 
         $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
-            $output = $GroupsTable->GetDashboardData($this->Auth->user('id'));
+            $output = $GroupsTable->GetDashboardData($use_id);
             // echo '$output <pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }

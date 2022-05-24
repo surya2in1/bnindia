@@ -231,6 +231,10 @@ var KTDatatablesDataSourceAjaxServer = function() {
 	                	required: false,
 	                	minAge: 18
 	                }, 
+	                agent_id:{
+	                	required: true,
+	                	min:1
+	                },
                     pin_code:{
                         required: true,
                         number: true,

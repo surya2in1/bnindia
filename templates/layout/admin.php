@@ -241,6 +241,10 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('day_book.js') ?>
         <?php } ?>
 
+        <?php if($this->request->getParam('controller') == 'AllUsers'  && ($this->request->getParam('action') == 'index' || $this->request->getParam('action') == 'memberform')) { ?> 
+            <?= $this->Html->script('all_users.js') ?>
+        <?php } ?>
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>

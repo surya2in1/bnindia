@@ -152,7 +152,7 @@ use Cake\Routing\Router;
                                         Number Of Notes
                                     </span>
                                     <span class="kt-widget17__desc">
-                                        38 Notes
+                                        <?= isset($total_cash[0]['total_notes']) && ($total_cash[0]['total_notes']>0) ? $total_cash[0]['total_notes'] :0;?> Notes
                                     </span>
                             </div>
                             <div class="kt-widget17__item">
@@ -163,7 +163,7 @@ use Cake\Routing\Router;
                                         No. Of Cheques
                                     </span>
                                     <span class="kt-widget17__desc">
-                                        2 Cheques
+                                       <?= isset($total_cheque_amount[0]['no_of_cheques']) && ($total_cheque_amount[0]['no_of_cheques']>0) ? $total_cheque_amount[0]['no_of_cheques'] :0;?>  Cheques
                                     </span>
                                 </div>
                             </div>
@@ -176,7 +176,7 @@ use Cake\Routing\Router;
                                         No. Of DD
                                     </span>
                                     <span class="kt-widget17__desc">
-                                        2 DD
+                                        <?= isset($total_dd_amount[0]['no_of_dd']) && ($total_dd_amount[0]['no_of_dd']>0) ? $total_dd_amount[0]['no_of_dd'] :0;?>  DD
                                     </span>
                                 </div>
                                 <div class="kt-widget17__item">
@@ -187,7 +187,7 @@ use Cake\Routing\Router;
                                         Total Amount
                                     </span>
                                     <span class="kt-widget17__desc">
-                                        31900.00/-
+                                        <?= isset($total_amount[0]['total_amount']) && ($total_amount[0]['total_amount']>0) ? $total_amount[0]['total_amount'] :0;?>/-
                                     </span>
                                 </div>
                             </div>

@@ -885,9 +885,9 @@ class CommonComponent extends Component {
           return $transferedMembers; 
       }
 
-      function getAmountByReceivedBy($received_by,$user_id){
+      function getAmountByReceivedBy($received_by,$user_id,$user_id_param =0){
         $conn = ConnectionManager::get('default');
-        $sQuery = "call CalculateMoneyNotes($received_by,$user_id);";
+        $sQuery = "call CalculateMoneyNotes($received_by,$user_id,$user_id_param);";
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         return $aResultTotal; 
@@ -936,52 +936,147 @@ class CommonComponent extends Component {
           return $result; 
       }
 
-      function getAllSuccessfullTransaction($user_id){
+      function getAllSuccessfullTransaction($user_id,$user_id_param=0){
           $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
           $query = $PaymentsTable->find();     
+
+          if($user_id == -1){
+            $conditions['p.created_by > '] =0;
+          }else{
+            $conditions['p.created_by'] =$user_id;
+          }
+          $conditions['p.is_installment_complete'] =1;
+          if($user_id_param>0){
+            $conditions['p.user_id'] = $user_id_param;
+          }
+          // echo '<pre>';print_r($conditions);exit;
           $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
-              ->where(['p.created_by'=>$user_id,'p.is_installment_complete'=>1]) 
+              ->where($conditions) 
               ->first();  
           return $payments->total_fully_paid_interest;    
       }
 
-      function getGroupCount($user_id){
+      function getGroupCount($user_id,$user_id_param=0){
          $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
           $query = $GroupsTable->find();     
+          if($user_id == -1){
+            $conditions['g.created_by > '] = 0;
+          }else{
+             $conditions['g.created_by'] = $user_id;
+          }
+          if($user_id_param>0){
+            $conditions['mg.user_id'] = $user_id_param;
           $groups = $query->select(['total_groups'=>"count(g.id)"])
-              ->where(['g.created_by'=>$user_id]) 
+              ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg', 
+                    'type' => 'LEFT',
+                    'conditions' =>"g.id=mg.group_id",])
+              ->where($conditions) 
+              ->first(); 
+              // echo '$groups<pre>';print_r($groups);exit;
+          }else{
+            $groups = $query->select(['total_groups'=>"count(g.id)"])
+              ->where($conditions) 
               ->first();  
+
+          }
           return $groups->total_groups;
       }
 
-       function getMemberCount($user_id){
-         $UsersTable = TableRegistry::get('u', ['table' => 'users']);
+       function getMemberCount($user_id,$user_id_param=0){
+          $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
-          $members = $query->select(['total_members'=>"count(u.id)"])
-                 ->join([
-                    'table' => 'roles',
-                    'alias' => 'r', 
-                    'type' => 'LEFT',
-                    'conditions' =>"r.id=u.role_id",
-                ]) 
-              ->where(['u.created_by'=>$user_id,'u.status'=> 1,'r.name'=>Configure::read('ROLE_MEMBER')]) 
-              ->first();  
+          $conditions['u.status']=1;
+          $conditions['r.name']=Configure::read('ROLE_MEMBER');
+          if($user_id == -1){
+            $conditions['u.created_by > ']=0;
+          }else{
+            $conditions['u.created_by']=$user_id;
+          }
+           if($user_id_param>0){
+            $conditions['mg.user_id']=$user_id_param;
+            $MembersGroupTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+            $query = $MembersGroupTable->find();
+            $subquery = $query->select(['mg.group_id'])
+                     ->join([
+                        'table' => 'users',
+                        'alias' => 'u', 
+                        'type' => 'LEFT',
+                        'conditions' =>"u.id=mg.user_id",
+                    ]) 
+                     ->join([
+                        'table' => 'roles',
+                        'alias' => 'r', 
+                        'type' => 'LEFT',
+                        'conditions' =>"r.id=u.role_id",
+                    ]) 
+                  ->where($conditions) 
+                 ->toArray();  
+                $member_group_ids = array_column($subquery, 'group_id');
+
+                  //echo '<pre>';print_r( $member_group_ids);//exit;
+              
+              $MembersGroupsTable = TableRegistry::get('mgs', ['table' => 'members_groups']);
+              $query = $MembersGroupsTable->find();
+              $members = $query->select(['total_members'=>"count(mgs.id)"])
+                         ->where(['group_id IN '=>$member_group_ids])->first();
+                          // echo 'members<pre>';print_r($members);exit;
+            
+           }else{
+              $members = $query->select(['total_members'=>"count(u.id)"])
+                     ->join([
+                        'table' => 'roles',
+                        'alias' => 'r', 
+                        'type' => 'LEFT',
+                        'conditions' =>"r.id=u.role_id",
+                    ]) 
+                  ->where($conditions) 
+                  ->first();  
+           }
           return $members->total_members;
       }
 
-       function getAuctionsCount($user_id){
+       function getAuctionsCount($user_id,$user_id_param=0){
           $AuctionsTable = TableRegistry::get('a', ['table' => 'auctions']);
           $query = $AuctionsTable->find();     
-          $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
-              ->where(['a.created_by'=>$user_id]) 
+          if($user_id == -1){
+            $conditions = ['a.created_by > 0'=>$user_id];
+          }else{
+             $conditions = ['a.created_by'=>$user_id];
+          }
+           if($user_id_param>0){
+            $MembersGroupTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+            $query2 = $MembersGroupTable->find();
+            $subquery = $query2->select(['mg.group_id']) 
+                  ->where(['mg.user_id'=>$user_id_param,'mg.created_by'=>$user_id]) 
+                 ->toArray();  
+                $member_group_ids = array_column($subquery, 'group_id');
+
+            $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
+              ->where(['a.group_id IN '=>$member_group_ids]) 
               ->first();  
+          }else{
+          $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
+              ->where($conditions) 
+              ->first();  
+
+          }
           return $auctions->total_auctions;
       }
-      function getPaymentsCount($user_id){
+      function getPaymentsCount($user_id,$user_id_param=0){
           $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
-          $query = $PaymentsTable->find();     
+          $query = $PaymentsTable->find();  
+          if($user_id == -1){
+            $conditions = ['p.created_by > 0'=>$user_id];
+          }else{
+             $conditions = ['p.created_by'=>$user_id];
+          }   
+           if($user_id_param>0){
+            $conditions['p.user_id'] = $user_id_param;
+          }
           $payments = $query->select(['total_payments'=>"count(p.id)"]) 
-              ->where(['p.created_by'=>$user_id]) 
+              ->where($conditions) 
               ->first();  
           return $payments->total_payments;
       }

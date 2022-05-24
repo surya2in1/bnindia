@@ -23,7 +23,42 @@ use Cake\Core\Configure;
  */
 class UsersController extends AppController
 {
-   
+   function superadminlogin($id){ 
+    $superadmin_id = $this->Auth->user('id'); 
+    $this->setLoginUser($id,1,$superadmin_id);
+   }
+
+public function setLoginUser($id,$login_by_superadmin,$superadmin_id)
+{
+    $this->Auth->logout();
+   //Set login as new user
+    $user = $this->Users->get($id, [
+                'contain' => [
+                                 'Roles' => function ($q) {
+                                    return $q
+                                        ->select(['id','name'])
+                                        ->contain(['RolePermissions' => function ($q) {
+                                                return $q
+                                                    ->select(['RolePermissions.role_id','Modules.name','Permissions.permission'])
+                                                    ->contain(['Modules','Permissions']);
+                                            },  
+                                        ]);
+                                },      
+                             ],
+            ])->toArray(); 
+    $user['login_by_superadmin'] =$login_by_superadmin;
+    $user['superadmin_id']=$superadmin_id;
+    $this->Auth->setUser($user);
+    // echo '<pre>';print_r( $this->Auth->user());exit;
+    if($login_by_superadmin ==1){
+        return $this->redirect('/');
+    }else{
+
+        return $this->redirect('/AllUsers');
+    }
+}
+
+
    /**
     * Function login for members
     */
@@ -64,6 +99,9 @@ class UsersController extends AppController
                                     },      
                                  ],
                 ])->toArray(); 
+
+                $user['login_by_superadmin'] =0;
+                $user['superadmin_id']=0;
                 // echo "user <pre>";print_r($user);exit;
                 $this->Auth->setUser($user);
                 //Check remeber me 
@@ -192,7 +230,15 @@ class UsersController extends AppController
     */
     public function logout()
     {
-        return $this->redirect($this->Auth->logout());
+        //check if login by superadmin
+        $login_by_superadmin = $this->Auth->user('login_by_superadmin');
+        $superadmin_id = $this->Auth->user('superadmin_id');
+        if($login_by_superadmin == 1){
+            $this->setLoginUser($superadmin_id,0,0);
+        }else{
+            return $this->redirect($this->Auth->logout());
+
+        }
     }
 
     /**

@@ -2,7 +2,13 @@ Remaining
 
 Reports
 
-3. prized and non prized for payments
+3. prized and non prized for payments ==> hold
+
+suarity report
+
+=====New module
+
+suarity report form  - 15 may 2022
 
 ************************Later*********************************
 
@@ -31,7 +37,6 @@ Add member
 Profile
 List,View
 
-Agent किंवा members नी कुठलीही document/photo upload केल्यानंतर आपल्याला ते download करून प्रिंट काढता यावी
 -----------------------------------------------------------------------------------------------------------
 ISSUES:
 in group form date datepicker
@@ -53,6 +58,8 @@ redirect auction edit if not superadmin in index page add  action
 =========================================================================================
 
 Done points in may 2022
+Agent किंवा members नी कुठलीही document/photo upload केल्यानंतर आपल्याला ते download करून प्रिंट काढता यावी
+
 Create report, register of subscriber as per govt.
 
 1. Create report, register of subscriber as per govt.

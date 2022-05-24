@@ -454,4 +454,106 @@ class UsersTable extends Table
         return $output;
     }
 
+     public function GetSuperAdminData($user_id) { 
+        $aColumns = array('r.name', 'u.email','u.first_name','u.last_name','u.gender','u.status' );
+        /* Indexed column (used for fast and accurate table cardinality) */
+        $sIndexColumn = "u.id";
+        /* DB table to use */
+        $sTable = "users u";
+       
+        /*
+        * MySQL connection
+        */
+        $conn = ConnectionManager::get('default');
+
+       /*
+        * Paging
+        */
+        $sLimit = "";
+        if ( isset( $_POST['start'] ) && $_POST['length'] != '-1' )
+        {
+            $sLimit = "LIMIT ".intval( $_POST['start'] ).", ".
+            intval( $_POST['length'] );
+        }
+        /*
+        * Ordering
+        */
+        $sOrder = "";
+        if ( isset( $_POST['order'][0] ) )
+        {
+            $sOrder = "ORDER BY  ";
+            for ( $i=0 ; $i<intval( $_POST['order'] ) ; $i++ )
+            {
+                if ( $_POST['columns'][$_POST['order'][$i]['column']]['orderable'] == "true" )
+                {
+                    $sOrder .= "".$aColumns[$_POST['order'][$i]['column']]." ".
+                    ($_POST['order'][$i]['dir']==='asc' ? 'asc' : 'desc') .", ";
+                }
+            }
+            $sOrder = substr_replace( $sOrder, "", -2 );
+            if ( $sOrder == "ORDER BY" )
+            {
+                $sOrder = "";
+            }
+        }
+        /*
+        * Filtering
+        * NOTE this does not match the built-in DataTables filtering which does it
+        * word by word on any field. It's possible to do here, but concerned about efficiency
+        * on very large tables, and MySQL's regex functionality is very limited
+        */
+        $config_role_superadmin = Configure::read('ROLE_SUPERADMIN'); 
+        $sWhere = "WHERE r.name != '".$config_role_superadmin."' ";
+        if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
+        {
+            $sWhere .= " AND (";
+                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                {
+                    $sWhere .= "".$aColumns[$i]." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+                }
+                $sWhere = substr_replace( $sWhere, "", -3 );
+                $sWhere .= ')';
+        }
+        /* Individual column filtering */
+        /*
+        * SQL queries
+        * Get data to display
+        */
+        $sQuery = "
+        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." ,u.id as actions
+        FROM   $sTable  left JOIN roles r on u.role_id = r.id 
+        $sWhere
+        $sOrder
+        $sLimit
+        ";
+        $stmt = $conn->execute($sQuery);
+        $rResult = $stmt ->fetchAll('assoc');
+       
+        /* Data set length after filtering */
+        $sQuery = "
+        SELECT FOUND_ROWS() as cnt
+        ";
+        $rResultFilterTotal = $conn->execute($sQuery);
+        $aResultFilterTotal = $rResultFilterTotal ->fetchAll('assoc');
+        $iFilteredTotal = $aResultFilterTotal[0]['cnt'];
+        /* Total data set length */
+        $sQuery = "
+        SELECT COUNT(".$sIndexColumn.") as cnt
+        FROM   $sTable left JOIN roles r on u.role_id = r.id 
+        where r.name= '".$config_role_superadmin."'
+        ";
+        $rResultTotal = $conn->execute($sQuery);
+        $aResultTotal = $rResultTotal ->fetchAll('assoc');
+        $iTotal = $aResultTotal[0]['cnt'];
+        /*
+        * Output
+        */
+        $output = array(
+        "draw" => intval($_POST['draw']),
+        "iTotalRecords" => $iTotal,
+        "iTotalDisplayRecords" => $iFilteredTotal,
+        "aaData" =>  $rResult
+        );
+        return $output;
+    }
 }

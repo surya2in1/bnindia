@@ -327,7 +327,7 @@ use Cake\Routing\Router;
                                                 
                                                 <tr>
                                                     <td>20</td> 
-                                                    <td><input type="number" class="form-control border-black" name="money_notes[20]" id="no_of_twenty_notes" placeholder="Enter No. Of Twenty Notes" value="" lbl-val="20"></td> 
+                                                    <td><input type="number" class="form-control border-black" name="money_notes[20][val]" id="no_of_twenty_notes" placeholder="Enter No. Of Twenty Notes" value="" lbl-val="20"></td> 
                                                     <td><input type="number" class="form-control total" name="money_notes[20][total]" id="no_of_twenty_notes_total" placeholder="Enter Total" value="" readonly></td> 
                                                 </tr>
                                                 

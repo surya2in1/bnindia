@@ -425,7 +425,11 @@ class GroupsTable extends Table
         * word by word on any field. It's possible to do here, but concerned about efficiency
         * on very large tables, and MySQL's regex functionality is very limited
         */
-        $sWhere = " WHERE g.created_by= '".$user_id."' ";
+        if($user_id == -1){
+            $sWhere = " WHERE g.created_by > 0";
+        }else{
+            $sWhere = " WHERE g.created_by= '".$user_id."' ";
+        }
         $having='';
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
@@ -457,7 +461,7 @@ class GroupsTable extends Table
         $sOrder
         $sLimit
         ";
-        // echo $sQuery;exit;
+         echo $sQuery;exit;
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
        
