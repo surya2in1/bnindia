@@ -1085,7 +1085,7 @@ class CommonComponent extends Component {
     * this function ussed for image and user documents upload
     * fun used for profile inf and member add edit
     */
-    public function userDocUpload($db_upload_field, $post, $path = '', $id=0){
+    public function userDocUpload($db_upload_field, $post, $path = '', $id=0,$table_name='agents'){
         $name = $post->getClientFilename();
         $filename = '';
         if($name){
@@ -1096,7 +1096,7 @@ class CommonComponent extends Component {
             $uniqueString = md5(time().$sffledStr);
              
             //get existing file name
-            $AgentsTable = TableRegistry::get('a', ['table' => 'agents']);
+            $AgentsTable = TableRegistry::get('a', ['table' => $table_name]);
             $query = $AgentsTable->find();     
             $agents = $query->select("a.".$db_upload_field) 
                   ->where(['a.id'=>$id]) 

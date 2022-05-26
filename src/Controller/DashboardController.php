@@ -64,7 +64,7 @@ class DashboardController extends AppController
             $user_id_param = $this->Auth->user('id');
             $use_id = $this->Auth->user('created_by');
         }else if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
-            
+            $use_id = $this->Auth->user('created_by');
         }else{
             $use_id = $this->Auth->user('id');
         }
@@ -84,7 +84,7 @@ class DashboardController extends AppController
         $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
-            $output = $GroupsTable->GetDashboardData($use_id);
+            $output = $GroupsTable->GetDashboardData($use_id,$user_id_param);
             // echo '$output <pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }

@@ -241,7 +241,7 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('day_book.js') ?>
         <?php } ?>
 
-        <?php if($this->request->getParam('controller') == 'AllUsers'  && ($this->request->getParam('action') == 'index' || $this->request->getParam('action') == 'memberform')) { ?> 
+        <?php if($this->request->getParam('controller') == 'AllUsers'  && ($this->request->getParam('action') == 'index' || $this->request->getParam('action') == 'createadminform')) { ?> 
             <?= $this->Html->script('all_users.js') ?>
         <?php } ?>
 

@@ -371,7 +371,7 @@ class GroupsTable extends Table
         return isset($result[0]['group_code']) ? $result[0]['group_code'] : '';
     }
 
-    public function GetDashboardData($user_id) { 
+    public function GetDashboardData($user_id,$user_id_param=0) { 
         $aColumns = array('g.chit_amount','g.no_of_months','g.premium', 
                     "COUNT(a.id) as no_of_installments",
                     "SUM(a.net_subscription_amount) as total_amt_payable",
@@ -430,22 +430,28 @@ class GroupsTable extends Table
         }else{
             $sWhere = " WHERE g.created_by= '".$user_id."' ";
         }
+        $join = '';
+        $sWhere_member ='';
+        if($user_id_param >0 ){
+            $sWhere_member = " AND mg.user_id= '".$user_id_param."' ";
+            $join = " JOIN members_groups mg on mg.group_id=g.id ";
+        }
         $having='';
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )
         {
-            $having="Having (no_of_installments ='".( $_POST['search']['value'] )."'  or total_amt_payable='".( $_POST['search']['value'] )."'  or total_dividend='".( $_POST['search']['value'] )."' )";
-            $sWhere .= " OR (";
-                for ( $i=0 ; $i<count($aColumns) ; $i++ )
-                {
-                    $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
-                    if(in_array($columns, ['COUNT(a.id)','SUM(a.net_subscription_amount)','SUM(a.subscriber_dividend)'])){
-                        continue;
-                    }
-                    // $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
-                    $sWhere .= "".$columns." = '".( $_POST['search']['value'] )."' OR ";
-                }
-                $sWhere = substr_replace( $sWhere, "", -3 );
-                $sWhere .= ')';
+            $having="Having (g.chit_amount='".( $_POST['search']['value'] )."'  or g.no_of_months='".( $_POST['search']['value'] )."'  or  g.premium='".( $_POST['search']['value'] )."'  or  no_of_installments ='".( $_POST['search']['value'] )."'  or total_amt_payable='".( $_POST['search']['value'] )."'  or total_dividend='".( $_POST['search']['value'] )."' )";
+            // $sWhere .= " AND (";
+            //     for ( $i=0 ; $i<count($aColumns) ; $i++ )
+            //     {
+            //         $columns = preg_replace('/ as.*/', '', $aColumns[$i]);
+            //         if(in_array($columns, ['COUNT(a.id)','SUM(a.net_subscription_amount)','SUM(a.subscriber_dividend)'])){
+            //             continue;
+            //         }
+            //         // $sWhere .= "".$columns." LIKE '%".( $_POST['search']['value'] )."%' OR ";
+            //         $sWhere .= "".$columns." = '".( $_POST['search']['value'] )."' OR ";
+            //     }
+            //     $sWhere = substr_replace( $sWhere, "", -3 );
+            //     $sWhere .= ')';
         }
         /* Individual column filtering */
         /*
@@ -454,14 +460,15 @@ class GroupsTable extends Table
         */
         $sQuery = "
         SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))." 
-        FROM   $sTable join groups g on g.id =a.group_id 
+        FROM   $sTable join groups g on g.id =a.group_id  $join
         $sWhere
+        $sWhere_member
         group by g.id
         $having
         $sOrder
         $sLimit
         ";
-         echo $sQuery;exit;
+        //echo $sQuery . "<br/>";
         $stmt = $conn->execute($sQuery);
         $rResult = $stmt ->fetchAll('assoc');
        
@@ -476,8 +483,9 @@ class GroupsTable extends Table
         /* Total data set length */
         $sQuery = "SELECT COUNT(*) as cnt from (
         SELECT COUNT(".$sIndexColumn.") as cnt
-        FROM   $sTable join groups g on g.id =a.group_id where g.created_by = ".$user_id." group by g.id
+        FROM   $sTable join groups g on g.id =a.group_id  $join where g.created_by = ".$user_id." $sWhere_member group by g.id
         ) cnt ";
+         //echo $sQuery;exit;
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
          // echo '$aResultTotal <pre>';print_r($aResultTotal);exit;
