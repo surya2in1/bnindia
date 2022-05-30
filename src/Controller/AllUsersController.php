@@ -172,47 +172,48 @@ class AllUsersController extends AppController
         $this->loadModel('Users');
         if($user_id>0){ 
             $password = $this->Common->randomPassword();
-            $query = $this->Users->query();
-            $query->update()
-                    ->set(['password'=>$password,'status'=>1])
-                    ->where(['id' => $user_id])
-                    ->execute();
-
-            // send mail to user
-            // Please specify your Mail Server - Example: mail.example.com.
-            ini_set("SMTP","riyajaya692@gmail.com");
-
-            // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
-            ini_set("smtp_port","25");
-
-            // Please specify the return address to use
-            ini_set('sendmail_from', 'riyajaya692@gmail.com');
-            
-            TransportFactory::setConfig('gmail', [
-              'host' => 'ssl://smtp.gmail.com',
-              'port' => 25,
-              'username' => 'riyajaya692@gmail.com',
-              'password' => 'etgtxblbsftaupzd',
-              'className' => 'Smtp'
-            ]);
+           
             $user = $this->Users->find('all')->where(['id'=>$user_id])->first();
-            $msg ="Hello ".$user->first_name."\r\n";
-            $msg .="Welcome to Bnindia application, your account has been genereted successfully,"."\r\n";
-            $msg .= "Password:".$password."\r\n";
-            $msg .= 'Thank you,'."\r\n".'Bnindia team';
-            //temparary comment send mail 
-            $send= Email::deliver($user->email, 'Bnindia application', $msg, ['from' => 'riyajaya692@gmail.com']);
-             
+            $user->password = $password;
+            $user->status = 1;
+            if($this->Users->save($user)){
+                // send mail to user
+                // Please specify your Mail Server - Example: mail.example.com.
+                ini_set("SMTP","riyajaya692@gmail.com");
 
-            if($send){
-                echo 1;
-            }else{
-                //if mail not send revert the changes
-                $query->update()
-                    ->set(['status'=>0])
-                    ->where(['id' => $user_id])
-                    ->execute();
-                echo 2;
+                // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
+                ini_set("smtp_port","25");
+
+                // Please specify the return address to use
+                ini_set('sendmail_from', 'riyajaya692@gmail.com');
+                
+                TransportFactory::setConfig('gmail', [
+                  'host' => 'ssl://smtp.gmail.com',
+                  'port' => 25,
+                  'username' => 'riyajaya692@gmail.com',
+                  'password' => 'etgtxblbsftaupzd',
+                  'className' => 'Smtp'
+                ]);
+                $user = $this->Users->find('all')->where(['id'=>$user_id])->first();
+                $msg ="Hello ".$user->first_name."\r\n";
+                $msg .="Welcome to Bnindia application, your account has been genereted successfully,"."\r\n";
+                $msg .= "Password:".$password."\r\n";
+                $msg .= 'Thank you,'."\r\n".'Bnindia team';
+                //temparary comment send mail 
+                $send= Email::deliver($user->email, 'Bnindia application', $msg, ['from' => 'riyajaya692@gmail.com']);
+                 
+
+                if($send){
+                    echo 1;
+                }else{
+                    //if mail not send revert the changes
+                    $query->update()
+                        ->set(['status'=>0])
+                        ->where(['id' => $user_id])
+                        ->execute();
+                    echo 2;
+                }
+
             }
         }
         exit;

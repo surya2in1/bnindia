@@ -826,8 +826,10 @@ public function setLoginUser($id,$login_by_superadmin,$superadmin_id)
      }
 
      function getTransferGroupUser($user_id,$group_id){
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
         //Get vaccant group users
-        $vaccant_members = $this->Common->getVacantMemberDetails($this->Auth->user('id'));   
+        $vaccant_members = $this->Common->getVacantMemberDetails($this->Auth->user('id'),0,$user_role, $this->Auth->user('created_by'));   
         $user_ids=[];
         if(!empty($vaccant_members)){
             foreach ($vaccant_members as $key => $value){

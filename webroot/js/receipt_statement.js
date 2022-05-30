@@ -15,7 +15,7 @@ var KTFormControls = function() {
 	                	required:true
 	                },
 	                group_id: { required: function(element){
-                            return ($("#search_by option:selected").val() == 'group_by' || $("#search_by option:selected").val() == 'member_by');
+                            return ($("#search_by option:selected").val() == 'group_by' );
                             },  
             		},
             		user_id: { required: function(element){
@@ -82,9 +82,12 @@ jQuery(document).ready(function() {
 function show_hide_type_div(){
 	var search_by = $('#search_by').val();
 	$('.search_by').addClass('hide-div'); 
-	if(search_by == 'group_by' || search_by == 'member_by'){ 
-		$('#group_id').val('');
+	$('#group_id').val('');
+	if(search_by == 'group_by'){ 
 	  	$('#group_div').removeClass('hide-div'); 
+	} 
+	if(search_by == 'member_by'){ 
+	  	getGroupMembers();
 	} 
 }
 
@@ -130,7 +133,31 @@ $('#group_id').change(function(e) {
 						});
             		} 
             	} 
-            	$('#members').html(member_options); 
+            	$('#members').html(member_options);  
+            	$('#member_div').removeClass('hide-div');
             }
 		}); 
 });
+
+function getGroupMembers(){
+	$('.bnspinner').removeClass('hide');
+	var member_options = '<option value="">Select Member</option>';
+	$.ajax({
+		   "url": $('#router_url').val()+"Reports/getMembers",
+            "type": "POST", 
+            beforeSend: function (xhr) { // Add this line
+                xhr.setRequestHeader('X-CSRF-Token', $('[name="_csrfToken"]').val());
+            },
+            success: function(response, status, xhr, $form) { 
+            	$('.bnspinner').addClass('hide');
+            	var result = JSON.parse(response);  
+            	if(result !=''){ 
+	            		$.each(result, function( key, value ) {  
+						  member_options += '<option value="'+value.u.id+'" data-ticket_no="'+value.ticket_no+'">'+value.name+'</option>';
+						});
+            	 } 
+            	$('#members').html(member_options);  
+            	$('#member_div').removeClass('hide-div');
+            }
+		}); 
+}

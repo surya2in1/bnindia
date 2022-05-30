@@ -22,21 +22,65 @@ class ReportsController extends AppController
 
     function receiptStatement(){
         $this->viewBuilder()->setLayout('admin'); 
- 
+        $groups = $this->getGroupsRoleWise();
+        $this->set(compact('groups'));
+    }
+
+    function getGroupsRoleWise(){
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
+        $conditions['status']= 0;
+        if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $conditions['created_by']=$this->Auth->user('id'); 
+        }
+
+        if($user_role == Configure::read('ROLE_MEMBER')){ 
+            //Get all groups of current member
+            $member_groups =$this->Common->getAllGroupMembers($this->Auth->user('id'),$this->Auth->user('created_by'));
+            $member_group_ids = array_column($member_groups, 'group_id');
+
+            // echo '<pre>';print_r($member_groups);exit;
+            $conditions['id IN ']=$member_group_ids;
+            $conditions['created_by'] = $this->Auth->user('created_by'); 
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+           $conditions['created_by'] = $this->Auth->user('created_by'); 
+        } 
+
         $GroupsTable= TableRegistry::get('Groups');
         $groups = $GroupsTable->find('list', [
                                     'keyField' => 'id',
                                     'valueField' => 'group_code'
                                 ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
-        $this->set(compact('groups'));
+                 ->where($conditions)->toArray();
+        return $groups;
     }
 
+    function getMembers(){
+         $user_id=0;$created_by=0;
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+        if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $created_by=$this->Auth->user('id');
+        }
+
+        if($user_role == Configure::read('ROLE_MEMBER')){ 
+            $user_id=$this->Auth->user('id');
+            $created_by=$this->Auth->user('created_by');
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+           $created_by=$this->Auth->user('created_by');
+        } 
+        $group_members = $this->Common->getAllGroupMembers($user_id,$created_by);
+        echo json_encode($group_members);exit;
+    }
     public function pdf()
     { 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();  
-            $report = $this->Common->getReceiptStatement($post,$this->Auth->user('id'));  
+            $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+            $report = $this->Common->getReceiptStatement($post,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));  
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');
@@ -64,6 +108,22 @@ class ReportsController extends AppController
      */
     public function instalmentDetails()
     { 
+        $user_id=0;$created_by=0;
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
+        $conditions['status']= 1;
+        if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $conditions['created_by']=$this->Auth->user('id'); 
+        }
+
+        if($user_role == Configure::read('ROLE_MEMBER')){ 
+            $conditions['id']=$this->Auth->user('id');
+            $conditions['created_by'] = $this->Auth->user('created_by'); 
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+           $conditions['created_by'] = $this->Auth->user('created_by'); 
+        } 
+
         $this->viewBuilder()->setLayout('admin');  
         $UsersTable= TableRegistry::get('Users');
         $users = $UsersTable->find('list', [
@@ -78,7 +138,7 @@ class ReportsController extends AppController
                                         },     
                                      ], 
                                 ])
-                 ->where(['status ' => 1,'created_by'=>$this->Auth->User('id')])->toArray();
+                 ->where($conditions)->order(['Users.first_name  asc'])->toArray();
                  // echo 'users<pre>';print_r($users);exit;
         $this->set(compact('users'));
     } 
@@ -86,8 +146,10 @@ class ReportsController extends AppController
     function instalmentDetailsPdf(){
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post_data = $this->request->getData();   
-            $report = $this->Common->getInstalmentDetails($post_data,$this->Auth->user('id'));  
-            $user_details = $this->Common->getUserGroupDetails($post_data,$this->Auth->user('id'));  
+            $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+            $report = $this->Common->getInstalmentDetails($post_data,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));  
+            $user_details = $this->Common->getUserGroupDetails($post_data,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));  
             // echo '$post<pre>';print_r($user_details);  exit;
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
@@ -108,12 +170,7 @@ class ReportsController extends AppController
      public function subscribersDetails()
     { 
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                    'keyField' => 'id',
-                                    'valueField' => 'group_code'
-                                ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
+        $groups = $this->getGroupsRoleWise(); 
         $this->set(compact('groups')); 
     } 
 
@@ -122,8 +179,11 @@ class ReportsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();   
             // echo '$post<pre>';print_r($post);  exit;
-            $report = $this->Common->getSubscribersDetails($post,$this->Auth->user('id'));  
-            $group_details = $this->Common->getGroupsDetails($post,$this->Auth->user('id')); 
+            $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+
+            $report = $this->Common->getSubscribersDetails($post,$this->Auth->user('id'),$user_role, $this->Auth->user('created_by'));  
+            $group_details = $this->Common->getGroupsDetails($post,$this->Auth->user('id'),$user_role, $this->Auth->user('created_by')); 
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');
@@ -143,13 +203,8 @@ class ReportsController extends AppController
 
     function auctionsDetails(){
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                    'keyField' => 'id',
-                                    'valueField' => 'group_code'
-                                ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
-        $this->set(compact('groups')); 
+        $groups = $this->getGroupsRoleWise();
+        $this->set(compact('groups'));
     }
 
     function auctionsDetailsPdf(){
@@ -157,9 +212,12 @@ class ReportsController extends AppController
         $group_details=[];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post_data = $this->request->getData();   
+            $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+
             // echo '$post<pre>';print_r($post_data);  exit;
-            $report = $this->Common->getAuctionsDetails($post_data,$this->Auth->user('id'));  
-            $group_details = $this->Common->getGroupsDetails($post_data,$this->Auth->user('id'));  
+            $report = $this->Common->getAuctionsDetails($post_data,$this->Auth->user('id'),$user_role, $this->Auth->user('created_by'));  
+            $group_details = $this->Common->getGroupsDetails($post_data,$this->Auth->user('id'),$user_role, $this->Auth->user('created_by'));  
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');
@@ -180,13 +238,43 @@ class ReportsController extends AppController
 
     function groupsDetails(){
         $this->viewBuilder()->setLayout('admin');  
-        $this->set('branch_name', $this->Auth->user('branch_name'));
+        $UsersTable= TableRegistry::get('Users');
+
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
+        $conditions['status']= 1;
+        if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $conditions['Users.id']=$this->Auth->user('id'); 
+        }
+
+        if($user_role == Configure::read('ROLE_MEMBER')){  
+            $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+           $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
+        } 
+
+        $branch_names = $UsersTable->find('list', [
+                                    'keyField' => 'id',
+                                     'valueField' => function ($row) {
+                                          return $row['branch_name'];
+                                    } ,
+                                    'contain' => ['Roles' => function ($q) {
+                                            return $q
+                                                ->select(['name'])
+                                                ->where(['Roles.name' => Configure::read('ROLE_ADMIN') ]);
+                                        },     
+                                     ], 
+                                ])
+                 ->where($conditions)->order(['Users.branch_name asc'])->toArray();
+                 // echo 'branch_names<pre>';print_r($branch_names);exit; 
+        $this->set('branch_names', $branch_names);
     }
 
     function groupsDetailsPdf(){
         $report =[]; 
         if ($this->request->is(['patch', 'post', 'put'])) { 
-            $report = $this->Common->getGroupList($this->Auth->user('id'));    
+            $report = $this->Common->getGroupList( $this->request->getData('branch_name'));    
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');
@@ -207,7 +295,10 @@ class ReportsController extends AppController
     }
 
     function vacuntMembersDetailsPdf(){
-        $report = $this->Common->getVacantMemberDetails($this->Auth->user('id'));    
+        $user = $this->Auth->user();
+        $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+   
+        $report = $this->Common->getVacantMemberDetails($this->Auth->user('id'),0,$user_role, $this->Auth->user('created_by'));    
         $this->viewBuilder()->enableAutoLayout(false);    
         $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
         $this->viewBuilder()->setLayout('admin');
@@ -227,18 +318,16 @@ class ReportsController extends AppController
     function formanCommissionDetails()
     { 
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                    'keyField' => 'id',
-                                    'valueField' => 'group_code'
-                                ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
-        $this->set(compact('groups')); 
+        $groups = $this->getGroupsRoleWise();
+        $this->set(compact('groups'));
     } 
 
     function formanCommissionDetailsPdf(){
+         $user = $this->Auth->user();
+         $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';  
+
         $post_data=$this->request->getData();
-        $report = $this->Common->getFormanCommissionDetailsPdf($post_data,$this->Auth->user('id'));    
+        $report = $this->Common->getFormanCommissionDetailsPdf($post_data,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));    
         $this->viewBuilder()->enableAutoLayout(false);    
         $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
         $this->viewBuilder()->setLayout('admin');
@@ -257,18 +346,16 @@ class ReportsController extends AppController
     function prizedPaymentSubscriberDetails()
     { 
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                    'keyField' => 'id',
-                                    'valueField' => 'group_code'
-                                ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
-        $this->set(compact('groups')); 
+        $groups = $this->getGroupsRoleWise();
+        $this->set(compact('groups'));
     } 
 
     function prizedPaymentSubscriberDetailsPdf(){
+        $user = $this->Auth->user();
+         $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';  
+
         $post_data=$this->request->getData();
-        $report = $this->Common->getFormanCommissionDetailsPdf($post_data,$this->Auth->user('id'));    
+        $report = $this->Common->getFormanCommissionDetailsPdf($post_data,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));    
         $this->viewBuilder()->enableAutoLayout(false);    
         $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
         $this->viewBuilder()->setLayout('admin');
@@ -287,18 +374,15 @@ class ReportsController extends AppController
      function transferedSubscriberDetails()
     { 
         $this->viewBuilder()->setLayout('admin');  
-        $GroupsTable= TableRegistry::get('Groups');
-        $groups = $GroupsTable->find('list', [
-                                    'keyField' => 'id',
-                                    'valueField' => 'group_code'
-                                ])
-                 ->where(['status ' => 0,'created_by'=>$this->Auth->user('id')])->toArray();
-        $this->set(compact('groups')); 
+        $groups = $this->getGroupsRoleWise();
+        $this->set(compact('groups'));
     } 
 
     function transferedSubscriberDetailsPdf(){
+         $user = $this->Auth->user();
+         $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
         $post_data=$this->request->getData();
-        $report = $this->Common->getTransferedSubscriberDetails($post_data,$this->Auth->user('id'));    
+        $report = $this->Common->getTransferedSubscriberDetails($post_data,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));    
         $this->viewBuilder()->enableAutoLayout(false);    
         $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
         $this->viewBuilder()->setLayout('admin');
@@ -332,8 +416,10 @@ class ReportsController extends AppController
      function subscriberListsPdf(){
         $report =[];
         if ($this->request->is(['patch', 'post', 'put'])) {
+             $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
             $post = $this->request->getData();   
-            $report = $this->Common->getSubscribersLists($post,$this->Auth->user('id'));  
+            $report = $this->Common->getSubscribersLists($post,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));  
             // echo '$report<pre>';print_r($report);  exit;
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
@@ -359,10 +445,12 @@ class ReportsController extends AppController
     } 
 
      function dayBookPdf(){
+         $user = $this->Auth->user();
+         $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
         $report =[];
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->request->getData();   
-            $report = $this->Common->getDayBookLists($post,$this->Auth->user('id'));  
+            $report = $this->Common->getDayBookLists($post,$this->Auth->user('id'),$user_role,$this->Auth->user('created_by'));  
             // echo '$report<pre>';print_r($report);  exit;
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 

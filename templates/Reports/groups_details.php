@@ -45,8 +45,15 @@ use Cake\Routing\Router;
 
                                 <div class="form-group row">
                                     <label class="col-form-label col-lg-2 col-sm-12">Branch Name:</label>
-                                    <div class="col-lg-6"> 
-                                        <input type="text" class="form-control" name="branch_name" readonly="" value="<?=$branch_name?>">
+                                    <div class="col-lg-6">  
+                                         <select id="branch_name" name="branch_name" class="form-control">
+                                             <?php if($branch_names){ 
+                                                foreach ($branch_names as $key => $branch) {?>
+                                                    <option value="<?= $key; ?>"><?=($branch);?></option>
+                                               <?php } 
+                                            } ?> 
+                                        </select> 
+
                                     </div>   
                                 </div>
  

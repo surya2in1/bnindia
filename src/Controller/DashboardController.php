@@ -47,7 +47,6 @@ class DashboardController extends AppController
         //echo '<pre>';print_r($this->Auth->user());exit;
         $user = $this->Auth->user();
         $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
-        //erro for New Members getMemberCount for role member
 
         //For Member Check auth role is member then join to members_groups with auth id and created by as user_id
         /*********** getAllSuccessfullTransaction pending******/

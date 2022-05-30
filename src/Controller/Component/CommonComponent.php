@@ -117,6 +117,38 @@ class CommonComponent extends Component {
         return $groupmembers;
   }
 
+
+  function getAllGroupMembers($user_id=0,$created_by=0){ 
+      $conditions['mg.is_transfer_user']=0;
+      if($user_id>0){
+        $conditions['u.id']=$user_id;
+      }
+      if($created_by>0){
+       $conditions['g.created_by']=$created_by; 
+      }
+      $groupMembersTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+      $query = $groupMembersTable->find();     
+      $group_members = $query->select(['mg.ticket_no','mg.group_id','u.id',
+            'name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(middle_name, 1, 1)), LOWER(SUBSTRING(middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name, 2))' => 'identifier'])
+            ])
+            ->join([
+                'table' => 'users',
+                'alias' => 'u',
+                'type' => 'LEFT',
+                'conditions' =>'u.id = mg.user_id',
+            ]) 
+            ->join([
+                'table' => 'groups',
+                'alias' => 'g',
+                'type' => 'LEFT',
+                'conditions' =>'g.id = mg.group_id',
+            ])  
+          ->where($conditions)
+          ->toArray();   
+        // echo 'group_members<pre>';print_r($group_members);exit;
+          return $group_members;
+  }
+
   // Get installment no by selecting group and member
   //   SELECT a.auction_no,max(p.id) as pid 
   //   FROM auctions a 
@@ -332,19 +364,31 @@ class CommonComponent extends Component {
     return $last_auction_date;        
   }
 
-  function getReceiptStatement($post,$user_id){
+  function getReceiptStatement($post,$user_id,$user_role,$created_by){
     $payments =[];
     if(isset($post['start']) && isset($post['end']) && isset($post['search_by'])){
        $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
         //echo '$post<pre>';print_r($post); 
        $where_Conditions = [];
-       if($post['search_by'] == 'group_by' || $post['search_by'] == 'member_by'){
+       if($post['search_by'] == 'group_by' ){
           $where_Conditions[]= ['g.id'=>$post['group_id']];
        }
        if($post['search_by'] == 'member_by'){
           $where_Conditions[]= ['u.id'=>$post['user_id']];
        }
+       $role_wise_conditions = [];
+       if($user_role == Configure::read('ROLE_ADMIN')){
+            $role_wise_conditions['p.created_by'] =$user_id;
+        }
+        if($user_role == Configure::read('ROLE_MEMBER')){
+            $role_wise_conditions['p.user_id'] =$user_id;
+            $role_wise_conditions['p.created_by'] =$created_by;
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+            $role_wise_conditions['p.created_by'] =$created_by;
+        } 
+
         //echo '$where_Conditions<pre>';print_r($where_Conditions);//exit;
         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         $query = $PaymentsTable->find();     
@@ -383,7 +427,8 @@ class CommonComponent extends Component {
                 'type' => 'LEFT',
                 'conditions' =>'p.user_id = u.id',
             ])  
-            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end'],'p.created_by'=>$user_id])
+            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end']])
+            ->where($role_wise_conditions)
             ->where($where_Conditions)
             ->toArray();  
     }
@@ -391,7 +436,7 @@ class CommonComponent extends Component {
     return $payments;
   }
 
-  function getInstalmentDetails($post,$user_id){
+  function getInstalmentDetails($post,$user_id,$user_role,$created_by){
     $report['payments'] =[];
     $report['all_months_due_amount'] = 0;
 
@@ -400,6 +445,18 @@ class CommonComponent extends Component {
        $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';
         $where_Conditions[]= ['p.user_id'=>$post['user_id']];
         // echo '$post<pre>';print_r($post);
+
+        $role_wise_conditions = [];
+        if($user_role == Configure::read('ROLE_ADMIN')){
+            $role_wise_conditions['p.created_by'] =$user_id;
+        }
+        if($user_role == Configure::read('ROLE_MEMBER')){
+            $role_wise_conditions['p.user_id'] =$user_id;
+            $role_wise_conditions['p.created_by'] =$created_by;
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+            $role_wise_conditions['p.created_by'] =$created_by;
+        } 
 
         $report['all_months_due_amount'] = $this->getAllMonthsDueAmount($post['user_id']);
         // echo '$all_months_due_amount '.$report['all_months_due_amount'];
@@ -431,7 +488,8 @@ class CommonComponent extends Component {
                 'type' => 'LEFT',
                 'conditions' =>'p.group_id = g.id',
             ])  
-            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end'],'p.created_by'=>$user_id])
+            ->where(['p.date >='=> $post['start'],'p.date <='=> $post['end']])
+            ->where($role_wise_conditions)
             ->where($where_Conditions)
             ->toArray();  
     }
@@ -521,10 +579,22 @@ class CommonComponent extends Component {
         return $aResultTotal['total_amount'];
     }
 
-    public function getSubscribersDetails($post,$user_id)
+    public function getSubscribersDetails($post,$user_id,$user_role,$created_by)
     {
         $result=[];
         if(isset($post['group_id']) && isset($user_id)){
+            $role_wise_conditions = [];
+            if($user_role == Configure::read('ROLE_ADMIN')){
+                $role_wise_conditions['g.created_by'] =$user_id;
+            }
+            if($user_role == Configure::read('ROLE_MEMBER')){
+                $role_wise_conditions['g.user_id'] =$user_id;
+                $role_wise_conditions['g.created_by'] =$created_by;
+            }
+            if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+                $role_wise_conditions['g.created_by'] =$created_by;
+            } 
+
             $payment= TableRegistry::get('Payments');
             $subquery = $payment->find();
             $subquery->select([
@@ -580,17 +650,29 @@ class CommonComponent extends Component {
                   'type' => 'LEFT',
                   'conditions' => 'p.p_group_id = g.id and p.p_user_id=u.id ',
                ]) 
-               ->where(['g.id'=>$post['group_id'],'g.created_by'=>$user_id])
+               ->where(['g.id'=>$post['group_id']])
+               ->where($role_wise_conditions)
                ->toArray();
                // echo '$result<pre>';print_r($result);exit;
         }
         return $result;
     }    
 
-    public function getAuctionsDetails($post,$user_id)
+    public function getAuctionsDetails($post,$user_id,$user_role,$created_by)
     {
       $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : ''; 
       $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : '';  
+      $role_wise_conditions = [];
+        if($user_role == Configure::read('ROLE_ADMIN')){
+            $role_wise_conditions['a.created_by'] =$user_id;
+        }
+        if($user_role == Configure::read('ROLE_MEMBER')){
+            $role_wise_conditions['a.created_by'] =$created_by;
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+            $role_wise_conditions['a.created_by'] =$created_by;
+        } 
+
       $AuctionsTable = TableRegistry::get('a', ['table' => 'auctions']);
       $query = $AuctionsTable->find();     
       $auctions = $query->select(['a.auction_no','a.auction_date','a.auction_highest_percent','a.ticket_no','a.priced_amount','a.total_subscriber_dividend','a.subscriber_dividend',
@@ -602,13 +684,25 @@ class CommonComponent extends Component {
                 'type' => 'LEFT',
                 'conditions' =>'a.auction_winner_member = u.id',
             ])  
-          ->where(['a.auction_date >='=> $post['start'],'a.auction_date <='=> $post['end'],'a.created_by'=>$user_id,'a.group_id'=>$post['group_id']]) 
+          ->where(['a.auction_date >='=> $post['start'],'a.auction_date <='=> $post['end'],'a.group_id'=>$post['group_id']]) 
+          ->where($role_wise_conditions)
           ->toArray();  
            // echo '$auctions<pre>';print_r($auctions);  exit;
       return $auctions;    
     }
 
-     function getGroupsDetails($post, $user_id){
+     function getGroupsDetails($post, $user_id,$user_role,$created_by){
+            $role_wise_conditions = [];
+            if($user_role == Configure::read('ROLE_ADMIN')){
+                $role_wise_conditions['g.created_by'] =$user_id;
+            }
+            if($user_role == Configure::read('ROLE_MEMBER')){
+                $role_wise_conditions['g.user_id'] =$user_id;
+                $role_wise_conditions['g.created_by'] =$created_by;
+            }
+            if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+                $role_wise_conditions['g.created_by'] =$created_by;
+            } 
           $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
           $query = $GroupsTable->find();     
           $groups = $query->select(['g.group_code','g.chit_amount','g.total_number','g.premium',
@@ -630,12 +724,24 @@ class CommonComponent extends Component {
                     'type' => 'LEFT',
                     'conditions' =>'a.id = ug.agent_id',
                 ]) 
-              ->where(['g.id'=>$post['group_id'],'g.created_by'=>$user_id]) 
+              ->where(['g.id'=>$post['group_id']]) 
+              ->where($role_wise_conditions)
               ->first();  
           return $groups;    
       }
 
-      function getUserGroupDetails($post, $user_id){
+      function getUserGroupDetails($post, $user_id,$user_role,$created_by){
+           $role_wise_conditions = [];
+            if($user_role == Configure::read('ROLE_ADMIN')){
+                $role_wise_conditions['g.created_by'] =$user_id;
+            }
+            if($user_role == Configure::read('ROLE_MEMBER')){ 
+                $role_wise_conditions['g.created_by'] =$created_by;
+            }
+            if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+                $role_wise_conditions['g.created_by'] =$created_by;
+            } 
+
           $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
           $groups = $query->select(['g.group_code','g.chit_amount','g.total_number','g.premium',
@@ -673,7 +779,8 @@ class CommonComponent extends Component {
                     'type' => 'LEFT',
                     'conditions' =>'a.id = ug.agent_id',
                 ]) 
-              ->where(['u.id'=>$post['user_id'],'g.created_by'=>$user_id]) 
+              ->where(['u.id'=>$post['user_id']]) 
+              ->where($role_wise_conditions)
               ->first();  
           return $groups;    
       }
@@ -697,7 +804,19 @@ class CommonComponent extends Component {
           return $groups;   
       }
 
-      function getVacantMemberDetails($user_id,$group_id=0){
+      function getVacantMemberDetails($user_id,$group_id=0,$user_role,$created_by){
+        $role_wise_conditions = [];
+        if($user_role == Configure::read('ROLE_ADMIN')){
+            $role_wise_conditions['g.created_by'] =$user_id;
+        }
+        if($user_role == Configure::read('ROLE_MEMBER')){
+            $role_wise_conditions['g.user_id'] =$user_id;
+            $role_wise_conditions['g.created_by'] =$created_by;
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+            $role_wise_conditions['g.created_by'] =$created_by;
+        } 
+
         $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
         $query = $MembersGroupsTable->find();  
         $AuctionsTable = TableRegistry::get('Auctions');
@@ -736,7 +855,7 @@ class CommonComponent extends Component {
                     // 'type' => 'JOIN',
                     'conditions' =>'mg.user_id = u.id',
                 ]) 
-              ->where(['g.created_by'=>$user_id])  
+              ->where($role_wise_conditions)  
                ->where(['mg.group_id IN '=>$include])  
               ->where($where_Conditions)
               // ->where(['mg.group_id IN '=>" (SELECT group_id FROM auctions WHERE auction_group_due_date < CURRENT_DATE() group by group_id ORDER BY group_id ASC)"])
@@ -746,7 +865,23 @@ class CommonComponent extends Component {
           return $groups;    
       }
 
-      function getFormanCommissionDetailsPdf($post,$user_id){
+      function getRoleWiseConditions($user_id,$user_role,$created_by,$tablenm){
+            $role_wise_conditions = [];
+            if($user_role == Configure::read('ROLE_ADMIN')){
+                $role_wise_conditions[$tablenm.'.created_by'] =$user_id;
+            }
+            if($user_role == Configure::read('ROLE_MEMBER')){
+                $role_wise_conditions[$tablenm.'.user_id'] =$user_id;
+                $role_wise_conditions[$tablenm.'.created_by'] =$created_by;
+            }
+            if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+                $role_wise_conditions[$tablenm.'.created_by'] =$created_by;
+            } 
+              // echo '$pv <pre>';print_r($role_wise_conditions);exit;
+            return $role_wise_conditions;
+      }
+      function getFormanCommissionDetailsPdf($post,$user_id,$user_role,$created_by){
+        $role_wise_conditions=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'g');
         $post['start']= strtotime($post['start']) > 0 ? date('Y-m-d',strtotime($post['start'])) : '';
         $post['end']= strtotime($post['end']) > 0 ? date('Y-m-d',strtotime($post['end'])) : ''; 
 
@@ -771,9 +906,10 @@ class CommonComponent extends Component {
                     'alias' => 'a', 
                     'conditions' =>'pv.auction_id = a.id',
                 ]) 
-              ->where(['g.created_by'=>$user_id,'g.id'=>$post['group_id']])   
+              ->where(['g.id'=>$post['group_id']])   
+              ->where($role_wise_conditions)
               ->where(['pv.date >='=> $post['start'],'pv.date <='=> $post['end']]) 
-              ->order(['pv.group_id' => 'ASC'])->toArray();  
+              ->order(['pv.group_id' => 'ASC']);//->toArray();  
           // echo '$pv <pre>';print_r($payment_vouchers);exit;    
           return $payment_vouchers; 
       }
@@ -846,11 +982,12 @@ class CommonComponent extends Component {
         return $users;
       }
 
-      function getTransferedSubscriberDetails($post,$user_id){
+      function getTransferedSubscriberDetails($post,$user_id,$user_role,$created_by){
+
         $MembersGroupsTable = TableRegistry::get('mg', ['table' => 'members_groups']);
         $query = $MembersGroupsTable->find();   
-
-        $where_Conditions = ['g.created_by'=>$user_id,'mg.is_transfer_user'=>1];
+        $role_wise_conditions=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'g');
+        $where_Conditions = ['mg.is_transfer_user'=>1];
 
         if($post['group_id'] != 'all'){
             $where_Conditions = ['g.id'=>$post['group_id']];
@@ -880,6 +1017,7 @@ class CommonComponent extends Component {
                     'conditions' =>'mg.new_user_id = nu.id',
                 ]) 
               ->where($where_Conditions)  
+              ->where($role_wise_conditions)
               ->order(['mg.group_id' => 'ASC'])->toArray();  
           // echo '$pv <pre>';print_r($transferedMembers);exit;    
           return $transferedMembers; 
@@ -1122,7 +1260,8 @@ class CommonComponent extends Component {
         return $filename;
     }
 
-    function getSubscribersLists($post, $user_id){
+    function getSubscribersLists($post, $user_id,$user_role,$created_by){
+          $role_wise_conditions=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'u');
           $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
           $users = $query->select(['mg.id','mg.old_user_id','name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(u.middle_name, 1, 1)), LOWER(SUBSTRING(u.middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(u.last_name, 1, 1)), LOWER(SUBSTRING(u.last_name, 2))' => 'identifier', ' , ','u.address'=> 'identifier']), 
@@ -1178,21 +1317,22 @@ class CommonComponent extends Component {
               //       'type' => 'LEFT',
               //       'conditions' =>"u.created_by=u.id",
               //   ])  
-              ->where([
-                    'u.created_by'=>$user_id,
+              ->where([ 
                     'g.created_date >= '=>date('Y-m-d',strtotime($post['start'])),
                     'g.created_date <= '=>date('Y-m-d',strtotime($post['end']))
-                ]) ->toArray();  
+                ])
+              ->where($role_wise_conditions)
+              ->toArray();  
               // echo $users;exit;
           return $users;    
       }
 
-      function getDayBookLists($post, $user_id){
+      function getDayBookLists($post, $user_id,$user_role,$created_by){
         //get receipt data
         $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
         $query = $PaymentsTable->find();   
-
-        $where_Conditions = ['g.created_by'=>$user_id,
+        $role_wise_conditionsr=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'g');
+        $where_Conditions = [
                               'p.date >='=>date('Y-m-d',strtotime($post['start'])),
                               'p.date <='=>date('Y-m-d',strtotime($post['end']))
                             ]; 
@@ -1218,7 +1358,8 @@ class CommonComponent extends Component {
                     'alias' => 'u', 
                     'conditions' =>'p.user_id = u.id',
                 ]) 
-              ->where($where_Conditions)  
+              ->where($where_Conditions)
+              ->where($role_wise_conditionsr)  
               ->order(['p.id' => 'ASC'])->toArray();  
           // echo '$receipts <pre>';print_r($receipts);exit;    
 
@@ -1239,8 +1380,8 @@ class CommonComponent extends Component {
           //get payment voucher data
           $PaymentVouchersTable = TableRegistry::get('pv', ['table' => 'payment_vouchers']);
           $query = $PaymentVouchersTable->find();   
-
-          $where_Conditions_pv = ['g.created_by'=>$user_id,
+          $role_wise_conditionspv=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'g');
+          $where_Conditions_pv = [
                                   'pv.date >='=>date('Y-m-d',strtotime($post['start'])),
                                   'pv.date <='=>date('Y-m-d',strtotime($post['end']))
                                 ]; 
@@ -1266,13 +1407,14 @@ class CommonComponent extends Component {
                     'conditions' =>'pv.user_id = u.id',
                 ]) 
               ->where($where_Conditions_pv)  
+              ->where($role_wise_conditionspv)
               ->order(['pv.id' => 'ASC'])->toArray();  
           // echo '$payment_vouchers <pre>';print_r($payment_vouchers);//exit;
 
           $OtherPaymentsTable = TableRegistry::get('op', ['table' => 'other_payments']);
           $query = $OtherPaymentsTable->find();   
-
-          $where_Conditions_op = ['op.created_by'=>$user_id,
+          $role_wise_conditionsop=$this->getRoleWiseConditions($user_id,$user_role,$created_by,'op');
+          $where_Conditions_op = [
                                    'op.date >='=>date('Y-m-d',strtotime($post['start'])),
                                    'op.date <='=>date('Y-m-d',strtotime($post['end']))
                                 ]; 
@@ -1287,6 +1429,7 @@ class CommonComponent extends Component {
             'other'=>'op.gst'
                 ]) 
               ->where($where_Conditions_op)  
+              ->where($role_wise_conditionsop)
               ->order(['op.id' => 'ASC'])->toArray();  
           // echo '$other_payments <pre>';print_r($other_payments);//exit;
 

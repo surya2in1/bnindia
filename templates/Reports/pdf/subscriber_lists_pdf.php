@@ -124,7 +124,7 @@ tr:nth-child(even) {
                      <td><?= !empty($value->trans_mg['removal_resaon']) ? $value->trans_mg['removal_resaon'] : '--'; ?></td> 
                      <td><?= !empty($value->date_of_removal) ? $value->date_of_removal : '--'; ?></td>
                      <td><?= !empty($value->trans_name) ? $value->trans_name : '--'; ?></td>
-                     <td><?= !empty($value->trans_date) && ($value->mg['old_user_id'] >0) ? $value->
+                     <td><?= (!empty($value->trans_date) && ($value->mg['old_user_id'] >0)) ? $value->trans_date
                      : '--'; ?></td>
                      <td><?= !empty($value->trans_mg['ticket_no']) ? $value->trans_mg['ticket_no'] : '--'; ?></td>
                      <td><?= !empty($value->trans_g['chit_amount']) && ($value->mg['old_user_id'] >0) ? $value->trans_g['chit_amount'] : '--'; ?></td>
