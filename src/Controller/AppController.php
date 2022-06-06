@@ -99,6 +99,9 @@ class AppController extends Controller
              $this->set('reports_side_menu', $this->Common->searchUserPermission('reports',$user['role']['role_permissions']));
              $this->set('agent_side_menu', $this->Common->searchUserPermission('agents',$user['role']['role_permissions']));
             $this->set('list_of_all_users_side_menu', $this->Common->searchUserPermission('list_of_all_users',$user['role']['role_permissions'])); 
+            $this->set('branch_head_side_menu', $this->Common->searchUserPermission('branch_head',$user['role']['role_permissions'])); 
+            $this->set('assistent_head_side_menu', $this->Common->searchUserPermission('assistent_head',$user['role']['role_permissions'])); 
+            $this->set('cashier_side_menu', $this->Common->searchUserPermission('cashier',$user['role']['role_permissions'])); 
         }
     }
 

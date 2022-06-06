@@ -217,10 +217,10 @@ ServerRequest::addDetector('tablet', function ($request) {
 Configure::write('ROLE_ADMIN','admin');
 Configure::write('ROLE_SUPERADMIN','superadmin');
 Configure::write('ROLE_MEMBER','member');
-Configure::write('ROLE_USER','user');
+Configure::write('ROLE_USER','user');//Cashier/user same
 Configure::write('ROLE_AGENT','agent');
 Configure::write('ROLE_BRANCH_HEAD','branch_head');
-Configure::write('ROLE_ASSISTANT_HEAD','assistant_head');
+Configure::write('ROLE_ASSISTANT_HEAD','assistant_head'); 
 
 Configure::write('monthly','monthly');
 Configure::write('fortnight','fortnight');

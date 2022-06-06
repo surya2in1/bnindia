@@ -245,6 +245,18 @@ $cakeDescription = 'Bnindia';
             <?= $this->Html->script('all_users.js') ?>
         <?php } ?>
 
+        <?php if($this->request->getParam('controller') == 'BranchHeads') { ?> 
+            <?= $this->Html->script('branch_head.js') ?>
+        <?php } ?>
+
+        <?php if($this->request->getParam('controller') == 'AssistentHeads') { ?> 
+            <?= $this->Html->script('assistent_head.js') ?>
+        <?php } ?>
+
+        <?php if($this->request->getParam('controller') == 'Cashiers') { ?> 
+            <?= $this->Html->script('cashiers.js') ?>
+        <?php } ?>
+
         <?= $this->fetch('script') ?>
         <!--end::Page Scripts -->
     </footer>

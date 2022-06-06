@@ -38,15 +38,17 @@ class CommonComponent extends Component {
           'host' => 'ssl://smtp.gmail.com',
           'port' => 25,
           'username' => 'riyajaya692@gmail.com',
-          //'password' => 'etgtxblbsftaupzd',
-          'password' => 'sbgindxgmawqclcz',
+          'password' => 'etgtxblbsftaupzd',
+          // 'password' => 'sbgindxgmawqclcz',
           'className' => 'Smtp'
         ]);
-        
+
         try {
-            Email::deliver($email, $subject, $msg, ['from' => 'votreidentifiant@gmail.com']);
+            // Email::deliver($email, $subject, $msg, ['from' => 'votreidentifiant@gmail.com']);
+            Email::deliver($email, $subject, $msg, ['from' => 'riyajaya692@gmail.com']);
             $response = 1;
         } catch (Exception $e) {
+           // echo $email.'<pre>';print_r($e);exit;
             $response = 0;
         }
         return $response;
