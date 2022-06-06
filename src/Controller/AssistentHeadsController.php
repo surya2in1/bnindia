@@ -78,19 +78,19 @@ class AssistentHeadsController extends AppController
             if ($result = $this->Users->save($user)) {  
                 $profile_picture = $profile_picture_data;
                 if($profile_picture_data && $profile_picture_data->getClientFilename()){
-                   $updateuser['profile_picture'] = $this->Common->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id,'Users'); 
+                   $updateuser['profile_picture'] = $this->Common->userDocUpload('profile_picture', $profile_picture_data,WWW_ROOT.'img'.DS."user_imgs",$result->id,'users'); 
                 }
                           
                 //upload documnts\
                 if($address_proof && $address_proof->getClientFilename()){
-                    $updateuser['address_proof'] = $this->Common->userDocUpload('address_proof',$address_proof,'', $result->id,'Users');
+                    $updateuser['address_proof'] = $this->Common->userDocUpload('address_proof',$address_proof,'', $result->id,'users');
                 }
 
                 if($photo_proof &&  $photo_proof->getClientFilename()){
-                    $updateuser['photo_proof'] = $this->Common->userDocUpload('photo_proof',$photo_proof,'', $result->id,'Users');
+                    $updateuser['photo_proof'] = $this->Common->userDocUpload('photo_proof',$photo_proof,'', $result->id,'users');
                 }
                 if($other_document &&  $other_document->getClientFilename()){
-                    $updateuser['other_document'] = $this->Common->userDocUpload('other_document',$other_document,'', $result->id,'Users');
+                    $updateuser['other_document'] = $this->Common->userDocUpload('other_document',$other_document,'', $result->id,'users');
                 } 
                 //update user docs
                 if(isset($updateuser)){ 
