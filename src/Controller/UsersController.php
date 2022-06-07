@@ -554,7 +554,14 @@ public function setLoginUser($id,$login_by_superadmin,$superadmin_id)
             $RolesTable = TableRegistry::get('Roles');
             $role = $RolesTable->find('all')->where(['name'=>'member'])->first();
             $post['role_id'] = $role->id;
-            $post['created_by'] = $this->Auth->user('id');
+            $userr = $this->Auth->user();
+            if($userr['role']['name'] == Configure::read('ROLE_ADMIN')){
+                $post['created_by']=$this->Auth->user('id'); 
+                $post['created_by_userid']=$this->Auth->user('id');
+            }else{
+                $post['created_by']=$this->Auth->user('created_by'); 
+                $post['created_by_userid']=$this->Auth->user('id'); 
+            }
             // echo '<pre>';print_r($post);exit;
             $user = $this->Users->patchEntity($user, $post);
             if ($result = $this->Users->save($user)) {  
@@ -654,11 +661,18 @@ public function setLoginUser($id,$login_by_superadmin,$superadmin_id)
 
 
         // $GroupsTable = TableRegistry::get('Groups');
+        $userr = $this->Auth->user();
+        if($userr['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $conditions['created_by']=$this->Auth->user('id');  
+        }else{
+            $conditions['created_by']=$this->Auth->user('created_by');  
+        }
+
         $agent_list = $this->Agents->find('list', [
                                         'keyField' => 'id',
                                         'valueField' => 'agent_code' 
                                     ])
-                    ->where(['status '=>0,'created_by'=>$this->Auth->user('id')])->toArray();
+                    ->where(['status '=>0])->where($conditions)->toArray();
 
         $this->set(compact('user','agent_list'));
      }

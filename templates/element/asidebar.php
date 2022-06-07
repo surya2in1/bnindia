@@ -1,4 +1,6 @@
-<?php use Cake\Routing\Router; ?>
+<?php use Cake\Routing\Router;
+use Cake\Core\Configure;
+ ?>
 <div class="kt-aside__brand kt-grid__item " id="kt_aside_brand">
                         <div class="kt-aside__brand-logo">
                             <a href="<?php echo Router::url('/dashboard', true); ?>">
@@ -184,7 +186,7 @@
                                 <?php }?>
 
                                 <!-- add agent end-->
-                                <?php if($member_side_menu == '1111'){?>
+                                <?php if(in_array($member_side_menu, Configure::read('role_all_access'))){?>
                                 <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Users') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
@@ -198,6 +200,7 @@
                                     <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                         <ul class="kt-menu__subnav kt-menu__item--active">
                                             <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
+                                            <?php if(in_array($member_side_menu, Configure::read('role_create_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'memberform') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -208,6 +211,8 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php }?>
+                                            <?php if(in_array($member_side_menu, Configure::read('role_admin_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'transferMembers') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -218,6 +223,8 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php }?>
+                                            <?php if(in_array($member_side_menu, Configure::read('role_admin_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'members') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -228,6 +235,7 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php }?>
                                         </ul>
                                     </div>
                                 </li>
@@ -399,7 +407,7 @@
                                     </div>
                                 </li>
                                 <?php }?>
-                                 <?php if($payments_side_menu == '1111'){?>
+                                <?php if(in_array($payments_side_menu, Configure::read('role_all_access'))){?>
                                 <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'Payments'  || $this->request->getParam('controller') == 'PaymentVouchers'  || $this->request->getParam('controller') == 'OtherPayments') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                     <a href="javascript:;" class="kt-menu__link kt-menu__toggle"><span class="kt-menu__link-icon"> 
                                             <i class="fas fa-receipt" aria-hidden="true"></i>
@@ -414,6 +422,7 @@
                                     <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
                                         <ul class="kt-menu__subnav kt-menu__item--active">
                                             <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true"><span class="kt-menu__link"><span class="kt-menu__link-text">Skins</span></span></li>
+                                            <?php if(in_array($payments_side_menu, Configure::read('role_create_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'paymentform') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -424,6 +433,9 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php } ?>
+                                            
+                                            <?php if(in_array($payments_side_menu, Configure::read('role_admin_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -434,6 +446,7 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                             <?php } ?>
                                             <!--<li class="kt-menu__item <?php if($this->request->getParam('controller') == 'Payments' && $this->request->getParam('action') == 'paymentvoucher') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">-->
                                                 <?php 
                                                 // echo  $this->Html->link(
@@ -449,7 +462,7 @@
                                             
                                             
                                             <!----------------------------------------------------------------------------------------->
-                                            
+                                            <?php if(in_array($payments_side_menu, Configure::read('role_admin_access'))){?>
                                             <li class="kt-menu__item  kt-menu__item--submenu <?php if($this->request->getParam('controller') == 'PaymentVouchers' || $this->request->getParam('controller') == 'OtherPayments') { ?> kt-menu__item--open<?php } ?>" aria-haspopup="true" data-ktmenu-submenu-toggle="hover">
                                                 <a href="javascript:;" class="kt-menu__link kt-menu__toggle">
                                                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -485,7 +498,10 @@
                                                     </ul>
                                                 </div>
                                             </li>
+                                            <?php } ?>
                                             <!------------------------------------------------------------------------------------------>
+                                            <?php if(in_array($payments_side_menu, Configure::read('role_admin_access'))){?>
+
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'PaymentVouchers' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -496,6 +512,9 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php } ?>
+
+                                            <?php if(in_array($payments_side_menu, Configure::read('role_admin_access'))){?>
                                             <li class="kt-menu__item <?php if($this->request->getParam('controller') == 'OtherPayments' && $this->request->getParam('action') == 'index') { ?> kt-menu__item--active<?php } ?>" aria-haspopup="true">
                                                 <?php echo  $this->Html->link(
                                                      '<i class="kt-menu__link-bullet kt-menu__link-bullet--dot">
@@ -506,6 +525,7 @@
                                                     ['class' => 'kt-menu__link','escape'=>false]
                                                 ); ?>
                                             </li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </li>

@@ -75,6 +75,7 @@ class Payment extends Entity
         'created_by' => true,
         'created' => true,
         'modified' => true,
+        'created_by_userid'=>true
     ];
 }
 

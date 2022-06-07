@@ -229,6 +229,19 @@ Configure::write('daily','daily');
 Configure::write('weekdays',[1=>'Monday',2=>'Tuesday',3=>'Wednesday',4=>'Thursday', 5=>'Friday',6=>'Saturday',7=>'Sunday']);
 Configure::write('received_by',[1=>'Cash',2=>'Cheque',3=>'Direct Debit']);
 
+//crud
+//get 
+/**
+ *  $permission = $this->Permissions->find('all')->toArray();
+    $permission = array_column($permission, 'permission');
+    echo implode(',', $permission);exit;
+    echo '$permission<pre>';print_r($permission);exit;
+ *  */
+Configure::write('role_all_access',['1111','1110','1100','1000','0001','0011','0111','1010','1001','1101','1011','0100','0110','0101','0010']);
+
+Configure::write('role_create_access',['1111','1110','1100','1000','1010','1001','1101','1011']);
+Configure::write('role_admin_access',['1111']);
+
 // Configure::write('CakePdf', [
 //     'engine' => 'CakePdf.WkHtmlToPdf',
 //     'margin' => [

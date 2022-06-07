@@ -84,6 +84,12 @@ class PaymentsController extends AppController
         }
 
         //Get available Users
+        $userr = $this->Auth->user();
+        if($userr['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $conditions['Auctions.created_by']=$this->Auth->user('id'); 
+        }else{
+            $conditions['Auctions.created_by']=$this->Auth->user('created_by'); 
+        }
         $AuctionsTable = TableRegistry::get('Auctions');
         $groups = $AuctionsTable->find('list', [
                                         'keyField' => 'group_id',
@@ -94,7 +100,7 @@ class PaymentsController extends AppController
                      ->contain([
                             'Groups'  
                         ])
-                    ->where(['Auctions.created_by'=>$this->Auth->user('id')])
+                    ->where($conditions)
                     ->group(['Auctions.group_id'])->toArray();
         // echo '$groups<pre>';print_r($groups);exit;
        
@@ -121,8 +127,15 @@ class PaymentsController extends AppController
           if($mysql_version == '10.4.13-MariaDB' && isset($post['money_notes']) && !empty($post['money_notes']) ){
             $post['money_notes'] = json_encode($post['money_notes']);
           }  
-          // echo '<pre>';print_r($post);exit;
-          $post['created_by'] = $this->Auth->user('id');
+          // echo '<pre>';print_r($post);exit; 
+          $userr = $this->Auth->user();
+          if($userr['role']['name'] == Configure::read('ROLE_ADMIN')){
+            $post['created_by']=$this->Auth->user('id'); 
+            $post['created_by_userid']=$this->Auth->user('id');
+          }else{
+            $post['created_by']=$this->Auth->user('created_by'); 
+            $post['created_by_userid']=$this->Auth->user('id'); 
+          }
           $payment = $this->Payments->patchEntity($payment, $post, ['validate' => 'receivedby']);
           $result = $this->Payments->save($payment);
           // echo '<pre>';print_r($result);exit;
