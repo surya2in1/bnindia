@@ -151,6 +151,41 @@ class CommonComponent extends Component {
           return $group_members;
   }
 
+ function getAllGroupMembersForReceipt($user_id=0,$created_by=0,$user_role,$agent_id=0){ 
+      $conditions['mg.is_transfer_user']=0;
+      if($user_id>0){
+        $conditions['u.id']=$user_id;
+      }
+      if($created_by>0){
+       $conditions['g.created_by']=$created_by; 
+      }
+      if($user_role == Configure::read('ROLE_AGENT')){
+          $conditions['u.agent_id']=$agent_id;
+        } 
+      $groupMembersTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+      $query = $groupMembersTable->find();     
+      $group_members = $query->select(['mg.ticket_no','mg.group_id','u.id',
+            'name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(middle_name, 1, 1)), LOWER(SUBSTRING(middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name, 2))' => 'identifier'])
+            ])
+            ->join([
+                'table' => 'users',
+                'alias' => 'u',
+                'type' => 'LEFT',
+                'conditions' =>'u.id = mg.user_id',
+            ]) 
+            ->join([
+                'table' => 'groups',
+                'alias' => 'g',
+                'type' => 'LEFT',
+                'conditions' =>'g.id = mg.group_id',
+            ])  
+          ->where($conditions)
+          ->group('u.id')
+          ->toArray();   
+        // echo 'group_members<pre>';print_r($group_members);exit;
+          return $group_members;
+  }
+
   // Get installment no by selecting group and member
   //   SELECT a.auction_no,max(p.id) as pid 
   //   FROM auctions a 
@@ -812,7 +847,7 @@ class CommonComponent extends Component {
             $role_wise_conditions['g.created_by'] =$user_id;
         }
         if($user_role == Configure::read('ROLE_MEMBER')){
-            $role_wise_conditions['g.user_id'] =$user_id;
+            $role_wise_conditions['u.id'] =$user_id;
             $role_wise_conditions['g.created_by'] =$created_by;
         }
         if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){

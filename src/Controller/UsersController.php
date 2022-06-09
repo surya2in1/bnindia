@@ -103,6 +103,11 @@ public function setLoginUser($id,$login_by_superadmin,$superadmin_id)
                 $user['login_by_superadmin'] =0;
                 $user['superadmin_id']=0;
                 // echo "user <pre>";print_r($user);exit;
+                $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
+                if($user_role == Configure::read('ROLE_MEMBER') || $user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){ 
+                    $userbranch = $this->Users->find('all')->where(['id'=>$user['created_by']])->first();
+                    $user['branch_name']= $userbranch->branch_name;
+                }
                 $this->Auth->setUser($user);
                 //Check remeber me 
                 if (isset($post['remember_me']) && $post['remember_me'] == 'on') {     

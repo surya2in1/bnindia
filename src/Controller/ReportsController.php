@@ -29,7 +29,7 @@ class ReportsController extends AppController
     function getGroupsRoleWise(){
         $user = $this->Auth->user();
         $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
-        $conditions['status']= 0;
+        // $conditions['status']= 0;
         if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
             $conditions['created_by']=$this->Auth->user('id'); 
         }
@@ -39,7 +39,7 @@ class ReportsController extends AppController
             $member_groups =$this->Common->getAllGroupMembers($this->Auth->user('id'),$this->Auth->user('created_by'));
             $member_group_ids = array_column($member_groups, 'group_id');
 
-            // echo '<pre>';print_r($member_groups);exit;
+            // echo '<pre>';print_r($member_group_ids);exit;
             $conditions['id IN ']=$member_group_ids;
             $conditions['created_by'] = $this->Auth->user('created_by'); 
         }
@@ -71,7 +71,7 @@ class ReportsController extends AppController
         if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
            $created_by=$this->Auth->user('created_by');
         } 
-        $group_members = $this->Common->getAllGroupMembers($user_id,$created_by);
+        $group_members = $this->Common->getAllGroupMembersForReceipt($user_id,$created_by,$user_role,$this->Auth->user('agent_id'));
         echo json_encode($group_members);exit;
     }
     public function pdf()
@@ -113,15 +113,15 @@ class ReportsController extends AppController
         $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
         $conditions['status']= 1;
         if($user['role']['name'] == Configure::read('ROLE_ADMIN')){
-            $conditions['created_by']=$this->Auth->user('id'); 
+            $conditions['Users.created_by']=$this->Auth->user('id'); 
         }
 
         if($user_role == Configure::read('ROLE_MEMBER')){ 
-            $conditions['id']=$this->Auth->user('id');
-            $conditions['created_by'] = $this->Auth->user('created_by'); 
+            $conditions['Users.id']=$this->Auth->user('id');
+            $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
         }
         if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
-           $conditions['created_by'] = $this->Auth->user('created_by'); 
+           $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
         } 
 
         $this->viewBuilder()->setLayout('admin');  
@@ -248,10 +248,10 @@ class ReportsController extends AppController
         }
 
         if($user_role == Configure::read('ROLE_MEMBER')){  
-            $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
+            $conditions['Users.id'] = $this->Auth->user('created_by'); 
         }
         if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
-           $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
+           $conditions['Users.id'] = $this->Auth->user('created_by'); 
         } 
 
         $branch_names = $UsersTable->find('list', [
@@ -298,6 +298,7 @@ class ReportsController extends AppController
         $user = $this->Auth->user();
         $user_role = isset($user['role']['name']) ? $user['role']['name'] : ''; 
    
+        //get groups of only that member for member role //refer getMemberCount
         $report = $this->Common->getVacantMemberDetails($this->Auth->user('id'),0,$user_role, $this->Auth->user('created_by'));    
         $this->viewBuilder()->enableAutoLayout(false);    
         $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
