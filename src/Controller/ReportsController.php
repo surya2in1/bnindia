@@ -43,7 +43,16 @@ class ReportsController extends AppController
             $conditions['id IN ']=$member_group_ids;
             $conditions['created_by'] = $this->Auth->user('created_by'); 
         }
-        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+        if($user_role == Configure::read('ROLE_AGENT')){ 
+            //Get all groups of current member
+            $member_groups =$this->Common->getAgentMemberGroups($this->Auth->user('created_by'),$this->Auth->user('agent_id'));
+            $member_group_ids = array_column($member_groups, 'group_id');
+
+            // echo '<pre>';print_r($member_group_ids);exit;
+            $conditions['id IN ']=$member_group_ids;
+            $conditions['created_by'] = $this->Auth->user('created_by'); 
+        }
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
            $conditions['created_by'] = $this->Auth->user('created_by'); 
         } 
 
@@ -120,7 +129,13 @@ class ReportsController extends AppController
             $conditions['Users.id']=$this->Auth->user('id');
             $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
         }
-        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+
+        if($user_role == Configure::read('ROLE_AGENT')){ 
+            $conditions['Users.agent_id']=$this->Auth->user('agent_id');
+            $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
+        }
+
+        if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
            $conditions['Users.created_by'] = $this->Auth->user('created_by'); 
         } 
 
@@ -274,7 +289,14 @@ class ReportsController extends AppController
     function groupsDetailsPdf(){
         $report =[]; 
         if ($this->request->is(['patch', 'post', 'put'])) { 
-            $report = $this->Common->getGroupList( $this->request->getData('branch_name'));    
+            $user = $this->Auth->user();
+            $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
+            if($user['role']['name'] == Configure::read('ROLE_AGENT')){
+                $report = $this->Common->getAgentMemberGroupList( $this->request->getData('branch_name'),$this->Auth->user('agent_id'));    
+            }else{
+                $report = $this->Common->getGroupList( $this->request->getData('branch_name'));    
+            }
+
             $this->viewBuilder()->enableAutoLayout(false);    
             $this->viewBuilder()->setClassName('CakePdf.Pdf'); 
             $this->viewBuilder()->setLayout('admin');

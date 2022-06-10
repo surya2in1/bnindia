@@ -54,6 +54,7 @@ class DashboardController extends AppController
 
         $is_member =0;
         $user_id_param = 0;
+        $agent_id = 0;
         $branch_name = $this->Auth->user('branch_name');
         if($user_role == Configure::read('ROLE_SUPERADMIN')){
             $use_id = -1;
@@ -62,28 +63,31 @@ class DashboardController extends AppController
             $is_member =1;
             $user_id_param = $this->Auth->user('id');
             $use_id = $this->Auth->user('created_by');
-        }else if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_AGENT') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
+        }else if($user_role == Configure::read('ROLE_AGENT')){
+            $agent_id = $this->Auth->user('agent_id');
+            $use_id = $this->Auth->user('created_by');
+        }else if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
             $use_id = $this->Auth->user('created_by');
         }else{
             $use_id = $this->Auth->user('id');
         }
         $this->set('branch_name', $branch_name);
 
-        $total_cash = $this->Common->getAmountByReceivedBy(1,$use_id,$user_id_param);  
-        $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$use_id,$user_id_param); 
-        $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$use_id,$user_id_param);  
-        $total_amount = $this->Common->getAmountByReceivedBy(0,$use_id,$user_id_param);  
+        $total_cash = $this->Common->getAmountByReceivedBy(1,$use_id,$user_id_param,$agent_id,$user_role);  
+        $total_cheque_amount = $this->Common->getAmountByReceivedBy(2,$use_id,$user_id_param,$agent_id,$user_role); 
+        $total_dd_amount = $this->Common->getAmountByReceivedBy(3,$use_id,$user_id_param,$agent_id,$user_role);  
+        $total_amount = $this->Common->getAmountByReceivedBy(0,$use_id,$user_id_param,$agent_id,$user_role);  
 
-        $succefull_transactions= $this->Common->getAllSuccessfullTransaction($use_id,$user_id_param); 
-        $total_groups= $this->Common->getGroupCount($use_id,$user_id_param); 
-        $total_members= $this->Common->getMemberCount($use_id,$user_id_param); 
-        $total_auctions= $this->Common->getAuctionsCount($use_id,$user_id_param); 
-        $total_payments= $this->Common->getPaymentsCount($use_id,$user_id_param); 
+        $succefull_transactions= $this->Common->getAllSuccessfullTransaction($use_id,$user_id_param,$agent_id); 
+        $total_groups= $this->Common->getGroupCount($use_id,$user_id_param,$agent_id); 
+        $total_members= $this->Common->getMemberCount($use_id,$user_id_param,$agent_id); 
+        $total_auctions= $this->Common->getAuctionsCount($use_id,$user_id_param,$agent_id); 
+        $total_payments= $this->Common->getPaymentsCount($use_id,$user_id_param,$agent_id); 
 
         $this->set(compact('total_cash','total_cheque_amount','total_dd_amount','total_amount','succefull_transactions','total_groups','total_members','total_auctions','total_payments'));
         if ($this->request->is('post')) { 
             $GroupsTable = TableRegistry::get('Groups');
-            $output = $GroupsTable->GetDashboardData($use_id,$user_id_param);
+            $output = $GroupsTable->GetDashboardData($use_id,$user_id_param,$agent_id);
             // echo '$output <pre>';print_r($output);exit;
              echo json_encode($output);exit;
         }

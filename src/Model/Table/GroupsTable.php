@@ -371,7 +371,7 @@ class GroupsTable extends Table
         return isset($result[0]['group_code']) ? $result[0]['group_code'] : '';
     }
 
-    public function GetDashboardData($user_id,$user_id_param=0) { 
+    public function GetDashboardData($user_id,$user_id_param=0,$agent_id=0) { 
         $aColumns = array('g.chit_amount','g.no_of_months','g.premium', 
                     "COUNT(a.id) as no_of_installments",
                     "SUM(a.net_subscription_amount) as total_amt_payable",
@@ -435,6 +435,10 @@ class GroupsTable extends Table
         if($user_id_param >0 ){
             $sWhere_member = " AND mg.user_id= '".$user_id_param."' ";
             $join = " JOIN members_groups mg on mg.group_id=g.id ";
+        }
+        if($agent_id>0){
+            $sWhere_member = " AND u.agent_id= '".$agent_id."' ";
+            $join = " JOIN members_groups mg on mg.group_id=g.id JOIN users u on u.id=mg.user_id";   
         }
         $having='';
         if ( isset($_POST['search']) && $_POST['search']['value'] != "" )

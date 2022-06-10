@@ -1060,9 +1060,13 @@ class CommonComponent extends Component {
           return $transferedMembers; 
       }
 
-      function getAmountByReceivedBy($received_by,$user_id,$user_id_param =0){
+      function getAmountByReceivedBy($received_by,$user_id,$user_id_param =0,$agent_id=0,$user_role){
         $conn = ConnectionManager::get('default');
-        $sQuery = "call CalculateMoneyNotes($received_by,$user_id,$user_id_param);";
+        if($user_role == Configure::read('ROLE_AGENT')){
+            $sQuery = "call CalculateMoneyNotesForAgent($received_by,$user_id,$user_id_param,$agent_id);";
+        }else{
+            $sQuery = "call CalculateMoneyNotes($received_by,$user_id,$user_id_param);";
+        }
         $rResultTotal = $conn->execute($sQuery);
         $aResultTotal = $rResultTotal ->fetchAll('assoc');
         return $aResultTotal; 
@@ -1077,7 +1081,6 @@ class CommonComponent extends Component {
                'AND' => array( 
                    array(
                      'OR'=>array(
-                        ['YEAR(p.due_date)'=> date("Y")],
                         ['YEAR(p.due_date) is '=> NULL]
                      )
                    ),
@@ -1111,7 +1114,7 @@ class CommonComponent extends Component {
           return $result; 
       }
 
-      function getAllSuccessfullTransaction($user_id,$user_id_param=0){
+      function getAllSuccessfullTransaction($user_id,$user_id_param=0,$agent_id=0){
           $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
           $query = $PaymentsTable->find();     
 
@@ -1124,14 +1127,23 @@ class CommonComponent extends Component {
           if($user_id_param>0){
             $conditions['p.user_id'] = $user_id_param;
           }
+          if($agent_id>0){
+            $conditions['u.agent_id'] = $agent_id;
+          }
           // echo '<pre>';print_r($conditions);exit;
           $payments = $query->select(['total_fully_paid_interest'=>"count(p.id)"])
+              ->join([
+                            'table' => 'users',
+                            'alias' => 'u', 
+                            'type' => 'LEFT',
+                            'conditions' =>"u.id=p.user_id",
+                        ])
               ->where($conditions) 
               ->first();  
           return $payments->total_fully_paid_interest;    
       }
 
-      function getGroupCount($user_id,$user_id_param=0){
+      function getGroupCount($user_id,$user_id_param=0,$agent_id=0){
          $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
           $query = $GroupsTable->find();     
           if($user_id == -1){
@@ -1141,7 +1153,7 @@ class CommonComponent extends Component {
           }
           if($user_id_param>0){
             $conditions['mg.user_id'] = $user_id_param;
-          $groups = $query->select(['total_groups'=>"count(g.id)"])
+            $groups = $query->select(['total_groups'=>"count(g.id)"])
               ->join([
                     'table' => 'members_groups',
                     'alias' => 'mg', 
@@ -1150,6 +1162,19 @@ class CommonComponent extends Component {
               ->where($conditions) 
               ->first(); 
               // echo '$groups<pre>';print_r($groups);exit;
+          }elseif($agent_id>0){
+            $conditions['u.agent_id'] = $agent_id;
+            $groups = $query->select(['total_groups'=>"count(g.id)"])
+              ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg',  
+                    'conditions' =>"g.id=mg.group_id",])
+              ->join([
+                    'table' => 'users',
+                    'alias' => 'u',  
+                    'conditions' =>"u.id=mg.user_id",])
+              ->where($conditions) 
+              ->first(); 
           }else{
             $groups = $query->select(['total_groups'=>"count(g.id)"])
               ->where($conditions) 
@@ -1159,7 +1184,7 @@ class CommonComponent extends Component {
           return $groups->total_groups;
       }
 
-       function getMemberCount($user_id,$user_id_param=0){
+       function getMemberCount($user_id,$user_id_param=0,$agent_id=0){
           $UsersTable = TableRegistry::get('u', ['table' => 'users']);
           $query = $UsersTable->find();     
           $conditions['u.status']=1;
@@ -1198,6 +1223,25 @@ class CommonComponent extends Component {
                          ->where(['group_id IN '=>$member_group_ids])->first();
                           // echo 'members<pre>';print_r($members);exit;
             
+           }elseif($agent_id>0){
+            $conditions['u.agent_id']=$agent_id;
+            $MembersGroupTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+            $query = $MembersGroupTable->find();
+            $members = $query->select(['total_members'=>"count(mg.id)"])
+                     ->join([
+                        'table' => 'users',
+                        'alias' => 'u', 
+                        'type' => 'LEFT',
+                        'conditions' =>"u.id=mg.user_id",
+                    ]) 
+                     ->join([
+                        'table' => 'roles',
+                        'alias' => 'r', 
+                        'type' => 'LEFT',
+                        'conditions' =>"r.id=u.role_id",
+                    ]) 
+                  ->where($conditions) 
+                 ->first();   
            }else{
               $members = $query->select(['total_members'=>"count(u.id)"])
                      ->join([
@@ -1212,7 +1256,7 @@ class CommonComponent extends Component {
           return $members->total_members;
       }
 
-       function getAuctionsCount($user_id,$user_id_param=0){
+       function getAuctionsCount($user_id,$user_id_param=0,$agent_id=0){
           $AuctionsTable = TableRegistry::get('a', ['table' => 'auctions']);
           $query = $AuctionsTable->find();     
           if($user_id == -1){
@@ -1231,6 +1275,23 @@ class CommonComponent extends Component {
             $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
               ->where(['a.group_id IN '=>$member_group_ids]) 
               ->first();  
+          }elseif($agent_id>0){
+            $MembersGroupTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+            $query2 = $MembersGroupTable->find();
+            $subquery = $query2->select(['mg.group_id']) 
+                ->join([
+                        'table' => 'users',
+                        'alias' => 'u', 
+                        'type' => 'LEFT',
+                        'conditions' =>"u.id=mg.user_id",
+                    ])
+                ->where(['u.agent_id'=>$agent_id,'mg.created_by'=>$user_id]) 
+                ->toArray();  
+                $member_group_ids = array_column($subquery, 'group_id');
+
+            $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
+              ->where(['a.group_id IN '=>$member_group_ids]) 
+              ->first();
           }else{
           $auctions = $query->select(['total_auctions'=>"count(a.id)"]) 
               ->where($conditions) 
@@ -1239,7 +1300,7 @@ class CommonComponent extends Component {
           }
           return $auctions->total_auctions;
       }
-      function getPaymentsCount($user_id,$user_id_param=0){
+      function getPaymentsCount($user_id,$user_id_param=0,$agent_id=0){
           $PaymentsTable = TableRegistry::get('p', ['table' => 'payments']);
           $query = $PaymentsTable->find();  
           if($user_id == -1){
@@ -1247,10 +1308,19 @@ class CommonComponent extends Component {
           }else{
              $conditions = ['p.created_by'=>$user_id];
           }   
-           if($user_id_param>0){
+          if($user_id_param>0){
             $conditions['p.user_id'] = $user_id_param;
           }
+          if($agent_id>0){
+            $conditions['u.agent_id'] = $agent_id;
+          }
           $payments = $query->select(['total_payments'=>"count(p.id)"]) 
+              ->join([
+                        'table' => 'users',
+                        'alias' => 'u', 
+                        'type' => 'LEFT',
+                        'conditions' =>"u.id=p.user_id",
+                    ])
               ->where($conditions) 
               ->first();  
           return $payments->total_payments;
@@ -1563,6 +1633,65 @@ class CommonComponent extends Component {
           return $final_data; 
       }
 
+      function getAgentMemberGroups($created_by=0,$agent_id){ 
+          $conditions['mg.is_transfer_user']=0;
+          $conditions['u.agent_id']=$agent_id;
+          if($created_by>0){
+           $conditions['g.created_by']=$created_by; 
+          }
+          $groupMembersTable = TableRegistry::get('mg', ['table' => 'members_groups']);
+          $query = $groupMembersTable->find();     
+          $group_members = $query->select(['mg.ticket_no','mg.group_id','u.id',
+                'name' => $query->func()->concat(['UPPER(SUBSTRING(u.first_name, 1, 1)), LOWER(SUBSTRING(u.first_name, 2))' => 'identifier', ' ','UPPER(SUBSTRING(middle_name, 1, 1)), LOWER(SUBSTRING(middle_name, 2))' => 'identifier', ' ', 'UPPER(SUBSTRING(last_name, 1, 1)), LOWER(SUBSTRING(last_name, 2))' => 'identifier'])
+                ])
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u',
+                    'type' => 'LEFT',
+                    'conditions' =>'u.id = mg.user_id',
+                ]) 
+                ->join([
+                    'table' => 'groups',
+                    'alias' => 'g',
+                    'type' => 'LEFT',
+                    'conditions' =>'g.id = mg.group_id',
+                ])  
+              ->where($conditions)
+              ->toArray();   
+            // echo 'group_members<pre>';print_r($group_members);exit;
+              return $group_members;
+      }
+
+      function getAgentMemberGroupList($branch_id,$agent_id)
+      {
+          $GroupsTable = TableRegistry::get('g', ['table' => 'groups']);
+          $query = $GroupsTable->find();     
+          $groups = $query->select(['g.group_code','g.chit_amount','g.total_number',
+                   'g.gov_reg_no','g.date','g.no_of_months','g.bank_deposite_date',
+                   'g.deposite_maturity_date','g.group_type',
+                   'group_status'=>"(
+                        CASE 
+                            WHEN g.is_all_auction_completed =0 THEN 'Active'
+                            WHEN g.is_all_auction_completed =1 THEN 'Close'
+                            ELSE '--'
+                        END)"
+                ])
+                ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg',
+                    // 'type' => 'LEFT',
+                    'conditions' =>'g.id = mg.group_id',
+                ])  
+                ->join([
+                    'table' => 'users',
+                    'alias' => 'u',
+                    // 'type' => 'LEFT',
+                    'conditions' =>'u.id = mg.user_id',
+                ]) 
+              ->where(['g.created_by'=>$branch_id,'u.agent_id'=>$agent_id]) 
+              ->toArray();  
+          return $groups;   
+      }
 
 }
      
