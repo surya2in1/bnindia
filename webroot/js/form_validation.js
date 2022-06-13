@@ -58,11 +58,18 @@ var KTFormControls = function () {
                 address_proof: { extension: "png|jpe?g|pdf" },
                 photo_proof: { extension: "png|jpe?g|pdf" },
                 other_document: { extension: "png|jpe?g|pdf" },
-                branch_name: {
-                    required: true,
-                    lettersonly: true,
-                    maxlength: 50
-                },
+                // branch_name: {
+                //     required: true,
+                //     lettersonly: true,
+                //     maxlength: 50
+                // },
+                branch_name: { 
+                                required: function(element){
+                                    return $("#role_name").val() == $("#role_name_const").val();
+                                }, 
+                                lettersonly: true,
+                                maxlength: 50
+                            },
                 area_code:{
                     number: true,
                     maxlength: 5,

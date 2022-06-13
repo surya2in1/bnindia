@@ -14,7 +14,7 @@
 									<div class="kt-login__signin">
 										<div class="kt-login__head">
 											<?= $this->Flash->render() ?>
-											<h3 class="kt-login__title">Sign In To Admin</h3>
+											<h3 class="kt-login__title">Sign In</h3>
 										</div>
 										<div class="kt-login__form">
 											<?= $this->Form->create(null, array(

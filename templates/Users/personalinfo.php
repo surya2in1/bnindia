@@ -1,4 +1,6 @@
-<?php use Cake\Routing\Router; ?>
+<?php use Cake\Routing\Router; 
+use Cake\Core\Configure;
+?>
 
 <!-- begin:: Subheader -->
 <div class="kt-subheader   kt-grid__item" id="kt_subheader">
@@ -39,7 +41,8 @@
 							</div>
 						</div>
 						<?= $this->Flash->render() ?>
-						
+						<input type="hidden" name="role_name" id="role_name" value="<?= $user['role']['name']; ?>">
+						<input type="hidden" name="role_name_const" id="role_name_const" value="<?= Configure::read('ROLE_ADMIN'); ?>">
 						<?= $this->Form->create(null, array(
 											   'url'=>'/personalinfo',
 						                       'class'=>'kt-form kt-form--label-right',
@@ -206,12 +209,14 @@
 												<input class="form-control" name="income_amt" type="text" value="<?= $user->income_amt; ?>">
 											</div>
 										</div>
+										<?php if($user['role']['name'] == Configure::read('ROLE_ADMIN')){?>
 										<div class="form-group row">
 											<label class="col-xl-3 col-lg-3 col-form-label">Branch Name<span class="required" aria-required="true"> * </span></label>
 											<div class="col-lg-9 col-xl-6">
 												<input class="form-control" name="branch_name" type="text" value="<?= $user->branch_name; ?>">
 											</div>
 										</div>
+										<?php } ?>
 										<div class="row">
 											<label class="col-xl-3"></label>
 											<div class="col-lg-9 col-xl-6">

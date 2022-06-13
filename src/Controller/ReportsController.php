@@ -40,7 +40,7 @@ class ReportsController extends AppController
             $member_group_ids = array_column($member_groups, 'group_id');
 
             // echo '<pre>';print_r($member_group_ids);exit;
-            $conditions['id IN ']=$member_group_ids;
+            $conditions['id IN ']=!empty($member_group_ids) ? $member_group_ids : [0];
             $conditions['created_by'] = $this->Auth->user('created_by'); 
         }
         if($user_role == Configure::read('ROLE_AGENT')){ 
@@ -49,7 +49,7 @@ class ReportsController extends AppController
             $member_group_ids = array_column($member_groups, 'group_id');
 
             // echo '<pre>';print_r($member_group_ids);exit;
-            $conditions['id IN ']=$member_group_ids;
+            $conditions['id IN ']=!empty($member_group_ids) ? $member_group_ids : [0];
             $conditions['created_by'] = $this->Auth->user('created_by'); 
         }
         if($user_role == Configure::read('ROLE_USER') || $user_role == Configure::read('ROLE_BRANCH_HEAD') || $user_role == Configure::read('ROLE_ASSISTANT_HEAD')){
@@ -293,6 +293,8 @@ class ReportsController extends AppController
             $user_role = isset($user['role']['name']) ? $user['role']['name'] : '';
             if($user['role']['name'] == Configure::read('ROLE_AGENT')){
                 $report = $this->Common->getAgentMemberGroupList( $this->request->getData('branch_name'),$this->Auth->user('agent_id'));    
+            }elseif($user['role']['name'] == Configure::read('ROLE_MEMBER')){
+                $report = $this->Common->getMemberGroupList( $this->request->getData('branch_name'),$this->Auth->user('id'));    
             }else{
                 $report = $this->Common->getGroupList( $this->request->getData('branch_name'));    
             }

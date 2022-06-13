@@ -124,9 +124,9 @@ class PaymentsController extends AppController
           $mysql_version = $this->Payments->getMysqlVersion();
           //SELECT money_notes->'$."2000".val' as code4 FROM payments
           
-          if($mysql_version == '10.4.13-MariaDB' && isset($post['money_notes']) && !empty($post['money_notes']) ){
+           if(($mysql_version == '10.4.13-MariaDB' || $mysql_version == '5.7.23-23') && isset($post['money_notes']) && !empty($post['money_notes']) ){
             $post['money_notes'] = json_encode($post['money_notes']);
-          }  
+          }
           // echo '<pre>';print_r($post);exit; 
           $userr = $this->Auth->user();
           if($userr['role']['name'] == Configure::read('ROLE_ADMIN')){
