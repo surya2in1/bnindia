@@ -108,8 +108,6 @@ tr:nth-child(even) {
          </thead>
          <tbody>
             <?php  
-            if(!empty($report)){
-              $sr_no=1;
               $total =0 ;
               $total_expenditure =0;
 
@@ -120,6 +118,9 @@ tr:nth-child(even) {
               $total_paid_to_subscriber = 0;
               $total_forman=0;
               $total_deposite_in_the_bank = 0;
+              $balance =0;
+            if(!empty($report)){
+              $sr_no=1;
 
                foreach ($report as $key => $value) {?>
                 <?php  

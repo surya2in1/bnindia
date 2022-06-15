@@ -1471,21 +1471,21 @@ class CommonComponent extends Component {
               ->where($where_Conditions)
               ->where($role_wise_conditionsr)  
               ->order(['p.id' => 'ASC'])->toArray();  
-          // echo '$receipts <pre>';print_r($receipts);exit;    
+           //echo '$receipts <pre>';print_r($receipts);//exit;    
 
           //Deposit in the bank
-          $deposit_in_bank = [];
-          if(!empty($receipts)){
-            $received_by_const = Configure::read('received_by');    
-            foreach($receipts as $key=> $receipt){
-                 $deposit_in_bank[$key]['receipt_date'] = $receipt['receipt_date'];
-                $deposit_in_bank[$key]['receipt_name'] = $receipt['receipt_name'];
-                $deposit_in_bank[$key]['deposit_in_bank_amount'] = $receipt['receipt_total'];
-                $deposit_in_bank[$key]['pv_total'] = $receipt['receipt_total'];
-                $deposit_in_bank[$key]['remark'] = $received_by_const[$receipt['received_by']];
-                $deposit_in_bank[$key]['referece_no'] = $receipt['receipt_no'];
-            }
-          }
+        //   $deposit_in_bank = [];
+        //   if(!empty($receipts)){
+        //     $received_by_const = Configure::read('received_by');    
+        //     foreach($receipts as $key=> $receipt){
+        //          $deposit_in_bank[$key]['receipt_date'] = $receipt['receipt_date'];
+        //         $deposit_in_bank[$key]['receipt_name'] = $receipt['receipt_name'];
+        //         $deposit_in_bank[$key]['deposit_in_bank_amount'] = $receipt['receipt_total'];
+        //         $deposit_in_bank[$key]['pv_total'] = $receipt['receipt_total'];
+        //         $deposit_in_bank[$key]['remark'] = $received_by_const[$receipt['received_by']];
+        //         $deposit_in_bank[$key]['referece_no'] = $receipt['receipt_no'];
+        //     }
+        //   }
 
           //get payment voucher data
           $PaymentVouchersTable = TableRegistry::get('pv', ['table' => 'payment_vouchers']);
@@ -1504,7 +1504,8 @@ class CommonComponent extends Component {
             'expenditure_foremans_commission' =>'pv.foreman_commission',
             'referece_no'=>'pv.payment_voucher_no',
             'pv.remark',
-            'other'=>'pv.gst'
+            'other'=>'pv.gst',
+            'deposit_in_bank_amount' =>'pv.total'
                 ])
                 ->join([
                     'table' => 'groups',
@@ -1519,7 +1520,7 @@ class CommonComponent extends Component {
               ->where($where_Conditions_pv)  
               ->where($role_wise_conditionspv)
               ->order(['pv.id' => 'ASC'])->toArray();  
-          // echo '$payment_vouchers <pre>';print_r($payment_vouchers);//exit;
+          //echo '$payment_vouchers <pre>';print_r($payment_vouchers);//exit;
 
           $OtherPaymentsTable = TableRegistry::get('op', ['table' => 'other_payments']);
           $query = $OtherPaymentsTable->find();   
@@ -1541,11 +1542,11 @@ class CommonComponent extends Component {
               ->where($where_Conditions_op)  
               ->where($role_wise_conditionsop)
               ->order(['op.id' => 'ASC'])->toArray();  
-          // echo '$other_payments <pre>';print_r($other_payments);//exit;
+          //echo '$other_payments <pre>';print_r($other_payments);//exit;
 
 
           //merge all data
-          $final_data = array_merge($receipts,$deposit_in_bank,$payment_vouchers,$other_payments);
+          $final_data = array_merge($receipts,$payment_vouchers,$other_payments);
           // echo '$final_data <pre>';print_r($final_data); 
 
           // $totalsByDate = [];
