@@ -122,11 +122,11 @@
 					<div class="kt-grid__item kt-grid__item--fluid kt-grid__item--center kt-grid kt-grid--ver kt-login__content" style="background-image: url(assets/media/bg/bg-4.jpg);">
 						<div class="kt-login__section">
 							<div class="kt-login__block">
-								<h3 class="kt-login__title">Join Our Community</h3>
-								<div class="kt-login__desc">
+								<h3 class="kt-login__title">Welcome to Shriram Chits</h3>
+								<!--<div class="kt-login__desc">
 									Lorem ipsum dolor sit amet, coectetuer adipiscing
 									<br>elit sed diam nonummy et nibh euismod
-								</div>
+								</div>-->
 							</div>
 						</div>
 					</div>
