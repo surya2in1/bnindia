@@ -31,6 +31,12 @@
       <link rel="stylesheet" href="css/theme/css/style.css">
 </head>
 <body>
+    <div class="body-inner">
+
+    <div id="top-bar" class="top-bar" style="padding: 0 !important;background: none !important;">
+    </div>
+    <!--/ Topbar end -->
+
     <!-- begin:: Header -->
      <?= $this->element('theme_header'); ?>
     <!-- end:: Header -->

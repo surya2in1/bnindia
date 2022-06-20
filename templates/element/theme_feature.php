@@ -4,10 +4,8 @@
         <div class="col-lg-6">
           <div class="ts-intro">
               <h2 class="into-title">About Us</h2>
-              <h3 class="into-sub-title">We deliver landmark projects</h3>
-              <p>We are rethoric question ran over her cheek When she reached the first hills of the Italic Mountains,
-                she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village
-                and the subline of her own road, the Line Lane.</p>
+              <h3 class="into-sub-title">COMPARING OUR SERVICES WITH OTHER CHIT FUND COMPANIES</h3>
+              <p>We are proud to inform you that we are the first company to provide all the transactions any time online for each and every common man to utilize from any where in the world</p>
           </div><!-- Intro box end -->
 
           <div class="gap-20"></div>
@@ -63,7 +61,7 @@
 
         <div class="col-lg-6 mt-4 mt-lg-0">
           <h3 class="into-sub-title">Our Values</h3>
-          <p>Minim Austin 3 wolf moon scenester aesthetic, umami odio pariatur bitters. Pop-up occaecat taxidermy street art, tattooed beard literally.</p>
+          <p>Chit fund is a savings cum borrowing tool, which is unique when compared to other financial systems.</p>
 
           <div class="accordion accordion-group" id="our-values-accordion">
               <div class="card">
@@ -77,7 +75,7 @@
               
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#our-values-accordion">
                     <div class="card-body">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidata
+                      You Can Check all Statements Online
                     </div>
                 </div>
               </div>
@@ -91,7 +89,7 @@
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#our-values-accordion">
                     <div class="card-body">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidata
+                      New Customer Registration Services are Available Online
                     </div>
                 </div>
               </div>
@@ -105,7 +103,7 @@
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#our-values-accordion">
                     <div class="card-body">
-                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidata
+                      Online Customers Services are Available 24*7
                     </div>
                 </div>
               </div>

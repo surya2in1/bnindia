@@ -8,7 +8,7 @@
               </div>
               <div class="ts-facts-content">
                 <h2 class="ts-facts-num"><span class="counterUp" data-count="1789">0</span></h2>
-                <h3 class="ts-facts-title">Total Projects</h3>
+                <h3 class="ts-facts-title">Total Groups</h3>
               </div>
           </div><!-- Col end -->
 
@@ -18,7 +18,7 @@
               </div>
               <div class="ts-facts-content">
                 <h2 class="ts-facts-num"><span class="counterUp" data-count="647">0</span></h2>
-                <h3 class="ts-facts-title">Staff Members</h3>
+                <h3 class="ts-facts-title">Total Members</h3>
               </div>
           </div><!-- Col end -->
 
@@ -28,7 +28,7 @@
               </div>
               <div class="ts-facts-content">
                 <h2 class="ts-facts-num"><span class="counterUp" data-count="4000">0</span></h2>
-                <h3 class="ts-facts-title">Hours of Work</h3>
+                <h3 class="ts-facts-title">Total Auctions</h3>
               </div>
           </div><!-- Col end -->
 
@@ -38,7 +38,7 @@
               </div>
               <div class="ts-facts-content">
                 <h2 class="ts-facts-num"><span class="counterUp" data-count="44">0</span></h2>
-                <h3 class="ts-facts-title">Countries Experience</h3>
+                <h3 class="ts-facts-title">Total Payments</h3>
               </div>
           </div><!-- Col end -->
 
