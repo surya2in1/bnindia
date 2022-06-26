@@ -100,7 +100,16 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/other-payment-form/*', ['controller' => 'OtherPayments', 'action' => 'otherpaymentform']);
     
-     $builder->connect('/receipt-statement', ['controller' => 'Reports', 'action' => 'receiptstatement']);
+    $builder->connect('/receipt-statement', ['controller' => 'Reports', 'action' => 'receiptstatement']);
+    
+    $builder->connect('/about-us', ['controller' => 'Users', 'action' => 'aboutus']);
+
+    $builder->connect('/chitfund', ['controller' => 'Users', 'action' => 'chitfund']);
+
+    $builder->connect('/services', ['controller' => 'Users', 'action' => 'services']);
+
+    $builder->connect('/contact', ['controller' => 'Users', 'action' => 'contact']);
+
     /*
      * Connect catchall routes for all controllers.
      *

@@ -26,6 +26,12 @@ class UsersController extends AppController
     public function index()
     {
         // $this->viewBuilder()->setLayout('login');
+        $use_id =-1;
+        $total_groups= $this->Common->getGroupCount($use_id); 
+        $total_members= $this->Common->getMemberCount($use_id); 
+        $total_auctions= $this->Common->getAuctionsCount($use_id); 
+        $total_payments= $this->Common->getPaymentsCount($use_id); 
+        $this->set(compact('total_groups','total_members','total_auctions','total_payments'));
     }
 
     function superadminlogin($id){ 
@@ -865,6 +871,34 @@ class UsersController extends AppController
         $output = $this->Common->getTransferGroupUser($unique_user_ids,$group_id);
 
         echo json_encode($output);exit;
+     }
+
+     public function aboutus()
+     {
+     }
+
+     public function chitfund()
+     {
+     }
+
+     public function services()
+     {
+     }
+
+     public function contact()
+     {
+        if ($this->request->is('post')) {
+            $post = $this->request->getData(); 
+           
+            $message = "Hello Admin, </br></br> There is message from </br> Name: ".$post['name']."</br>"."Message: ".$post['message']."</br></br> Thanks";
+            //echo  $message .' <pre>';print_r($post);exit;
+            $sendmail = $this->Common->sendmail($post['email'],$post['subject'],$message);
+            if ($sendmail) {
+                echo 1;exit;
+            } else {
+                echo 0;exit;
+            }
+        }
      }
 }
 

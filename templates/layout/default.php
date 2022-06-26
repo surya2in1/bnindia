@@ -1,3 +1,6 @@
+<?php
+use Cake\Routing\Router;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,42 +44,8 @@
      <?= $this->element('theme_header'); ?>
     <!-- end:: Header -->
    
-    <!-- begin:: Banner -->
-     <?= $this->element('theme_banner'); ?>
-    <!-- end:: Banner -->
-
-    <!-- begin:: Action -->
-     <?= $this->element('theme_action'); ?>
-    <!-- end:: Action -->
-
-    <!-- begin:: features -->
-     <?= $this->element('theme_feature'); ?>
-    <!-- end:: features -->
-
-    <!-- begin:: facts -->
-     <?= $this->element('theme_facts'); ?>
-    <!-- end:: facts -->
-
-    <!-- begin:: service -->
-     <?= $this->element('theme_service'); ?>
-    <!-- end:: service -->
-
-    <!-- begin:: project -->
-     <?= $this->element('theme_project'); ?>
-    <!-- end:: project -->
-
-    <!-- begin:: content -->
-     <?= $this->element('theme_content'); ?>
-    <!-- end:: content -->
-
-    <!-- begin:: subscribe -->
-     <?= $this->element('theme_subscribe'); ?>
-    <!-- end:: subscribe -->
-
-    <!-- begin:: news -->
-     <?= $this->element('theme_news'); ?>
-    <!-- end:: news -->
-
+    <?= $this->fetch('content') ?>  
+    
     <footer id="footer" class="footer bg-overlay">
         <?= $this->element('theme_footer'); ?>
     </footer><!-- Footer end -->

@@ -1,9 +1,11 @@
+<?php
+use Cake\Routing\Router;
+?>
 <section id="ts-features" class="ts-features">
   <div class="container">
     <div class="row">
         <div class="col-lg-6">
           <div class="ts-intro">
-              <h2 class="into-title">About Us</h2>
               <h3 class="into-sub-title">COMPARING OUR SERVICES WITH OTHER CHIT FUND COMPANIES</h3>
               <p>We are proud to inform you that we are the first company to provide all the transactions any time online for each and every common man to utilize from any where in the world</p>
           </div><!-- Intro box end -->
@@ -103,7 +105,7 @@
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#our-values-accordion">
                     <div class="card-body">
-                      Online Customers Services are Available 24*7
+                      Online Customers Services are Available
                     </div>
                 </div>
               </div>

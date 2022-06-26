@@ -1,4 +1,7 @@
-<div class="footer-main">
+<?php
+use Cake\Routing\Router;
+?>
+<!-- <div class="footer-main">
       <div class="container">
         <div class="row justify-content-between">
           <div class="col-lg-4 col-md-6 footer-widget footer-about">
@@ -16,8 +19,8 @@
                       class="fab fa-instagram"></i></a></li>
                 <li><a href="https://github.com/themefisher" aria-label="Github"><i class="fab fa-github"></i></a></li>
               </ul>
-            </div><!-- Footer social end -->
-          </div><!-- Col end -->
+            </div> 
+          </div> 
 
           <div class="col-lg-4 col-md-6 footer-widget mt-5 mt-md-0">
             <h3 class="widget-title">Working Hours</h3>
@@ -28,7 +31,7 @@
               <br> Saturday: <span class="text-right">12:00 - 15:00</span>
               <br> Sunday and holidays: <span class="text-right">09:00 - 12:00</span>
             </div>
-          </div><!-- Col end -->
+          </div> 
 
           <div class="col-lg-3 col-md-6 mt-5 mt-lg-0 footer-widget">
             <h3 class="widget-title">Services</h3>
@@ -39,40 +42,41 @@
               <li><a href="service-single.html">Design and Build</a></li>
               <li><a href="service-single.html">Self-Perform Construction</a></li>
             </ul>
-          </div><!-- Col end -->
-        </div><!-- Row end -->
-      </div><!-- Container end -->
-    </div><!-- Footer main end -->
+          </div> 
+        </div> 
+      </div> 
+</div> -->
+<!-- Footer main end -->
 
-    <div class="copyright">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <div class="copyright-info text-center text-md-left">
-              <span>Copyright &copy; <script>
-                  document.write(new Date().getFullYear())
-                </script>, Designed &amp; Developed by <a href="https://themefisher.com">Themefisher</a></span>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="footer-menu text-center text-md-right">
-              <ul class="list-unstyled">
-                <li><a href="about.html">About</a></li>
-                <li><a href="team.html">Our people</a></li>
-                <li><a href="faq.html">Faq</a></li>
-                <li><a href="news-left-sidebar.html">Blog</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-              </ul>
-            </div>
-          </div>
-        </div><!-- Row end -->
-
-        <div id="back-to-top" data-spy="affix" data-offset-top="10" class="back-to-top position-fixed">
-          <button class="btn btn-primary" title="Back to Top">
-            <i class="fa fa-angle-double-up"></i>
-          </button>
+<div class="copyright">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="copyright-info text-center text-md-left">
+          <span>Copyright &copy; <script>
+              document.write(new Date().getFullYear())
+            </script></span>
         </div>
+      </div>
 
-      </div><!-- Container end -->
-    </div><!-- Copyright end -->
+      <div class="col-md-6">
+        <div class="footer-menu text-center text-md-right">
+          <ul class="list-unstyled">
+            <li><a href="<?php echo Router::url('/about', true); ?>">About</a></li>
+            <li><a href="<?php echo Router::url('/services', true); ?>">Services</a></li>
+            <li><a href="<?php echo Router::url('/contact', true); ?>">Faq</a></li>
+            <!-- <li><a href="news-left-sidebar.html">Blog</a></li>
+            <li><a href="pricing.html">Pricing</a></li> -->
+          </ul>
+        </div>
+      </div>
+    </div><!-- Row end -->
+
+    <div id="back-to-top" data-spy="affix" data-offset-top="10" class="back-to-top position-fixed">
+      <button class="btn btn-primary" title="Back to Top">
+        <i class="fa fa-angle-double-up"></i>
+      </button>
+    </div>
+
+  </div><!-- Container end -->
+</div><!-- Copyright end -->

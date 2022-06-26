@@ -1,3 +1,6 @@
+<?php
+use Cake\Routing\Router;
+?>
 <!-- Header start -->
 <header id="header" class="header-one">
   <div class="bg-white">
@@ -5,7 +8,7 @@
       <div class="logo-area">
           <div class="row align-items-center">
             <div class="logo col-lg-3 text-center text-lg-left mb-3 mb-md-5 mb-lg-0">
-                <a class="d-block" href="index.html">
+                <a class="d-block" href="<?php echo Router::url('/', true); ?>">
                   <!-- <img loading="lazy" src="theme/images/logo.png" alt="Constra"> -->
                    <img loading="lazy" src="css/logos/logo11.png" alt="BNIndia" style="width: 116px;
     height: 100px;">
@@ -26,7 +29,7 @@
                     <div class="info-box">
                       <div class="info-box-content">
                           <p class="info-box-title">Email Us</p>
-                          <p class="info-box-subtitle"><a href="mailto:office@Constra.com">info@bbcf.in</a></p>
+                          <p class="info-box-subtitle"><a href="mailto:info@bbcf.in">info@bbcf.in</a></p>
                       </div>
                     </div>
                   </li>
@@ -39,7 +42,7 @@
                     </div>
                   </li>
                   <li class="header-get-a-quote">
-                    <a class="btn btn-primary" href="/contact">Get A Quote</a>
+                    <a class="btn btn-primary" href="<?php echo Router::url('/contact', true); ?>">Get A Quote</a>
                   </li>
                 </ul><!-- Ul end -->
             </div><!-- header right end -->
@@ -68,23 +71,23 @@
                           </ul>
                       </li> -->
 
-                      <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                      <li class="nav-item active"><a class="nav-link" href="<?php echo Router::url('/', true); ?>">Home</a></li>
 
-                      <li class="nav-item "><a class="nav-link" href="/about-us">About Us</a></li>
+                      <li class="nav-item "><a class="nav-link" href="<?php echo Router::url('/about-us', true); ?>">About Us</a></li>
               
-                      <li class="nav-item"><a class="nav-link" href="/chitfund">Chit Act</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/chitfund', true); ?>">Chit Act</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="/services">Services</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/services', true); ?>">Services</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="/agent">Agent</a></li>
+                      <!-- <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/agent', true); ?>">Agent</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="/general-information">General Info</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/general-information', true); ?>">General Info</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="/branches">Branches</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/branches', true); ?>">Branches</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="/chitgroup">Chit Group</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/chitgroup', true); ?>">Chit Group</a></li> -->
               
-                      <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/contact', true); ?>">Contact</a></li>
                     </ul>
                 </div>
               </nav>

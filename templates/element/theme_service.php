@@ -1,84 +1,52 @@
-<section id="ts-service-area" class="ts-service-area pb-0">
+<?php
+use Cake\Routing\Router;
+?>
+<section id="ts-service-area" class="ts-service-area">
   <div class="container">
     <div class="row text-center">
         <div class="col-12">
-          <h2 class="section-title">We Are Specialists In</h2>
-          <h3 class="section-sub-title">What We Do</h3>
+          <h2 class="section-title">Before investing, its important that you have to compare other chit fund companies whether <br>they are giving any such transparent transactions and services that our company is providing </h2>
+          <!-- <h3 class="section-sub-title">What We Do</h3> -->
         </div>
     </div>
     <!--/ Title row end -->
 
-    <div class="row">
-        <div class="col-lg-4">
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon1.png" alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Home Construction</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 1 end -->
-
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon2.png" alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Building Remodels</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 2 end -->
-
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon3.png"  alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Interior Design</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 3 end -->
-
-        </div><!-- Col end -->
-
-        <div class="col-lg-4 text-center">
-          <img loading="lazy" class="img-fluid" src="theme/images/services/service-center.jpg" alt="service-avater-image">
-        </div><!-- Col end -->
-
-        <div class="col-lg-4 mt-5 mt-lg-0 mb-4 mb-lg-0">
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon4.png" alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Exterior Design</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 4 end -->
-
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon5.png" alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Renovation</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 5 end -->
-
-          <div class="ts-service-box d-flex">
-              <div class="ts-service-box-img">
-                <img loading="lazy" src="theme/images/icon-image/service-icon6.png" alt="service-icon">
-              </div>
-              <div class="ts-service-box-info">
-                <h3 class="service-box-title"><a href="#">Safety Management</a></h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit Integer adipiscing erat</p>
-              </div>
-          </div><!-- Service 6 end -->
-        </div><!-- Col end -->
-    </div><!-- Content row end -->
-
+    <div class="row align-items-end">
+                <div class="col-12 col-sm-6 col-lg-12">
+                    <div class="single-features-area wow fadeInUp" data-wow-delay="100ms" style="visibility: visible; animation-delay: 100ms; animation-name: fadeInUp;">
+                        <!-- Section Heading -->
+                        <div class="section-heading">
+                            <center><div class="line"></div>
+                            <p>Before investing, its important that you have to compare other chit fund companies whether <br>they are giving any such transparent transactions and services that our company is providing </p></center>
+                        </div>
+                    </div>
+                </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-features-area mb-100" data-wow-delay="100ms">
+            <h2>Chit Fund  </h2>
+            <h6>Chit fund is a savings cum borrowing tool, which is unique when compared to other financial systems.</h6>
+            <a href="<?php echo Router::url('/admin', true); ?>" target="_blank" class="btn btn-primary">New Chit Group Scheme</a>
+          </div>
+        </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-features-area mb-100 wow fadeInUp" data-wow-delay="300ms" style="visibility: visible; animation-delay: 300ms; animation-name: fadeInUp;">
+                        <img src="theme/images/services/scheme-1.jpg" alt="" style="max-width: 100%;">
+                        <a href="<?php echo Router::url('/admin', true); ?>" alt="" style="color:#6e6e6e;">Online Customer Registration</a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-features-area mb-100 wow fadeInUp" data-wow-delay="500ms" style="visibility: visible; animation-delay: 500ms; animation-name: fadeInUp;">
+                        <img src="theme/images/services/scheme-2.jpg" alt=""style="max-width: 100%;">
+                        <a href="<?php echo Router::url('/admin', true); ?>" target="_blank" style="color:#6e6e6e;">You Can Check all Statements Online</a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="single-features-area mb-100 wow fadeInUp" data-wow-delay="700ms" style="visibility: visible; animation-delay: 700ms; animation-name: fadeInUp;">
+                        <img src="theme/images/services/scheme-3.jpg" alt=""style="max-width: 100%;">
+                        <a href="<?php echo Router::url('/contact', true); ?>" style="color:#6e6e6e;">Online Customers Services</a>
+                    </div>
+                </div>
+            </div>
   </div>
   <!--/ Container end -->
 </section><!-- Service end -->
