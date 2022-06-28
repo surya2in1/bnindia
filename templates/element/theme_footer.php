@@ -62,7 +62,7 @@ use Cake\Routing\Router;
       <div class="col-md-6">
         <div class="footer-menu text-center text-md-right">
           <ul class="list-unstyled">
-            <li><a href="<?php echo Router::url('/about', true); ?>">About</a></li>
+            <li><a href="<?php echo Router::url('/about-us', true); ?>">About</a></li>
             <li><a href="<?php echo Router::url('/services', true); ?>">Services</a></li>
             <li><a href="<?php echo Router::url('/contact', true); ?>">Faq</a></li>
             <!-- <li><a href="news-left-sidebar.html">Blog</a></li>

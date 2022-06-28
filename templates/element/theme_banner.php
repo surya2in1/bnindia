@@ -46,7 +46,7 @@ use Cake\Routing\Router;
                 <p class="slider-description lead" data-animation-in="slideInRight">We will deal with your failure that determines how you achieve success.</p>
                 <div data-animation-in="slideInLeft">
                     <a href="<?php echo Router::url('/contact', true); ?>" class="slider btn btn-primary" aria-label="contact-with-us">Get Free Quote</a>
-                    <a href="<?php echo Router::url('/about', true); ?>" class="slider btn btn-primary border" aria-label="learn-more-about-us">Learn more</a>
+                    <a href="<?php echo Router::url('/about-us', true); ?>" class="slider btn btn-primary border" aria-label="learn-more-about-us">Learn more</a>
                 </div>
               </div>
           </div>
