@@ -71,13 +71,13 @@ use Cake\Routing\Router;
                           </ul>
                       </li> -->
 
-                      <li class="nav-item active"><a class="nav-link" href="<?php echo Router::url('/', true); ?>">Home</a></li>
+                      <li class="nav-item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'index') { ?> active <?php } ?>"><a class="nav-link" href="<?php echo Router::url('/', true); ?>">Home</a></li>
 
-                      <li class="nav-item "><a class="nav-link" href="<?php echo Router::url('/about-us', true); ?>">About Us</a></li>
+                      <li class="nav-item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'aboutus') { ?> active <?php } ?>"><a class="nav-link" href="<?php echo Router::url('/about-us', true); ?>">About Us</a></li>
               
-                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/chitfund', true); ?>">Chit Act</a></li>
+                      <li class="nav-item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'chitfund') { ?> active <?php } ?>"><a class="nav-link" href="<?php echo Router::url('/chitfund', true); ?>">Chit Act</a></li>
 
-                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/services', true); ?>">Services</a></li>
+                      <li class="nav-item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'services') { ?> active <?php } ?>"><a class="nav-link" href="<?php echo Router::url('/services', true); ?>">Services</a></li>
 
                       <!-- <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/agent', true); ?>">Agent</a></li>
 
@@ -87,7 +87,7 @@ use Cake\Routing\Router;
 
                       <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/chitgroup', true); ?>">Chit Group</a></li> -->
               
-                      <li class="nav-item"><a class="nav-link" href="<?php echo Router::url('/contact', true); ?>">Contact</a></li>
+                      <li class="nav-item <?php if($this->request->getParam('controller') == 'Users' && $this->request->getParam('action') == 'contact') { ?> active <?php } ?>"><a class="nav-link" href="<?php echo Router::url('/contact', true); ?>">Contact</a></li>
                     </ul>
                 </div>
               </nav>

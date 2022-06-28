@@ -890,14 +890,15 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $post = $this->request->getData(); 
            
-            $message = "Hello Admin, </br></br> There is message from </br> Name: ".$post['name']."</br>"."Message: ".$post['message']."</br></br> Thanks";
+            $message = "Hello Admin, \r\n There is message from </br> Name: ".$post['name']."\r\n"."Message: ".$post['message']."\r\n Thanks";
             //echo  $message .' <pre>';print_r($post);exit;
             $sendmail = $this->Common->sendmail($post['email'],$post['subject'],$message);
-            if ($sendmail) {
-                echo 1;exit;
-            } else {
-                echo 0;exit;
+          
+            if($sendmail){
+                $this->Flash->success(__('Email has been sent successfully'));
+                return $this->redirect(['action' => 'contact']);
             }
+            $this->Flash->error(__('Email could not be sent. Please, try again.'));
         }
      }
 }
