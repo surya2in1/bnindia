@@ -85,6 +85,8 @@ tr:nth-child(even) {
            <tr> 
              <th rowspan="2">Date</th>
              <th rowspan="2">General Number</th>
+             <th rowspan="2">Group Code</th>
+             <th rowspan="2">Ticket Number</th>
              <th rowspan="2">On what account received or Paid</th>
              <th colspan="5">Receipts</th> 
              <th rowspan="2">Reference Receipt in the Receipt book</th>
@@ -154,6 +156,8 @@ tr:nth-child(even) {
                          <td></td>
                          <td></td>
                          <td></td>
+                         <td></td>
+                         <td></td>
                          <td><b><?= isset($value['subscription']) && ($value['subscription']>0) ?  $value['subscription'] : 0; ?><b></td>
                          <td></td>
                          <td></td>
@@ -170,6 +174,8 @@ tr:nth-child(even) {
                        <tr>
                          <td><?= isset($value['receipt_date']) ?  $value['receipt_date'] :'';  ?></td>
                          <td><?= $sr_no; ?></td>
+                         <td><?= isset($value['group_code']) ?  $value['group_code'] :'';  ?></td>
+                         <td><?= isset($value['ticket_no']) ?  $value['ticket_no'] :'';  ?></td>
                          <td><?= isset($value['receipt_name']) ?  $value['receipt_name'] :'--'; ?></td>
                          <td><?= isset($value['receipt_subcription']) ?  $value['receipt_subcription'] :'--'; ?></td>
                          <td><?= isset($value['receipt_interest']) ?  $value['receipt_interest'] :'--'; ?></td>
@@ -202,6 +208,8 @@ tr:nth-child(even) {
                      <td></td>
                      <td></td>
                      <td></td>
+                     <td></td>
+                     <td></td>
                      <td><b><?= $total; ?><b></td>
                      <td></td>
                      <td></td>
@@ -214,7 +222,7 @@ tr:nth-child(even) {
                      <td></td> 
                    </tr> 
             <?php }else{ ?>
-               <tr><td colspan="18"><center>Records not found!!!</center></td></tr>
+               <tr><td colspan="20"><center>Records not found!!!</center></td></tr>
             <?php }
             ?>
          </tbody>

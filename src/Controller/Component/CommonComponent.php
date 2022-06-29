@@ -1457,7 +1457,9 @@ class CommonComponent extends Component {
             'receipt_total' => 'p.total_amount',
             'receipt_no',
             'p.received_by',
-            'p.remark'
+            'p.remark',
+            'ticket_no'=>'mg.ticket_no',
+            'group_code'=>'g.group_code'
                 ])
                 ->join([
                     'table' => 'groups',
@@ -1468,6 +1470,11 @@ class CommonComponent extends Component {
                     'table' => 'users',
                     'alias' => 'u', 
                     'conditions' =>'p.user_id = u.id',
+                ]) 
+                 ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg', 
+                    'conditions' =>'mg.user_id = p.user_id and mg.group_id=p.group_id',
                 ]) 
               ->where($where_Conditions)
               ->where($role_wise_conditionsr)  
@@ -1506,7 +1513,9 @@ class CommonComponent extends Component {
             'referece_no'=>'pv.payment_voucher_no',
             'pv.remark',
             'other'=>'pv.gst',
-            'deposit_in_bank_amount' =>'pv.total'
+            'deposit_in_bank_amount' =>'pv.total',
+            'ticket_no'=>'mg.ticket_no',
+            'group_code'=>'g.group_code'
                 ])
                 ->join([
                     'table' => 'groups',
@@ -1517,6 +1526,11 @@ class CommonComponent extends Component {
                     'table' => 'users',
                     'alias' => 'u', 
                     'conditions' =>'pv.user_id = u.id',
+                ])  
+                ->join([
+                    'table' => 'members_groups',
+                    'alias' => 'mg', 
+                    'conditions' =>'mg.user_id = pv.user_id and mg.group_id=pv.group_id',
                 ]) 
               ->where($where_Conditions_pv)  
               ->where($role_wise_conditionspv)
@@ -1632,8 +1646,8 @@ class CommonComponent extends Component {
                 }   
             }
             //echo '$totalsByDate ff <pre>';print_r($totalsByDate);
-            //echo '$final_data ff <pre>';print_r($final_data);
-            //exit; 
+            // echo '$final_data ff <pre>';print_r($final_data);
+            // exit; 
             
           return $final_data; 
       }
